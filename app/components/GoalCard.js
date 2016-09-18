@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
+import toggleHOC from '../hocs/toggleHOC';
 
+const DIALOG_TOGGLE = 'dialog';
 let styles = {};
 
+const propTypes = {
+  goal: React.PropTypes.object.isRequired,
+  getToggleState: React.PropTypes.func.isRequired,
+  toggleOn: React.PropTypes.func.isRequired,
+  toggleOff: React.PropTypes.func.isRequired,
+};
+
 class GoalCard extends Component {
+
   /**
    * Calculate days left for Due Date.
    * @param {String} date - Date from API.
@@ -16,6 +28,33 @@ class GoalCard extends Component {
     return Math.round(Math.max(0, (due - now) / (24 * 3600 * 1000)));
   };
 
+  /**
+   * Render dialog with description
+   *
+   * @returns {Object} dialog element
+   */
+  renderDialog() {
+    const { goal } = this.props;
+    const actions = [
+      <FlatButton
+        label="Close"
+        primary
+        onTouchTap={() => this.props.toggleOff(DIALOG_TOGGLE)}
+      />
+    ];
+
+    return (
+      <Dialog
+        actions={actions}
+        title={goal.name}
+        open={this.props.getToggleState(DIALOG_TOGGLE)}
+        onRequestClose={() => this.props.toggleOff(DIALOG_TOGGLE)}
+      >
+        {goal.description}
+      </Dialog>
+    );
+  }
+
   render() {
     const { goal } = this.props;
     const achieved = goal.achieved;
@@ -23,7 +62,7 @@ class GoalCard extends Component {
     const goalStyle = Object.assign({}, styles.goal, achieved && styles.achieved);
 
     return (
-      <Paper key={goal.id} style={goalStyle} zDepth={2}>
+      <Paper style={goalStyle} zDepth={2} onTouchTap={() => this.props.toggleOn(DIALOG_TOGGLE)} >
         <i className={goal.icon} style={styles.icon} />
         <span style={styles.title}>{goal.name}</span>
         <div style={styles.details}>
@@ -33,14 +72,13 @@ class GoalCard extends Component {
           </div>
           <span style={styles.dueDate}><i className="icon-history" /> {dueDays}</span>
         </div>
+        {this.renderDialog()}
       </Paper>
     );
   }
 }
 
-GoalCard.propTypes = {
-  goal: React.PropTypes.object.isRequired,
-};
+GoalCard.propTypes = propTypes;
 
 styles = {
   goal: {
@@ -116,4 +154,4 @@ styles = {
   },
 };
 
-export default GoalCard;
+export default toggleHOC(GoalCard);
