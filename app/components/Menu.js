@@ -33,7 +33,7 @@ class Menu extends Component {
   }
 
   render() {
-    const { userLogoutProcess } = this.props;
+    const { userId, userLogoutProcess } = this.props;
     const unleashLogo = <img src={LogoImg} alt="Unleash" width="40" />;
     const iconProps = { color: blueGrey50 };
     return (
@@ -53,7 +53,7 @@ class Menu extends Component {
           </MenuItem>
           <MenuItem
             leftIcon={<ActionAccountCircle {...iconProps} />}
-            onTouchTap={() => this.handleMenuClick('/')}
+            onTouchTap={() => this.handleMenuClick(`/profiles/${userId}`)}
             style={styles.menuItem}
           >
             My Path
@@ -93,6 +93,7 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
+  userId: React.PropTypes.string,
   router: React.PropTypes.object,
   userLogoutProcess: React.PropTypes.func,
 };

@@ -16,7 +16,10 @@ const defaultState = Immutable.fromJS({
 
 const getDefaultState = () => defaultState;
 
-const userLogin = (state, action) => state.set('userData', action.userData).set('isLoggedIn', true);
+const userLogin = (state, action) =>
+  state
+    .set('userData', Immutable.fromJS(action.userData))
+    .set('isLoggedIn', true);
 
 const userLogout = () => defaultState;
 
