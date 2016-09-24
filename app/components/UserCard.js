@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DefaultHero from '../assets/default_hero.jpg';
 
 let styles = {};
 
@@ -9,10 +10,13 @@ class UserCard extends Component {
 
   render() {
     const { user } = this.props;
+    // @TODO: (Kelvin De Moya) - Update after deciding if it should be checked here or by the API.
+    const googleDefaultImage = 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg';
+    const userUrl = user.picture === googleDefaultImage ? DefaultHero : user.picture || DefaultHero;
 
     return (
       <div className="user" onClick={() => this.handleProfileSelect(user.id)} style={styles.user}>
-        <img style={styles.avatar} src={user.picture} alt={user.firstName} />
+        <img style={styles.avatar} src={userUrl} alt={user.firstName} />
         <div style={styles.name}>{user.fullName}</div>
       </div>
     );
