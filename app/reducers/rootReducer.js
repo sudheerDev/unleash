@@ -6,6 +6,7 @@ import goalsReducer from './goalsReducer';
 import profilesReducer from './profilesReducer';
 import pathsReducer from './pathsReducer';
 import userReducer from './userReducer';
+import curratedPathsReducer from './curratedPathsReducer';
 
 const rootReducer = combineReducers({
   skills: skillsReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   paths: pathsReducer,
   user: userReducer,
   toastr: toastrReducer,
+  curratedPaths: curratedPathsReducer
 });
 
 export default rootReducer;
