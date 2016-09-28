@@ -8,6 +8,7 @@ import Menu from '../Menu';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('Menu Component', () => {
+  const userId = '12345ABCDEF';
   let component;
   let routerSpy;
   let userLogoutProcess;
@@ -25,7 +26,12 @@ describe('Menu Component', () => {
       muiTheme: React.PropTypes.object
     };
 
-    component = mount(<Menu router={router} userLogoutProcess={userLogoutProcess}/>,
+    component = mount(
+      <Menu
+        userId={userId}
+        router={router}
+        userLogoutProcess={userLogoutProcess}
+      />,
       {
         context,
         childContextTypes
@@ -41,6 +47,15 @@ describe('Menu Component', () => {
     const expectedRoute = '/heroes/unleash';
     element.node.handleMenuClick(expectedRoute);
     expect(routerSpy.getCall(0).args[0]).to.equal(expectedRoute);
+  });
+
+  it('should change the page to my path', () => {
+    const menuItem = component.find('MenuItem').filterWhere((element) => {
+      return element.text() === 'My Path';
+    });
+    menuItem.props().onTouchTap();
+    const expectedValue = `/profiles/${userId}`;
+    expect(routerSpy.getCall(0).args[0]).to.equal(expectedValue);
   });
 
   it('should call the userLogoutProcess function', () => {
