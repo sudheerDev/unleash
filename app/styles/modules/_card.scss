@@ -15,7 +15,7 @@ $card-template-txt:  $card-achieved-txt;
 $card-width:         180px;
 $card-height:        $card-width;
 $card-full-width:    160px;
-$card-full-height:   110px;
+$card-full-height:   200px;
 $card-tiny-width:    72px;
 $card-tiny-height:   $card-tiny-width;
 
@@ -89,16 +89,13 @@ $ninja-height:       $ninja-width;
   }
 
   &__edit {
-    position: absolute;
-    top: 0;
-    right: 65px;
-    width: 100%;
+    cursor: pointer;
     font-style: normal;
     font-weight: 600;
-    cursor: pointer;
-    border: 0;
-    outline: 0;
+    position: relative;
+    float: left;
     color: darken($card-default-bg, 20%);
+    z-index: 3;
   }
 
   &__comments {
@@ -265,7 +262,9 @@ $ninja-height:       $ninja-width;
     }
 
     .card__icon {
-      display: none;
+      display: block;
+      font-size: 20px;
+      text-align: right;
     }
   }
 
