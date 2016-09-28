@@ -100,13 +100,12 @@ angular.module('unleashApp')
       }
       
       /*
-       * bind modal events;
+       * bind modal events
        */
-      
       $modal.find('.modal__icon').on('click', function () {
-        if(attrs.config === 'edit') {
+        if(attrs.config === 'edit' && scope.updated) {
           scope.updated.icon = this.children[0].dataset.icon;
-        } else {
+        } else if (attrs.config === 'edit') {
           scope.template.icon = this.children[0].dataset.icon;
         }
 
