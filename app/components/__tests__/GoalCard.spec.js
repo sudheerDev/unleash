@@ -8,10 +8,10 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('Goal Card', () => {
   let component;
-  const goal = generate('goal');
-  const mockedData = { goal: goal };
+  let goalData;
 
   beforeEach(() => {
+    goalData = generate('goal')[0];
     const context = {
       muiTheme: getMuiTheme()
     };
@@ -20,7 +20,7 @@ describe('Goal Card', () => {
     };
 
     component = mount(
-      <GoalCard goal={mockedData} />,
+      <GoalCard goal={goalData} />,
       {
         context,
         childContextTypes
@@ -32,7 +32,23 @@ describe('Goal Card', () => {
   });
 
   it('should render the goal', () => {
-    const goal = component.find('Paper');
-    expect(goal.length).to.equal(goal.length);
+    expect(component.find('Paper')).to.exist;
+  });
+
+  describe('description dialog', () => {
+    it('should toggle dialog state when touchTap event is fired', () => {
+      const childComponent = component.find('Paper');
+      expect(component.state().dialog).not.to.exist;
+      childComponent.props().onTouchTap();
+      expect(component.state().dialog).to.be.true;
+    });
+
+    it('should render a dialog when dialog state is true', () => {
+      const childComponent = component.find('Paper');
+      expect(component.find('Dialog').props().open).to.be.false;
+      childComponent.props().onTouchTap();
+      expect(component.find('Dialog').props().open).to.be.true;
+      expect(component.find('Dialog').props().children).to.equal(goalData.description);
+    });
   });
 });

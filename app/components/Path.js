@@ -12,7 +12,7 @@ class Paths extends Component {
 
   renderGoals(goals) {
     return _.map(goals, (goal) =>
-      <GoalCard goal={goal} />
+      <GoalCard key={goal.id} goal={goal} />
     );
   }
 
