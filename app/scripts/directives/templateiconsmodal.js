@@ -98,6 +98,19 @@ angular.module('unleashApp')
       if(currentIconClass !== '.') {
         $modal.find(currentIconClass).parent().addClass('current');
       }
+
+      element.bind('keydown keypress', function (event) {
+        if(event.which === 27) {
+          event.preventDefault();
+
+          $modal.removeClass('view');
+          $modal.find('.modal__icon').unbind('click');
+
+          if(currentIconClass !== '.') {
+            $modal.find(currentIconClass).parent().removeClass('current');
+          }
+        }
+      });
       
       /*
        * bind modal events
