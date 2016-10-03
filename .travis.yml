@@ -8,7 +8,7 @@ services:
 before_install:
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
-  - cp config.dist.js config.js
+  - cp config.js config.local.js
 
 install:
   - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/x-team-unleash:$TRAVIS_BUILD_NUMBER .

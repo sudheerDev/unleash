@@ -25,7 +25,7 @@ docker-compose run web npm install
 
 ### Config
 
-Create a `config.js` in the root directory of the project and override or set any value provided by `config.dist.js`. The minimal contents for the `config.js` file should be:
+Create a `config.local.js` in the root directory of the project and override or set any value provided by `config.js`. The minimal contents for the `config.local.js` file should be:
 
 ```js
 module.exports = {

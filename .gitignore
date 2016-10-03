@@ -2,7 +2,7 @@ node_modules
 dist
 npm-debug.log
 .idea/
-config.js
+config.local.js
 
 # Coverage files
 .nyc_output
