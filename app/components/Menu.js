@@ -8,6 +8,7 @@ import ActionAccountCircle from 'material-ui/svg-icons/action/account-circle';
 import ActionSupervisorAccount from 'material-ui/svg-icons/action/supervisor-account';
 import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
+import ActionReceipt from 'material-ui/svg-icons/action/receipt';
 import { blueGrey50, blueGrey800 } from 'material-ui/styles/colors';
 import LogoImg from '../assets/logo.png';
 import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
@@ -78,6 +79,13 @@ class Menu extends Component {
             style={styles.menuItem}
           >
             Skills
+          </MenuItem>
+          <MenuItem
+            leftIcon={<ActionReceipt {...iconProps} />}
+            onTouchTap={() => this.handleMenuClick('/currated-paths')}
+            style={styles.menuItem}
+          >
+            Currated Paths
           </MenuItem>
           <MenuItem
             leftIcon={<KeyIcon {...iconProps} />}

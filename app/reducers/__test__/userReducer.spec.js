@@ -5,12 +5,17 @@ import userReducer from '../userReducer';
 import UserActionCreators from '../../actions/user/UserActionCreators';
 import userReducerFunctions from '../../actions/user/UserReducerFunctions';
 import generate from '../../testUtils/fixtures';
+import curratedPathsReducer from '../curratedPathsReducer';
 
 describe('User Reducer', () => {
   const defaultState = userReducerFunctions.getDefaultState();
 
   it('should return the user reducer default state', () => {
     expect(userReducer(defaultState, {type: 'NONE'})).to.deep.equal(defaultState);
+  });
+
+  it('should return the currated paths reducer default state', () => {
+    expect(curratedPathsReducer({list: []}, {type: 'NONE'})).to.deep.equal({list: []});
   });
 
   it('should return the user state with the isLogged true and the user data', () => {
