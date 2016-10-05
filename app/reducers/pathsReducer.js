@@ -4,24 +4,20 @@
  * @author Kelvin De Moya <kelvin.demoya@x-team.com>
  */
 
-import { PATHS_LIST_SUCCESS, PATHS_LIST_FAILURE } from '../actions/PathsActions';
+import { PATHS } from '../actions/PathsActions';
 
 function pathsReducer(paths = [], action) {
   Object.freeze(paths);
 
-  let newPaths;
-
   switch (action.type) {
-    case PATHS_LIST_SUCCESS:
-      newPaths = [];
-      action.paths.forEach((path) => {
-        if (path.goals.length) {
-          newPaths.push(path);
-        }
-      });
-      return newPaths;
-    case PATHS_LIST_FAILURE:
+    case PATHS.FETCH.SUCCESS:
+      return action.paths;
+    case PATHS.FETCH.FAILURE:
       return [];
+    case PATHS.CREATE.SUCCESS:
+      return action.paths;
+    case PATHS.CREATE.FAILURE:
+      return paths;
     default:
       return paths;
   }

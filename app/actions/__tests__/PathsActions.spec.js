@@ -11,24 +11,6 @@ import config from '../../config/routes';
 
 describe('Path Actions', () => {
 
-  it('should create an action for pathsListSuccess', () => {
-    const paths = '/unleash/paths';
-    const expectedAction = {
-      type: PathsActions.PATHS_LIST_SUCCESS,
-      paths
-    };
-    expect(PathsActions.pathsListSuccess(paths)).to.deep.equal(expectedAction);
-  });
-
-  it('should create an action for pathsListFailure', () => {
-    const errors = 'Oops an error!';
-    const expectedAction = {
-      type: PathsActions.PATHS_LIST_FAILURE,
-      errors
-    };
-    expect(PathsActions.pathsListFailure(errors)).to.deep.equal(expectedAction);
-  });
-
   describe('Dispatch Actions', () => {
     const middlewares = [thunk];
     const store = configureStore(middlewares)();
@@ -42,17 +24,36 @@ describe('Path Actions', () => {
     it('should call the dispatcher for pathsList', () => {
       const userId = 150;
       const hostname = 'http://paths-staging.unleash.x-team.com';
-      const path = `/api/v1/paths.json?userId=${userId}`;
+      const path = `/api/v1/paths?userId=${userId}`;
 
       const httpResponse = generate('path', 15, userId);
       const requestCall = nock(hostname).get(path).reply(200, httpResponse);
 
       const expectedActions = [
-        {type: 'PATHS_LIST'},
-        PathsActions.pathsListSuccess(httpResponse)
+        {type: 'FETCH_PATHS_START'},
+        {type: 'FETCH_PATHS_SUCCESS', paths: httpResponse }
       ];
 
       return dispatch(PathsActions.pathsList(userId)).then(() => {
+        expect(requestCall.isDone()).to.be.true;
+        expect(store.getActions()).to.deep.equal(expectedActions);
+      });
+    });
+
+    it('should call the dispatcher for pathsCreate', () => {
+      const userId = 150;
+      const hostname = 'http://paths-staging.unleash.x-team.com';
+      const path = `/api/v1/paths`;
+
+      const httpResponse = generate('path', 15, userId);
+      const requestCall = nock(hostname).post(path, {userId: userId}).reply(200, httpResponse);
+
+      const expectedActions = [
+        {type: 'CREATE_PATHS_START'},
+        {type: 'CREATE_PATHS_SUCCESS', paths: httpResponse }
+      ];
+
+      return dispatch(PathsActions.pathsCreate(userId)).then(() => {
         expect(requestCall.isDone()).to.be.true;
         expect(store.getActions()).to.deep.equal(expectedActions);
       });
