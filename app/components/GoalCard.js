@@ -3,6 +3,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 import toggleHOC from '../hocs/toggleHOC';
+import MilestoneImg from '../assets/milestone.png';
 
 const DIALOG_TOGGLE = 'dialog';
 let styles = {};
@@ -60,9 +61,12 @@ class GoalCard extends Component {
     const achieved = goal.achieved;
     const dueDays = goal.dueDate ? this.daysLeft(goal.dueDate) : 0;
     const goalStyle = Object.assign({}, styles.goal, achieved && styles.achieved);
+    // @TODO: (Kelvin De Moya) - Just for testing. Update once goal type is implemented in the api.
+    const isMilestone = dueDays >= 10 || goal.level === 4;
 
     return (
       <Paper style={goalStyle} zDepth={2} onTouchTap={() => this.props.toggleOn(DIALOG_TOGGLE)} >
+        {isMilestone && <img src={MilestoneImg} style={styles.milestone} alt="milestone" />}
         <i className={goal.icon} style={styles.icon} />
         <span style={styles.title}>{goal.name}</span>
         <div style={styles.details}>
@@ -91,6 +95,12 @@ styles = {
     padding: '20px',
     textAlign: 'center',
     color: '#5f5f5f',
+  },
+  milestone: {
+    position: 'absolute',
+    right: '-8px',
+    top: '-8px',
+    width: '150px',
   },
   icon: {
     display: 'block',

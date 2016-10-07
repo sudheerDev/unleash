@@ -3,6 +3,7 @@ dist
 npm-debug.log
 .idea/
 config.local.js
+.DS_Store
 
 # Coverage files
 .nyc_output
