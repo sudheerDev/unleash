@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import GoalCard from './GoalCard';
 import * as _ from 'lodash';
+import RaisedButton from 'material-ui/RaisedButton';
 
 let styles = {};
 
@@ -8,6 +9,11 @@ class Paths extends Component {
   componentDidMount() {
     const { actions, params } = this.props;
     actions.pathsList(params.userId);
+  }
+
+  handleCreatePath() {
+    const { actions, params } = this.props;
+    actions.pathsCreate(params.userId);
   }
 
   renderGoals(goals) {
@@ -21,7 +27,7 @@ class Paths extends Component {
       <div key={path.id}>
         <div className="pathHeader" style={styles.pathHeader}>
           <div style={styles.divider}></div>
-          <div><i className="icon-map" /> {path.name || 'Main Path'}</div>
+          <div><i className="icon-map" /> {path.name || 'Empty Path'}</div>
           <div style={styles.divider}></div>
         </div>
         <div style={styles.pathsWrapper}>
@@ -36,6 +42,13 @@ class Paths extends Component {
     return (
       <div>
         {_.map(paths, (path) => this.renderPath(path))}
+        <RaisedButton
+          label="Create Path"
+          backgroundColor="#8FD694"
+          labelColor="#FFFFFF"
+          onTouchTap={() => this.handleCreatePath()}
+          style={styles.addPathButton}
+        />
       </div>
     );
   }
@@ -80,6 +93,14 @@ styles = {
     alignSelf: 'center',
     margin: '0 20px',
   },
+  addPathButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    margin: 'auto',
+    width: '40%',
+  }
 };
 
 export default Paths;

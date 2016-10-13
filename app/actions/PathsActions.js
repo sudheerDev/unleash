@@ -6,29 +6,45 @@
 
 import config from '../../config';
 
-export const PATHS_LIST = 'PATHS_LIST';
-export const PATHS_LIST_SUCCESS = 'PATHS_LIST_SUCCESS';
-export const PATHS_LIST_FAILURE = 'PATHS_LIST_FAILURE';
-
-function doPathsList() {
-  return { type: PATHS_LIST };
-}
-
-export function pathsListSuccess(paths) {
-  return { type: PATHS_LIST_SUCCESS, paths };
-}
-
-export function pathsListFailure(errors) {
-  return { type: PATHS_LIST_FAILURE, errors };
-}
+export const PATHS = {
+  FETCH: {
+    START: 'FETCH_PATHS_START',
+    SUCCESS: 'FETCH_PATHS_SUCCESS',
+    FAILURE: 'FETCH_PATHS_FAILURE'
+  },
+  CREATE: {
+    START: 'CREATE_PATHS_START',
+    SUCCESS: 'CREATE_PATHS_SUCCESS',
+    FAILURE: 'CREATE_PATHS_FAILURE'
+  }
+};
 
 export function pathsList(userId) {
   return (dispatch) => {
-    dispatch(doPathsList());
+    dispatch({ type: PATHS.FETCH.START });
 
-    return fetch(config.paths_api_url + userId)
+    return fetch(`${config.paths_api_url}?userId=${userId}`)
       .then(response => response.json())
-      .then(paths => dispatch(pathsListSuccess(paths)))
-      .catch(errors => dispatch(pathsListFailure(errors)));
+      .then(paths => dispatch({ type: PATHS.FETCH.SUCCESS, paths }))
+      .catch(errors => dispatch({ type: PATHS.FETCH.FAILURE, errors }));
+  };
+}
+
+export function pathsCreate(pathOwnerId) {
+  return (dispatch) => {
+    dispatch({ type: PATHS.CREATE.START });
+
+    return fetch(config.paths_api_url,
+      {
+        method: 'post',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: pathOwnerId })
+      })
+      .then(response => response.json())
+      .then(paths => dispatch({ type: PATHS.CREATE.SUCCESS, paths }))
+      .catch(errors => dispatch({ type: PATHS.CREATE.FAILURE, errors }));
   };
 }
