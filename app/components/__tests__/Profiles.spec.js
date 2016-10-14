@@ -11,16 +11,24 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 describe('Profiles List', () => {
   let component;
   const profiles = generate('profile', 15);
+  const skills = generate('skill', 5);
   const mockedProfiles = { list: keyBy(profiles, 'username') };
+  const mockedSkills = { list: keyBy(skills, 'name') };
   let mockedActions;
   let profileListSpy;
+  let skillListSpy;
+  let clearSkillSpy;
   let routerSpy;
 
   beforeEach(() => {
     profileListSpy = sinon.spy();
+    skillListSpy = sinon.spy();
+    clearSkillSpy = sinon.spy();
     routerSpy = sinon.spy();
     mockedActions = {
       profileList: profileListSpy,
+      skillList: skillListSpy,
+      clearSkill: clearSkillSpy,
     };
     const router = {
       push: routerSpy,
@@ -35,6 +43,7 @@ describe('Profiles List', () => {
     component = mount(
       <Profiles
         profiles={mockedProfiles}
+        skills={mockedSkills}
         actions={mockedActions}
         router={router}
       />,
@@ -53,7 +62,11 @@ describe('Profiles List', () => {
     expect(listItems.length).to.equal(profiles.length);
   });
 
-  it('should fetch the profiles lists when component is mounted', () => {
-    expect(profileListSpy.callCount).to.equal(1);
+  it('should fetch the profiles lists if state is empty', () => {
+    if (mockedProfiles.length === 0) {
+      expect(profileListSpy.callCount).to.equal(1);
+    } else {
+      expect(profileListSpy.callCount).to.equal(0);
+    }
   });
 });
