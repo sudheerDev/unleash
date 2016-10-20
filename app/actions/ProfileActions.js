@@ -9,6 +9,7 @@ export const PROFILE_LIST_FAILURE = 'PROFILE_LIST_FAILURE';
 export const PROFILE_LIST_BY_SKILL_START = 'PROFILE_LIST_BY_SKILL';
 export const PROFILE_LIST_BY_SKILL_SUCCESS = 'PROFILE_LIST_BY_SKILL_SUCCESS';
 export const PROFILE_LIST_BY_SKILL_FAILURE = 'PROFILE_LIST_BY_SKILL_FAILURE';
+export const PROFILE_LIST_BY_SKILL_CLEAR = 'PROFILE_LIST_BY_SKILL_CLEAR';
 
 function fetchProfileStart() {
   return { type: FETCH_PROFILE_START };
@@ -69,13 +70,19 @@ export function profileList() {
   };
 }
 
-export function profileListBySkill(slug) {
+export function profileListBySkill(slug, calledBy) {
   return (dispatch) => {
     dispatch(profileListBySkillStart());
 
     return fetch(`${config.profiles_api_url}?skillId=${slug}`)
       .then(response => response.json())
-      .then(profilesBySkill => dispatch(profileListBySkillSuccess(profilesBySkill)))
+      .then(profilesBySkill => {
+        dispatch(profileListBySkillSuccess({ ...profilesBySkill, calledBy }));
+      })
       .catch(errors => dispatch(profileListBySkillFailure(errors)));
   };
+}
+
+export function clearSkill() {
+  return (dispatch) => dispatch({ type: PROFILE_LIST_BY_SKILL_CLEAR });
 }

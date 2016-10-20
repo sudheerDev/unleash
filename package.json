@@ -20,7 +20,10 @@
     "url": "https://github.com/x-team/unleash/issues"
   },
   "prepush": {
-    "run": ["test", "test:lint"],
+    "run": [
+      "test",
+      "test:lint"
+    ],
     "silent": true
   },
   "nyc": {
@@ -41,6 +44,7 @@
     "material-ui": "^0.15.2",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "react-flip-move": "^2.6.0",
     "react-redux": "^4.4.5",
     "react-redux-toastr": "^3.8.4",
     "react-router": "^2.6.0",

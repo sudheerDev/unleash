@@ -1,11 +1,13 @@
 import {
   PROFILE_LIST_BY_SKILL_START,
   PROFILE_LIST_BY_SKILL_SUCCESS,
-  PROFILE_LIST_BY_SKILL_FAILURE
+  PROFILE_LIST_BY_SKILL_FAILURE,
+  PROFILE_LIST_BY_SKILL_CLEAR,
 } from '../actions/ProfileActions';
 
 const initialState = {
   profiles: null,
+  calledBy: null,
   isLoading: false,
 };
 
@@ -15,18 +17,28 @@ function skillReducer(state = initialState, action) {
       return {
         ...state,
         profiles: null,
+        calledBy: null,
         isLoading: true,
       };
     case PROFILE_LIST_BY_SKILL_SUCCESS:
       return {
         ...state,
         profiles: action.skill.Count > 0 ? action.skill.Items.map((item) => item.userId) : [],
+        calledBy: action.skill.calledBy,
         isLoading: false,
       };
     case PROFILE_LIST_BY_SKILL_FAILURE:
       return {
         ...state,
         profiles: null,
+        calledBy: action.skill.calledBy,
+        isLoading: false,
+      };
+    case PROFILE_LIST_BY_SKILL_CLEAR:
+      return {
+        ...state,
+        profiles: null,
+        calledBy: null,
         isLoading: false,
       };
     default:
