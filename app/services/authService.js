@@ -50,11 +50,6 @@ class AuthService {
   }
 
   registerTheUser(userProviderData) {
-    const isXTeamUser = authHelper.isFromXteam(userProviderData.email);
-    if (!isXTeamUser) {
-      toastr.error('', 'Try using an X-Team email address. Not registered.');
-      return AuthService.userLogout();
-    }
     const newUser = authHelper.setUpUnleashUser(userProviderData);
     const parameters = fetchHelper.postOptions(newUser);
     return fetch(config.profiles_api_url, parameters).then(response => response.json()).then(() => {

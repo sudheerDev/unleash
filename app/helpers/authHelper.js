@@ -1,10 +1,5 @@
 import _ from 'lodash';
 
-const isFromXteam = email => {
-  const domain = '@x-team.com';
-  return email.indexOf(domain) !== -1;
-};
-
 const parseEmail = email => email.match(/^([^@]*)@/)[1];
 
 const setUpUnleashUser = userProviderData => ({
@@ -19,7 +14,6 @@ const setUpUnleashUser = userProviderData => ({
 });
 
 export default {
-  isFromXteam,
   parseEmail,
   setUpUnleashUser
 };
