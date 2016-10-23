@@ -3,12 +3,6 @@ import { expect } from 'chai';
 import authHelper from '../authHelper';
 
 describe('Auth Helper', () => {
-  it('should check if email is a valid X-Team email', () => {
-    expect(authHelper.isFromXteam('unleash@x-team.com')).to.be.true;
-    expect(authHelper.isFromXteam('unleash@gmail.com')).to.be.false;
-    expect(authHelper.isFromXteam('unstoppable@x-team.com')).to.be.true;
-    expect(authHelper.isFromXteam('unstoppable@yahoo.com')).to.be.false;
-  });
 
   it('should parse the email to get the username', () => {
     expect(authHelper.parseEmail('unleash@x-team.com')).to.equal('unleash');
