@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GoalCard from './GoalCard';
+import PathHeader from './PathHeader';
 import * as _ from 'lodash';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -23,13 +24,10 @@ class Paths extends Component {
   }
 
   renderPath(path) {
+    const { actions } = this.props;
     return (
       <div key={path.id}>
-        <div className="pathHeader" style={styles.pathHeader}>
-          <div style={styles.divider}></div>
-          <div><i className="icon-map" /> {path.name || 'Empty Path'}</div>
-          <div style={styles.divider}></div>
-        </div>
+        <PathHeader path={path} actions={actions} />
         <div style={styles.pathsWrapper}>
           {this.renderGoals(path.goals)}
         </div>
@@ -71,27 +69,6 @@ styles = {
     margin: 'auto',
     width: '90%',
     maxWidth: '1150px',
-  },
-  pathHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    maxWidth: '1150px',
-    margin: '40px auto 0',
-    padding: '0 40px',
-    textAlign: 'center',
-    fontFamily: 'Inconsolata, cursive',
-    fontWeight: 'lighter',
-    fontSize: '26px',
-    textTransform: 'capitalize',
-    color: '#969696',
-  },
-  divider: {
-    flexGrow: 1,
-    backgroundColor: '#ebebeb',
-    height: '1px',
-    alignSelf: 'center',
-    margin: '0 20px',
   },
   addPathButton: {
     display: 'flex',
