@@ -5,6 +5,14 @@
  */
 
 import { PATHS } from '../actions/PathsActions';
+import _ from 'lodash';
+
+function updatePath(paths, updatedPath) {
+  return _.map(paths, (path) => {
+    const shouldUpdate = path.id === updatedPath.id;
+    return shouldUpdate ? Object.assign(path, updatedPath) : path;
+  });
+}
 
 function pathsReducer(paths = [], action) {
   Object.freeze(paths);
@@ -17,6 +25,10 @@ function pathsReducer(paths = [], action) {
     case PATHS.CREATE.SUCCESS:
       return action.paths;
     case PATHS.CREATE.FAILURE:
+      return paths;
+    case PATHS.UPDATE.SUCCESS:
+      return updatePath(paths, action.paths);
+    case PATHS.UPDATE.FAILURE:
       return paths;
     default:
       return paths;

@@ -16,6 +16,11 @@ export const PATHS = {
     START: 'CREATE_PATHS_START',
     SUCCESS: 'CREATE_PATHS_SUCCESS',
     FAILURE: 'CREATE_PATHS_FAILURE'
+  },
+  UPDATE: {
+    START: 'UPDATE_PATHS_START',
+    SUCCESS: 'UPDATE_PATHS_SUCCESS',
+    FAILURE: 'UPDATE_PATHS_FAILURE'
   }
 };
 
@@ -46,5 +51,24 @@ export function pathsCreate(pathOwnerId) {
       .then(response => response.json())
       .then(paths => dispatch({ type: PATHS.CREATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.CREATE.FAILURE, errors }));
+  };
+}
+
+export function pathsRename(pathId, newName) {
+  return (dispatch) => {
+    dispatch({ type: PATHS.UPDATE.START });
+
+    return fetch(`${config.paths_api_url}/${pathId}`,
+      {
+        method: 'put',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: newName }),
+      })
+      .then(response => response.json())
+      .then(paths => dispatch({ type: PATHS.UPDATE.SUCCESS, paths }))
+      .catch(errors => dispatch({ type: PATHS.UPDATE.FAILURE, errors }));
   };
 }
