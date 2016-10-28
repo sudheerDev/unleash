@@ -5,7 +5,7 @@ import PathContainer from '../containers/PathContainer';
 import SkillsContainer from '../containers/SkillsContainer';
 import SkillContainer from '../containers/SkillContainer';
 import GoalsContainer from '../containers/GoalsContainer';
-import CurratedPathsContainer from '../containers/CurratedPathsContainer';
+import CuratedPathsContainer from '../containers/CuratedPathsContainer';
 import { Route } from 'react-router';
 
 export default (
@@ -15,6 +15,6 @@ export default (
     <Route path="/skills" component={SkillsContainer} />
     <Route path="/skills/:slug" component={SkillContainer} />
     <Route path="/goals" component={GoalsContainer} />
-    <Route path="/currated-paths" component={CurratedPathsContainer} />
+    <Route path="/curated-paths" component={CuratedPathsContainer} />
   </Route>
 );

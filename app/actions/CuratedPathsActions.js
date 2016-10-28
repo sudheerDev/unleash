@@ -1,6 +1,6 @@
-export const CURRATED_PATHS = {
+export const CURATED_PATHS = {
   FETCH: {
-    SUCCESS: 'FETCH_GOALS_SUCCESS'
+    SUCCESS: 'FETCH_CURATED_SUCCESS'
   }
 };
 
@@ -10,6 +10,6 @@ export const paths = [
   { id: 3, name: 'Game development for beginners', author: 'Jacek Lawniczak' }
 ];
 
-export function fetchCurratedPaths() {
-  return (dispatch) => dispatch({ type: CURRATED_PATHS.FETCH.SUCCESS, paths });
+export function fetchCuratedPaths() {
+  return (dispatch) => dispatch({ type: CURATED_PATHS.FETCH.SUCCESS, paths });
 }

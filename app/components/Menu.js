@@ -82,10 +82,10 @@ class Menu extends Component {
           </MenuItem>
           <MenuItem
             leftIcon={<ActionReceipt {...iconProps} />}
-            onTouchTap={() => this.handleMenuClick('/currated-paths')}
+            onTouchTap={() => this.handleMenuClick('/curated-paths')}
             style={styles.menuItem}
           >
-            Currated Paths
+            Curated Paths
           </MenuItem>
           <MenuItem
             leftIcon={<KeyIcon {...iconProps} />}
