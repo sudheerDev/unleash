@@ -1,22 +1,22 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import * as CurratedPathsActions from '../actions/CurratedPathsActions';
-import CurratedPaths from '../components/CurratedPaths';
+import * as CuratedPathsActions from '../actions/CuratedPathsActions';
+import CuratedPaths from '../components/CuratedPaths';
 
 function mapStateToProps(state) {
   return {
-    curratedPaths: state.curratedPaths,
+    curatedPaths: state.curatedPaths,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(CurratedPathsActions, dispatch),
+    actions: bindActionCreators(CuratedPathsActions, dispatch),
   };
 }
 
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(CurratedPaths));
+)(CuratedPaths));
