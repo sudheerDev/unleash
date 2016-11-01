@@ -45,7 +45,7 @@ describe('Goals List', () => {
   });
 
   it('should render the list of goals', () => {
-    const listItems = component.find('ListItem');
+    const listItems = component.find('GoalCard');
     expect(listItems.length).to.equal(goals.length);
   });
 
