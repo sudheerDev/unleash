@@ -21,6 +21,12 @@ angular.module('unleashApp')
               user: userName,
               message: userName + ': [' + card.name + '][lvl: ' + card.level + '] ' + card.description
             }
+          },
+          {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
           }
         ).then(function() {
           defer.resolve();
