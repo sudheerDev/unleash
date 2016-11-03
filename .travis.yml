@@ -17,6 +17,7 @@ before_deploy:
   - if [ $TRAVIS_TAG ]; then export GOALS_URL='http://goals.unleash.x-team.com/api/v1/goals'; fi
   - if [ $TRAVIS_TAG ]; then export PATHS_URL='http://paths.unleash.x-team.com/api/v1/paths'; fi
   - if [ $TRAVIS_TAG ]; then export MIXPANEL_ANALYTICS_ENABLED='true'; fi
+  - if [ $TRAVIS_TAG ]; then export ZAPIER_WEBHOOK_URL='https://hooks.zapier.com/hooks/catch/576991/tyby3q/'; fi
   - grunt build
 deploy:
   - provider: script

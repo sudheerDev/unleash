@@ -7,7 +7,7 @@
  * # Renders the button for toggling achieved state in the card
  */
 angular.module('unleashApp')
-  .directive('unleashAchieve', function (cardsService, slackService) {
+  .directive('unleashAchieve', function (cardsService, slackService, zapierService) {
     return {
       link: function postLink(scope, element) {
         scope.slackNotification = false;
@@ -30,14 +30,17 @@ angular.module('unleashApp')
         $button.on('click', function() {
           cardsService.toggleAchieved(scope.$parent.pathId, scope.$parent.card)
             .then(function() {
-              if (scope.$parent.card.achieved && scope.slackNotification) {
-                slackService.notifyAchieved({
-                  cardOwner: scope.$parent.cardOwner,
-                  currentUser: scope.$parent.currentUser,
-                  card: scope.$parent.card,
-                  pathId: scope.$parent.pathId,
-                  additionalMessage: scope.additionalMessage
-                });
+              if (scope.$parent.card.achieved) {
+                if (scope.slackNotification) {
+                  slackService.notifyAchieved({
+                    cardOwner: scope.$parent.cardOwner,
+                    currentUser: scope.$parent.currentUser,
+                    card: scope.$parent.card,
+                    pathId: scope.$parent.pathId,
+                    additionalMessage: scope.additionalMessage
+                  });
+                }
+                zapierService.postZapierNotification(scope.$parent.card, scope.$parent.cardOwner.fullName);
               }
             });
         });

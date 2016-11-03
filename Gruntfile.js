@@ -30,7 +30,8 @@ module.exports = function (grunt) {
     profiles: process.env.PROFILES_URL,
     buildNumber: process.env.TRAVIS_BUILD_NUMBER,
     mixpanelAnalyticsEnabled: process.env.MIXPANEL_ANALYTICS_ENABLED,
-    defaultPictureUrl: process.env.DEFAULT_PICTURE_URL
+    defaultPictureUrl: process.env.DEFAULT_PICTURE_URL,
+    zapier: process.env.ZAPIER_WEBHOOK_URL
   };
 
   // Define the configuration for all the tasks
@@ -82,6 +83,10 @@ module.exports = function (grunt) {
             {
               match: 'DEFAULT_PICTURE_URL',
               replacement: '<%= unleash.defaultPictureUrl %>'
+            },
+            {
+              match: 'ZAPIER_WEBHOOK_URL',
+              replacement: '<%= unleash.zapier %>'
             }
           ]
         },
