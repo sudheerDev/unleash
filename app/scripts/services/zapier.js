@@ -8,7 +8,7 @@
  * Methods related to Zapier
  */
 angular.module('unleashApp')
-  .factory('zapierService', function($http, $q, ZAPIER_WEBHOOK_URL) {
+  .factory('zapierService', function($http, $q, $filter, ZAPIER_WEBHOOK_URL) {
 
     return {
       postZapierNotification: function(card, userName) {
@@ -19,7 +19,8 @@ angular.module('unleashApp')
           {
             achievement: {
               user: userName,
-              message: userName + ': [' + card.name + '][lvl: ' + card.level + '] ' + card.description
+              message: userName + ': [' + card.name + '][lvl: ' + card.level + '] ' + card.description,
+              date: $filter('date')(new Date(),'MMMM yyyy')
             }
           },
           {
