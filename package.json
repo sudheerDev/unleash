@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node devServer.js",
-    "test": "mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js",
-    "test:tdd": "mocha -w --require app/testUtils/setup.js --recursive app/**/*.spec.js",
-    "test:lint": "eslint ./app",
-    "coverage": "nyc mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js"
+    "test": "cross-env NODE_ENV=test mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js",
+    "test:tdd": "cross-env NODE_ENV=test mocha -w --require app/testUtils/setup.js --recursive app/**/*.spec.js",
+    "test:lint": "cross-env NODE_ENV=test eslint ./app",
+    "coverage": "cross-env NODE_ENV=test nyc mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/x-team/unleash#readme",
   "dependencies": {
+    "cross-env": "^3.1.3",
     "immutable": "^3.8.1",
     "lodash": "^4.15.0",
     "material-ui": "^0.15.2",
