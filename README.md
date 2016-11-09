@@ -17,10 +17,10 @@ You need to install:
 
 ### Install dependencies
 
-In order to install node & bower dependencies run the command (it might take a while but it's one-time only):
+In order to install node dependencies run the command (it might take a while but it's one-time only):
 
 ```shell
-docker-compose run web npm install
+docker-compose run web yarn
 ```
 
 ### Config
