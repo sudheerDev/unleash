@@ -4,12 +4,16 @@ import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 import toggleHOC from '../hocs/toggleHOC';
 import MilestoneImg from '../assets/milestone.png';
+import Loading from './Loading';
 
 const DIALOG_TOGGLE = 'dialog';
 let styles = {};
 
 const propTypes = {
+  loading: React.PropTypes.bool,
+  actions: React.PropTypes.object,
   goal: React.PropTypes.object.isRequired,
+  path: React.PropTypes.object,
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
@@ -29,20 +33,37 @@ class GoalCard extends Component {
     return Math.round(Math.max(0, (due - now) / (24 * 3600 * 1000)));
   };
 
+  toggleAchievement() {
+    const { goal, path } = this.props;
+    const achieved = !goal.achieved;
+    this.props.actions.pathsUpdateGoal(path, goal, { achieved });
+    this.props.toggleOff(DIALOG_TOGGLE);
+  }
+
   /**
    * Render dialog with description
    *
    * @returns {Object} dialog element
    */
   renderDialog() {
-    const { goal } = this.props;
+    const { goal, path } = this.props;
     const actions = [
       <FlatButton
         label="Close"
-        primary
+        secondary
         onTouchTap={() => this.props.toggleOff(DIALOG_TOGGLE)}
       />
     ];
+
+    if (path && actions) {
+      actions.unshift(
+        <FlatButton
+          label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
+          primary
+          onTouchTap={() => this.toggleAchievement()}
+        />
+      );
+    }
 
     return (
       <Dialog
@@ -57,12 +78,20 @@ class GoalCard extends Component {
   }
 
   render() {
-    const { goal } = this.props;
+    const { goal, loading } = this.props;
     const achieved = goal.achieved;
     const dueDays = goal.dueDate ? this.daysLeft(goal.dueDate) : 0;
     const goalStyle = Object.assign({}, styles.goal, achieved && styles.achieved);
     // @TODO: (Kelvin De Moya) - Just for testing. Update once goal type is implemented in the api.
     const isMilestone = dueDays >= 10 || goal.level === 4;
+
+    if (loading) {
+      return (
+        <Paper style={goalStyle} zDepth={2}>
+          <Loading />
+        </Paper>
+      );
+    }
 
     return (
       <Paper style={goalStyle} zDepth={2} onTouchTap={() => this.props.toggleOn(DIALOG_TOGGLE)} >
