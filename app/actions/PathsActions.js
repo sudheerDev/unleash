@@ -21,6 +21,11 @@ export const PATHS = {
     START: 'UPDATE_PATHS_START',
     SUCCESS: 'UPDATE_PATHS_SUCCESS',
     FAILURE: 'UPDATE_PATHS_FAILURE'
+  },
+  UPDATE_GOAL: {
+    START: 'UPDATE_PATHS_GOAL_START',
+    SUCCESS: 'UPDATE_PATHS_GOAL_SUCCESS',
+    FAILURE: 'UPDATE_PATHS_GOAL_FAILURE'
   }
 };
 
@@ -70,5 +75,26 @@ export function pathsRename(pathId, newName) {
       .then(response => response.json())
       .then(paths => dispatch({ type: PATHS.UPDATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.UPDATE.FAILURE, errors }));
+  };
+}
+
+export function pathsUpdateGoal(path, goal, data) {
+  const inflatedGoal = { ...goal, path };
+
+  return (dispatch) => {
+    dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
+
+    return fetch(`${config.paths_api_url}/${path.id}/goals/${goal.id}`,
+      {
+        method: 'put',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(paths => dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal }))
+      .catch(errors => dispatch({ type: PATHS.UPDATE_GOAL.FAILURE, errors, goal: inflatedGoal }));
   };
 }

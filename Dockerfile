@@ -1,6 +1,6 @@
 FROM node:6.5
 
-RUN npm install --silent -g babel-cli webpack
+RUN npm install --silent -g babel-cli webpack yarn
 
 # Fix bug https://github.com/npm/npm/issues/9863
 RUN cd $(npm root -g)/npm \
@@ -11,6 +11,6 @@ ADD . /var/www/unleash
 
 WORKDIR /var/www/unleash
 
-RUN npm install --silent
+RUN yarn
 
 CMD npm start
