@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node devServer.js",
-    "test": "mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js",
-    "test:tdd": "mocha -w --require app/testUtils/setup.js --recursive app/**/*.spec.js",
-    "test:lint": "eslint ./app",
-    "coverage": "nyc mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js"
+    "test": "cross-env NODE_ENV=test mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js",
+    "test:tdd": "cross-env NODE_ENV=test mocha -w --require app/testUtils/setup.js --recursive app/**/*.spec.js",
+    "test:lint": "cross-env NODE_ENV=test eslint ./app",
+    "coverage": "cross-env NODE_ENV=test nyc mocha --require app/testUtils/setup.js --recursive app/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/x-team/unleash#readme",
   "dependencies": {
+    "cross-env": "^3.1.3",
     "immutable": "^3.8.1",
     "lodash": "^4.15.0",
     "material-ui": "^0.15.2",
@@ -57,6 +58,7 @@
     "babel-core": "^6.10.4",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",
+    "babel-plugin-react-transform": "^2.0.2",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
@@ -87,11 +89,15 @@
     "nyc": "^8.1.0",
     "pre-push": "^0.1.1",
     "react-addons-test-utils": "^15.2.1",
+    "react-transform-catch-errors": "^1.0.2",
+    "react-transform-hmr": "^1.0.4",
+    "redbox-react": "^1.3.2",
     "redux-mock-store": "^1.1.4",
     "sinon": "^1.17.5",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
-    "webpack-dev-middleware": "^1.6.1"
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-hot-middleware": "^2.13.1"
   }
 }
