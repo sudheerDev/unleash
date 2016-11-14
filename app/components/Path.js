@@ -10,13 +10,11 @@ let styles = {};
 class Paths extends Component {
 
   componentDidMount() {
-    const { actions, params } = this.props;
-    actions.pathsList(params.userId);
   }
 
   handleCreatePath() {
-    const { actions, params } = this.props;
-    actions.pathsCreate(params.userId);
+    const { actions, userId } = this.props;
+    actions.pathsCreate(userId);
   }
 
   renderGoals(path) {
@@ -63,10 +61,8 @@ class Paths extends Component {
 
 Paths.propTypes = {
   actions: React.PropTypes.object.isRequired,
+  userId: React.PropTypes.string.isRequired,
   paths: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
 };
 
 styles = {
