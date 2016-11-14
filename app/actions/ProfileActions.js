@@ -15,8 +15,8 @@ function fetchProfileStart() {
   return { type: FETCH_PROFILE_START };
 }
 
-function fetchProfileSuccess(profile) {
-  return { type: FETCH_PROFILE_SUCCESS, profile };
+function fetchProfileSuccess(fetchedProfile) {
+  return { type: FETCH_PROFILE_SUCCESS, fetchedProfile };
 }
 
 function fetchProfileFailure(error) {
@@ -54,7 +54,7 @@ export function fetchProfile(id) {
 
     return fetch(`${config.profiles_api_url}/${id}`)
       .then(response => response.json())
-      .then(profile => dispatch(fetchProfileSuccess(profile)))
+      .then(fetchedProfile => dispatch(fetchProfileSuccess(fetchedProfile)))
       .catch(error => dispatch(fetchProfileFailure(error)));
   };
 }
