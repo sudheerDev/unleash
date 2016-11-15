@@ -7,7 +7,7 @@ import * as PathsActions from '../PathsActions';
 import nock from 'nock';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import config from '../../config/routes';
+import config from '../../../config';
 
 describe('Path Actions', () => {
 
@@ -23,15 +23,14 @@ describe('Path Actions', () => {
 
     it('should call the dispatcher for pathsList', () => {
       const userId = 150;
-      const hostname = 'http://paths-staging.unleash.x-team.com';
-      const path = `/api/v1/paths?userId=${userId}`;
+      const path = `?userId=${userId}`;
 
-      const httpResponse = generate('path', 15, userId);
-      const requestCall = nock(hostname).get(path).reply(200, httpResponse);
+      const httpResponse = generate('path', 15, 150);
+      const requestCall = nock(config.paths_api_url).get(path).reply(200, httpResponse);
 
       const expectedActions = [
-        {type: 'FETCH_PATHS_START'},
-        {type: 'FETCH_PATHS_SUCCESS', paths: httpResponse }
+        { type: PathsActions.PATHS.FETCH.START },
+        { type: PathsActions.PATHS.FETCH.SUCCESS, paths: httpResponse }
       ];
 
       return dispatch(PathsActions.pathsList(userId)).then(() => {
@@ -42,15 +41,14 @@ describe('Path Actions', () => {
 
     it('should call the dispatcher for pathsCreate', () => {
       const userId = 150;
-      const hostname = 'http://paths-staging.unleash.x-team.com';
-      const path = `/api/v1/paths`;
+      const path = '';
 
       const httpResponse = generate('path', 15, userId);
-      const requestCall = nock(hostname).post(path, {userId: userId}).reply(200, httpResponse);
+      const requestCall = nock(config.paths_api_url).post(path, {userId: userId}).reply(200, httpResponse);
 
       const expectedActions = [
-        {type: 'CREATE_PATHS_START'},
-        {type: 'CREATE_PATHS_SUCCESS', paths: httpResponse }
+        { type: PathsActions.PATHS.CREATE.START },
+        { type: PathsActions.PATHS.CREATE.SUCCESS, paths: httpResponse }
       ];
 
       return dispatch(PathsActions.pathsCreate(userId)).then(() => {

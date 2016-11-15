@@ -1,4 +1,4 @@
-import { SKILL_LIST_START, SKILL_LIST_SUCCESS, SKILL_LIST_FAILURE } from '../actions/SkillActions';
+import { SKILL } from '../actions/SkillActions';
 
 const initialState = {
   list: null,
@@ -8,13 +8,13 @@ const initialState = {
 function skillsReducer(state = initialState, action) {
   const skills = {};
   switch (action.type) {
-    case SKILL_LIST_START:
+    case SKILL.FETCH.START:
       return {
         ...state,
         list: null,
         isLoading: true,
       };
-    case SKILL_LIST_SUCCESS:
+    case SKILL.FETCH.SUCCESS:
       action.skills.forEach((skill) => {
         skills[skill.name] = skill;
       });
@@ -23,7 +23,7 @@ function skillsReducer(state = initialState, action) {
         list: skills,
         isLoading: false,
       };
-    case SKILL_LIST_FAILURE:
+    case SKILL.FETCH.FAILURE:
       return {
         ...state,
         list: null,

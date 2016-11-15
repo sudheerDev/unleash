@@ -1,88 +1,60 @@
 import config from '../../config';
 
-export const FETCH_PROFILE_START = 'FETCH_PROFILE_START';
-export const FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS';
-export const FETCH_PROFILE_FAILURE = 'FETCH_PROFILE_FAILURE';
-export const PROFILE_LIST_START = 'PROFILE_LIST_START';
-export const PROFILE_LIST_SUCCESS = 'PROFILE_LIST_SUCCESS';
-export const PROFILE_LIST_FAILURE = 'PROFILE_LIST_FAILURE';
-export const PROFILE_LIST_BY_SKILL_START = 'PROFILE_LIST_BY_SKILL';
-export const PROFILE_LIST_BY_SKILL_SUCCESS = 'PROFILE_LIST_BY_SKILL_SUCCESS';
-export const PROFILE_LIST_BY_SKILL_FAILURE = 'PROFILE_LIST_BY_SKILL_FAILURE';
-export const PROFILE_LIST_BY_SKILL_CLEAR = 'PROFILE_LIST_BY_SKILL_CLEAR';
-
-function fetchProfileStart() {
-  return { type: FETCH_PROFILE_START };
-}
-
-function fetchProfileSuccess(fetchedProfile) {
-  return { type: FETCH_PROFILE_SUCCESS, fetchedProfile };
-}
-
-function fetchProfileFailure(error) {
-  return { type: FETCH_PROFILE_FAILURE, error };
-}
-
-function profileListStart() {
-  return { type: PROFILE_LIST_START };
-}
-
-export function profileListSuccess(profiles) {
-  return { type: PROFILE_LIST_SUCCESS, profiles };
-}
-
-export function profileListFailure(errors) {
-  return { type: PROFILE_LIST_FAILURE, errors };
-}
-
-function profileListBySkillStart() {
-  return { type: PROFILE_LIST_BY_SKILL_START };
-}
-
-function profileListBySkillSuccess(skill) {
-  return { type: PROFILE_LIST_BY_SKILL_SUCCESS, skill };
-}
-
-function profileListBySkillFailure(error) {
-  return { type: PROFILE_LIST_BY_SKILL_FAILURE, error };
-}
-
+export const PROFILE = {
+  FETCH: {
+    START: 'FETCH_PROFILE_START',
+    SUCCESS: 'FETCH_PROFILE_SUCCESS',
+    FAILURE: 'FETCH_PROFILE_FAILURE',
+  },
+  LIST: {
+    START: 'LIST_PROFILE_START',
+    SUCCESS: 'LIST_PROFILE_SUCCESS',
+    FAILURE: 'LIST_PROFILE_FAILURE',
+  },
+  LIST_BY_SKILL: {
+    START: 'LIST_BY_SKILL_PROFILE_START',
+    SUCCESS: 'LIST_BY_SKILL_PROFILE_SUCCESS',
+    FAILURE: 'LIST_BY_SKILL_PROFILE_FAILURE',
+    CLEAR: 'LIST_BY_SKILL_PROFILE_CLEAR',
+  },
+};
 
 export function fetchProfile(id) {
   return (dispatch) => {
-    dispatch((fetchProfileStart()));
+    dispatch({ type: PROFILE.FETCH.START });
 
     return fetch(`${config.profiles_api_url}/${id}`)
       .then(response => response.json())
-      .then(fetchedProfile => dispatch(fetchProfileSuccess(fetchedProfile)))
-      .catch(error => dispatch(fetchProfileFailure(error)));
+      .then(fetchedProfile => dispatch({ type: PROFILE.FETCH.SUCCESS, fetchedProfile }))
+      .catch(error => dispatch({ type: PROFILE.FETCH.FAILURE, error }));
   };
 }
 
 export function profileList() {
   return (dispatch) => {
-    dispatch(profileListStart());
+    dispatch({ type: PROFILE.LIST.START });
 
     return fetch(config.profiles_api_url)
       .then(response => response.json())
-      .then(profiles => dispatch(profileListSuccess(profiles)))
-      .catch(errors => dispatch(profileListFailure(errors)));
+      .then(profiles => dispatch({ type: PROFILE.LIST.SUCCESS, profiles }))
+      .catch(errors => dispatch({ type: PROFILE.LIST.FAILURE, errors }));
   };
 }
 
 export function profileListBySkill(slug, calledBy) {
   return (dispatch) => {
-    dispatch(profileListBySkillStart());
+    dispatch({ type: PROFILE.LIST_BY_SKILL.START });
 
     return fetch(`${config.profiles_api_url}?skillId=${slug}`)
       .then(response => response.json())
       .then(profilesBySkill => {
-        dispatch(profileListBySkillSuccess({ ...profilesBySkill, calledBy }));
+        const skill = { ...profilesBySkill, calledBy };
+        dispatch({ type: PROFILE.LIST_BY_SKILL.SUCCESS, skill });
       })
-      .catch(errors => dispatch(profileListBySkillFailure(errors)));
+      .catch(errors => dispatch({ type: PROFILE.LIST_BY_SKILL.FAILURE, errors }));
   };
 }
 
 export function clearSkill() {
-  return (dispatch) => dispatch({ type: PROFILE_LIST_BY_SKILL_CLEAR });
+  return (dispatch) => dispatch({ type: PROFILE.LIST_BY_SKILL.CLEAR });
 }

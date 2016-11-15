@@ -1,12 +1,34 @@
-import * as UserConstants from '../actions/user/UserConstants';
-import userReducerFunctions from '../actions/user/UserReducerFunctions';
+import { USER } from '../actions/UserActions';
 
-function userReducer(state = userReducerFunctions.getDefaultState(), action) {
+export const initialState = {
+  isLoggedIn: false,
+  userData: {
+    id: null,
+    fullName: null,
+    isAdmin: false,
+    picture: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+    username: null
+  }
+};
+
+function userReducer(state = initialState, action = {}) {
   switch (action.type) {
-    case UserConstants.USER_LOGIN:
-      return userReducerFunctions.userLogin(state, action);
-    case UserConstants.USER_LOGOUT:
-      return userReducerFunctions.userLogout(state, action);
+    case USER.LOGIN:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          ...action.userData
+        },
+        isLoggedIn: true
+      };
+    case USER.LOGOUT:
+      return {
+        ...initialState
+      };
     default:
       return state;
   }

@@ -7,27 +7,9 @@ import * as SkillActions from '../SkillActions';
 import nock from 'nock';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import config from '../../config/routes';
+import config from '../../../config';
 
 describe('Skill Actions', () => {
-
-  it('should create an action for skillListSuccess', () => {
-    const skills = '/unleash/paths';
-    const expectedAction = {
-      type: SkillActions.SKILL_LIST_SUCCESS,
-      skills
-    };
-    expect(SkillActions.skillListSuccess(skills)).to.deep.equal(expectedAction);
-  });
-
-  it('should create an action for skillListFailure', () => {
-    const errors = 'Oops an error!';
-    const expectedAction = {
-      type: SkillActions.SKILL_LIST_FAILURE,
-      errors
-    };
-    expect(SkillActions.skillListFailure(errors)).to.deep.equal(expectedAction);
-  });
 
   describe('Dispatch Actions', () => {
     const middlewares = [thunk];
@@ -40,15 +22,14 @@ describe('Skill Actions', () => {
     });
 
     it('should call the dispatcher for skillList', () => {
-      const hostname = 'http://skills-staging.unleash.x-team.com';
-      const path = '/api/v1/skills.json';
+      const path = '';
 
       const httpResponse = generate('skill', 15);
-      const requestCall = nock(hostname).get(path).reply(200, httpResponse);
+      const requestCall = nock(config.skills_api_url).get(path).reply(200, httpResponse);
 
       const expectedActions = [
-        {type: 'SKILL_LIST_START'},
-        SkillActions.skillListSuccess(httpResponse)
+        { type: SkillActions.SKILL.FETCH.START },
+        { type: SkillActions.SKILL.FETCH.SUCCESS, skills: httpResponse }
       ];
 
       return dispatch(SkillActions.skillList()).then(() => {
