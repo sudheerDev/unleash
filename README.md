@@ -82,11 +82,11 @@ docker-compose run web bash
 In order to run tests please type:
 
 ```shell
-docker-compose run web npm run test
+docker-compose run web yarn test
 ```
 
 In order to run lint please type:
 
 ```shell
-docker-compose run web npm run test:lint
+docker-compose run web yarn test:lint
 ```

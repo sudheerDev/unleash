@@ -1,28 +1,20 @@
 import config from '../../config';
 
-export const SKILL_LIST_START = 'SKILL_LIST_START';
-export const SKILL_LIST_SUCCESS = 'SKILL_LIST_SUCCESS';
-export const SKILL_LIST_FAILURE = 'SKILL_LIST_FAILURE';
-
-function skillListStart() {
-  return { type: SKILL_LIST_START };
-}
-
-export function skillListSuccess(skills) {
-  return { type: SKILL_LIST_SUCCESS, skills };
-}
-
-export function skillListFailure(errors) {
-  return { type: SKILL_LIST_FAILURE, errors };
-}
+export const SKILL = {
+  FETCH: {
+    START: 'LIST_SKILL_START',
+    SUCCESS: 'LIST_SKILL_SUCCESS',
+    FAILURE: 'LIST_SKILL_FAILURE',
+  }
+};
 
 export function skillList() {
   return (dispatch) => {
-    dispatch(skillListStart());
+    dispatch({ type: SKILL.FETCH.START });
 
     return fetch(config.skills_api_url)
       .then(response => response.json())
-      .then(skills => dispatch(skillListSuccess(skills)))
-      .catch(errors => dispatch(skillListFailure(errors)));
+      .then(skills => dispatch({ type: SKILL.FETCH.SUCCESS, skills }))
+      .catch(errors => dispatch({ type: SKILL.FETCH.FAILURE, errors }));
   };
 }

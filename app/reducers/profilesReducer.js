@@ -1,10 +1,4 @@
-import {
-  PROFILE_LIST_START,
-  PROFILE_LIST_SUCCESS,
-  PROFILE_LIST_FAILURE,
-  FETCH_PROFILE_SUCCESS,
-  FETCH_PROFILE_FAILURE
-} from '../actions/ProfileActions';
+import { PROFILE } from '../actions/ProfileActions';
 
 const initialState = {
   list: null,
@@ -15,14 +9,15 @@ const initialState = {
 function profilesReducer(state = initialState, action) {
   const profiles = {};
   const { fetchedProfile, error = [] } = action;
+
   switch (action.type) {
-    case PROFILE_LIST_START:
+    case PROFILE.LIST.START:
       return {
         ...state,
         list: null,
         isLoading: true,
       };
-    case PROFILE_LIST_SUCCESS:
+    case PROFILE.LIST.SUCCESS:
       if (action.profiles.Count) {
         action.profiles.Items.forEach((profile) => {
           profiles[profile.username] = profile;
@@ -33,15 +28,15 @@ function profilesReducer(state = initialState, action) {
         list: profiles,
         isLoading: false,
       };
-    case PROFILE_LIST_FAILURE:
+    case PROFILE.LIST.FAILURE:
       return {
         ...state,
         list: null,
         isLoading: false,
       };
-    case FETCH_PROFILE_SUCCESS:
+    case PROFILE.FETCH.SUCCESS:
       return { ...state, profile: fetchedProfile.Item };
-    case FETCH_PROFILE_FAILURE:
+    case PROFILE.FETCH.FAILURE:
       return { ...state, error, profile: {} };
 
     default:
