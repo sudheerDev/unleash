@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { get } from 'lodash';
 import Menu from '../components/Menu';
 import AuthService from '../services/authService';
 
 function mapStateToProps(state) {
-  const userId = state.user.getIn(['userData', 'id']);
+  const userId = get(state, 'user.userData.id');
   return {
     userId,
   };

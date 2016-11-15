@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { toastr } from 'react-redux-toastr';
 import config from '../../config';
-import UserActionCreator from '../actions/user/UserActionCreators';
+import * as UserActions from '../actions/UserActions';
 import authHelper from '../helpers/authHelper';
 import fetchHelper from '../helpers/fetchHelper';
 
@@ -28,14 +28,14 @@ class AuthService {
       const userId = userProviderData.uid;
       this.getUserById(userId).then(unleashUser => {
         if (unleashUser) {
-          this.dispatch(UserActionCreator.userLogin(unleashUser));
+          this.dispatch(UserActions.userLogin(unleashUser));
           toastr.success('', `Welcome ${unleashUser.fullName}, unleash your potential today!`);
         } else {
           this.registerTheUser(userProviderData);
         }
       });
     } else {
-      this.dispatch(UserActionCreator.userLogout());
+      this.dispatch(UserActions.userLogout());
     }
   }
 
@@ -55,9 +55,9 @@ class AuthService {
     return fetch(config.profiles_api_url, parameters).then(response => response.json()).then(() => {
       this.getUserById(newUser.id).then(unleashUser => {
         if (unleashUser) {
-          this.dispatch(UserActionCreator.userLogin(unleashUser));
+          this.dispatch(UserActions.userLogin(unleashUser));
         } else {
-          this.dispatch(UserActionCreator.userLogout());
+          this.dispatch(UserActions.userLogout());
         }
       });
     })

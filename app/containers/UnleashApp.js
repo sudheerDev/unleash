@@ -3,7 +3,7 @@ import UnleashApp from '../components/UnleashApp';
 import AuthService from '../services/authService';
 
 function mapStateToProps(state) {
-  const isLoggedIn = state.user.get('isLoggedIn');
+  const isLoggedIn = state.user.isLoggedIn;
   return {
     isLoggedIn
   };
