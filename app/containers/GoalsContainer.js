@@ -7,18 +7,21 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import * as GoalsActions from '../actions/GoalsActions';
+import GoalsActionCreators from '../actions/goals/GoalsActionCreators';
 import Goals from '../components/Goals';
 
 function mapStateToProps(state) {
+  const list = state.goals.get('list').toJS();
+  const addModalParameters = state.goals.get('addGoalsModal').toJS();
   return {
-    goals: state.goals,
+    list,
+    addModalParameters,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(GoalsActions, dispatch),
+    actions: bindActionCreators(GoalsActionCreators, dispatch),
   };
 }
 

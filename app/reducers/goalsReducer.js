@@ -1,28 +1,27 @@
-import { GOALS } from '../actions/GoalsActions';
+import { GOALS } from '../actions/goals/GoalsConstants';
+import goalsReducerFunctions from '../actions/goals/GoalsReducerFunctions';
 
-const initialState = {
-  list: [],
-  isLoading: false
-};
-
-function goalsReducer(state = initialState, action) {
+function goalsReducer(state = goalsReducerFunctions.getDefaultState(), action) {
   switch (action.type) {
+
+    // Fetch actions
     case GOALS.FETCH.START:
-      return {
-        ...state,
-        isLoading: true
-      };
+      return goalsReducerFunctions.fetchStart(state, action);
     case GOALS.FETCH.SUCCESS:
-      return {
-        ...state,
-        list: action.goals,
-        isLoading: false
-      };
+      return goalsReducerFunctions.fetchSuccess(state, action);
     case GOALS.FETCH.FAILURE:
-      return {
-        ...state,
-        isLoading: false
-      };
+      return goalsReducerFunctions.fetchFailure(state, action);
+
+    // Add Goals actions
+    case GOALS.ADD.SHOW_MODAL:
+      return goalsReducerFunctions.showAddModal(state, action);
+    case GOALS.ADD.SHOW_SPINNER:
+      return goalsReducerFunctions.showAddGoalsSpinner(state, action);
+    case GOALS.ADD.UPDATE_FIELD:
+      return goalsReducerFunctions.updateAddGoalsField(state, action);
+    case GOALS.ADD.RESET:
+      return goalsReducerFunctions.resetGoalModal(state, action);
+
     default:
       return state;
   }
