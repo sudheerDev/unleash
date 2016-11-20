@@ -11,10 +11,25 @@ import ContentCreate from 'material-ui/svg-icons/content/create';
 import SocialSchool from 'material-ui/svg-icons/social/school';
 import NotificationOnDemandVideo from 'material-ui/svg-icons/notification/ondemand-video';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import toggleHOC from '../hocs/toggleHOC';
 
+const DIALOG_TOGGLE = 'addResource';
 let styles = {};
 
 class Skill extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      resource_url: '',
+      resource_description: ''
+    };
+  }
+
   componentDidMount() {
     this.props.actions.skillList();
     this.props.actions.profileList();
@@ -27,6 +42,82 @@ class Skill extends Component {
 
   getProfilesInIds(profiles = {}, ids = []) {
     return values(profiles).filter((profile) => ids.indexOf(profile.id) > -1);
+  }
+
+  /**
+   * Handle TextField change.
+   * @param {Object} event - TextField event.
+   */
+  handleResourceUrlChange = (event) => {
+    this.setState({
+      resource_url: event.target.value,
+    });
+  }
+
+  /**
+   * Handle TextField change.
+   * @param {Object} event - TextField event.
+   */
+  handleResourceDescriptionChange = (event) => {
+    this.setState({
+      resource_description: event.target.value,
+    });
+  }
+
+  handleAddResource() {
+    this.props.toggleOn(DIALOG_TOGGLE);
+  }
+
+  addResource(skillSlug) {
+    const { actions, toggleOff } = this.props;
+    if (this.state.resource_url !== '' && this.state.resource_description !== '') {
+      actions.resourceAdd(skillSlug, {
+        url: this.state.resource_url, description: this.state.resource_description
+      });
+      toggleOff(DIALOG_TOGGLE);
+    }
+  }
+
+  /**
+   * Render dialog with description.
+   * @returns {Object} dialog element
+   */
+  renderDialog(skillSlug) {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        onTouchTap={() => this.props.toggleOff(DIALOG_TOGGLE)}
+      />,
+      <FlatButton
+        label="Add Resource"
+        primary
+        onTouchTap={() => this.addResource(skillSlug)}
+      />
+    ];
+
+    return (
+      <Dialog
+        actions={actions}
+        title="Add Resource"
+        open={this.props.getToggleState(DIALOG_TOGGLE)}
+        onRequestClose={() => this.props.toggleOff(DIALOG_TOGGLE)}
+      >
+        <TextField
+          id="resource-url"
+          defaultValue={this.state.resource_url}
+          hintText="Resource URL"
+          onChange={this.handleResourceUrlChange}
+          fullWidth
+        />
+        <TextField
+          id="resource-description"
+          defaultValue={this.state.resource_description}
+          hintText="Description"
+          onChange={this.handleResourceDescriptionChange}
+          fullWidth
+        />
+      </Dialog>
+    );
   }
 
   renderProfiles(profiles) {
@@ -66,6 +157,13 @@ class Skill extends Component {
 
     return (
       <div style={styles.resources}>
+        <RaisedButton
+          label="Add Resource"
+          backgroundColor="#8FD694"
+          labelColor="#FFFFFF"
+          onTouchTap={() => this.handleAddResource()}
+          style={styles.addResourceButton}
+        />
         <List>
         {map(resources, (resource) =>
           <ListItem
@@ -112,6 +210,7 @@ class Skill extends Component {
           <div style={styles.divider}></div>
           <div>{skill.name}</div>
           <div style={styles.divider}></div>
+          {this.renderDialog(skill.slug)}
         </div>
         <Tabs>
           <Tab label="Profiles" style={styles.tab}>
@@ -133,6 +232,9 @@ Skill.propTypes = {
   profilesBySkill: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
   router: React.PropTypes.object.isRequired,
+  getToggleState: React.PropTypes.func.isRequired,
+  toggleOn: React.PropTypes.func.isRequired,
+  toggleOff: React.PropTypes.func.isRequired,
 };
 
 styles = {
@@ -173,7 +275,15 @@ styles = {
   tab: {
     backgroundColor: '#fff',
     color: '#757575'
+  },
+  addResourceButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    margin: '20px auto 0 auto',
+    width: '100%',
   }
 };
 
-export default Skill;
+export default toggleHOC(Skill);

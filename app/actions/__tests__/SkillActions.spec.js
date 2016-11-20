@@ -25,7 +25,7 @@ describe('Skill Actions', () => {
       const path = '';
 
       const httpResponse = generate('skill', 15);
-      const requestCall = nock(config.skills_api_url).get(path).reply(200, httpResponse);
+      const requestCall = nock(`${config.skills_api_url}.json`).get(path).reply(200, httpResponse);
 
       const expectedActions = [
         { type: SkillActions.SKILL.FETCH.START },
