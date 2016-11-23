@@ -12,7 +12,8 @@ import Goals from '../components/Goals';
 
 function mapStateToProps(state) {
   return {
-    goals: state.goals,
+    list: state.goals.list,
+    addModalParameters: state.goals.addGoalsModal,
   };
 }
 
