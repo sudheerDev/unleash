@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import GoalCard from './GoalCard';
 import _ from 'lodash';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import AddGoalsModal from './AddGoalsModal';
 
 let styles = {};
 
 class Goals extends Component {
   componentDidMount() {
     this.props.actions.fetchGoals();
+  }
+
+  getTags() {
+    const { list } = this.props;
+    const goalsWithTags = list.filter(goal => (goal.tags ? goal.tags.length > 0 : false));
+    const tags = _.flatten(goalsWithTags.map(goal => goal.tags));
+    return tags;
   }
 
   renderGoals(goals) {
@@ -16,10 +26,20 @@ class Goals extends Component {
   }
 
   render() {
-    const { goals: { list } } = this.props;
+    const { list, actions, addModalParameters } = this.props;
+    const tags = this.getTags();
     return (
-      <div style={styles.goalsWrapper}>
-        {this.renderGoals(list)}
+      <div>
+        <div style={styles.goalsWrapper}>
+          {this.renderGoals(list)}
+        </div>
+        <FloatingActionButton
+          style={styles.addButton}
+          onClick={() => actions.showAddGoalsModal(true)}
+        >
+          <ContentAdd />
+        </FloatingActionButton>
+        <AddGoalsModal parameters={addModalParameters} actions={actions} tagsOptions={tags} />
       </div>
     );
   }
@@ -27,7 +47,8 @@ class Goals extends Component {
 
 Goals.propTypes = {
   actions: React.PropTypes.object.isRequired,
-  goals: React.PropTypes.object.isRequired,
+  list: React.PropTypes.array.isRequired,
+  addModalParameters: React.PropTypes.object.isRequired,
 };
 
 styles = {
@@ -39,6 +60,11 @@ styles = {
     margin: 'auto',
     width: '90%',
     maxWidth: '1150px',
+  },
+  addButton: {
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
   },
 };
 
