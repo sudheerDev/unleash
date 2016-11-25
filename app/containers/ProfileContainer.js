@@ -15,7 +15,8 @@ function mapStateToProps(state) {
   return {
     userId: state.userId,
     paths: state.paths,
-    profiles: state.profiles
+    profiles: state.profiles,
+    loggedInUser: state.user.userData
   };
 }
 

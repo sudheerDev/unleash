@@ -15,7 +15,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { actions, params, paths, profiles } = this.props;
+    const { actions, params, paths, profiles, loggedInUser } = this.props;
     const userId = params.userId;
     const skills = [
       { name: 'mongoDB', id: 'c390be96-168b-4f42-a0cd-933fbc46e249' },
@@ -33,7 +33,7 @@ class Profile extends Component {
             </Paper>
           ))}
         </div>
-        <Path userId={userId} actions={actions} paths={paths} />
+        <Path userId={userId} actions={actions} paths={paths} loggedInUser={loggedInUser} />
       </div>
     );
   }
@@ -45,7 +45,8 @@ Profile.propTypes = {
   router: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
   paths: React.PropTypes.object.isRequired,
-  profiles: React.PropTypes.object.isRequired
+  profiles: React.PropTypes.object.isRequired,
+  loggedInUser: React.PropTypes.object.isRequired
 };
 
 export default Profile;
