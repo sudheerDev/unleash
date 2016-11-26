@@ -5,19 +5,23 @@ import TextField from 'material-ui/TextField';
 import ChipInput from 'material-ui-chip-input';
 import FlatButton from 'material-ui/FlatButton';
 import Loading from './Loading';
+import IconSelector from './IconSelector';
 
 let styles = {};
 
 class AddGoalsModal extends React.Component {
 
   getGoalForm() {
-    const { parameters, tagsOptions } = this.props;
+    const { parameters, tagsOptions, actions } = this.props;
     return (
       <div>
         {this.generateTextField('name')}
         {this.generateTextField('description')}
         {this.generateTextField('level')}
-        {this.generateTextField('icon')}
+        <IconSelector
+          value={parameters.icon}
+          onChange={(value) => actions.updateAddGoalsField('icon', value)}
+        />
         <ChipInput
           style={styles.textFields}
           floatingLabelText="Tags"
