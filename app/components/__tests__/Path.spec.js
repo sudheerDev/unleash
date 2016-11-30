@@ -16,6 +16,7 @@ describe('Path Component', () => {
   const location = {
     pathname: `/profiles/${testId}`
   };
+  const loggedInUser = generate('user', 1)[0];
   let component;
   let mockedActions;
   let pathsListSpy;
@@ -45,6 +46,8 @@ describe('Path Component', () => {
         params={params}
         actions={mockedActions}
         paths={paths}
+        loggedInUser={loggedInUser}
+        userId={testId}
         location={location}
         router={router}
       />,

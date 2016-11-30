@@ -9,7 +9,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('User Card', () => {
   let component;
-  const user = generate('profile');
+  const user = generate('profile')[0];
   let routerSpy;
 
   beforeEach(() => {
