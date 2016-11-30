@@ -52,10 +52,16 @@ describe('Add Goals Modal', () => {
     expect(component).to.exist; // eslint-disable-line
   });
 
-  it('should render the four textfield component to fill the new goal', () => {
+  it('should render the three textfield component to fill the new goal', () => {
     renderAddGoalsModal();
     const textFields = component.find('TextField');
-    expect(textFields.length).to.equal(4);
+    expect(textFields.length).to.equal(3);
+  });
+
+  it('should render icon select component', () => {
+    renderAddGoalsModal();
+    const iconSelector = component.find('IconSelector');
+    expect(iconSelector.length).to.equal(1);
   });
 
   it('should render chip component for the tags', () => {
@@ -68,9 +74,11 @@ describe('Add Goals Modal', () => {
     renderAddGoalsModal({ showSpinner: true });
     const textFields = component.find('TextField');
     const chipInput = component.find('ChipInput');
+    const iconSelector = component.find('IconSelector');
     const loading = component.find('Loading');
     expect(textFields.length).to.equal(0);
     expect(chipInput.length).to.equal(0);
+    expect(iconSelector.length).to.equal(0);
     expect(loading.length).to.equal(1);
   });
 });
