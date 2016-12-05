@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Loading from './Loading';
-import { find, every, some, values, map, range, random, sample } from 'lodash';
+import { find, every, some, values, map, random, sample } from 'lodash';
 import UserCard from './UserCard';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
@@ -196,9 +196,9 @@ class Skill extends Component {
 
     const skill = this.getSkillBySlug(skills.list, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles.list, profilesBySkill.profiles);
-    const resources = range(10).map(() => ({
-      id: Math.random().toString(36).slice(2),
-      url: `http://google.com/?q=${skill.name}`,
+    const resources = skill.resources.map(resource => ({
+      id: resource.id,
+      url: resource.url,
       upvotes: random(0, 10),
       upvoted: random(0, 3) === 0,
       type: sample(['post', 'course', 'video', 'tool', 'other'])
