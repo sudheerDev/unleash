@@ -5,8 +5,8 @@ import TextField from 'material-ui/TextField';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
-import toggleHOC from '../hocs/toggleHOC';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import toggleHOC from '../hocs/toggleHOC';
 
 const RENAME_DIALOG = 'rename';
 const REMOVE_DIALOG = 'remove';
@@ -120,11 +120,11 @@ class PathHeader extends Component {
     return (
       <div className="pathHeader">
         <div style={styles.pathHeader}>
-          <div style={styles.divider}></div>
+          <div style={styles.divider} />
           <div style={styles.name}>
             <i className="icon-map" /> {path.name || 'Empty Path'}
           </div>
-          <div style={styles.divider}></div>
+          <div style={styles.divider} />
         </div>
         {this.props.showActions && (
           <div className="pathActions" style={styles.pathHeaderActions}>
@@ -150,9 +150,15 @@ class PathHeader extends Component {
 }
 
 PathHeader.propTypes = {
-  path: React.PropTypes.object.isRequired,
+  path: React.PropTypes.shape({
+    name: React.PropTypes.string,
+    id: React.PropTypes.string.isRequired,
+  }).isRequired,
   showActions: React.PropTypes.bool.isRequired,
-  actions: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    pathsRemove: React.PropTypes.func.isRequired,
+    pathsRename: React.PropTypes.func.isRequired,
+  }).isRequired,
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
@@ -189,7 +195,7 @@ styles = {
   },
   name: {
     cursor: 'pointer',
-  }
+  },
 };
 
 export default toggleHOC(PathHeader);

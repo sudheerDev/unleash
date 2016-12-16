@@ -18,18 +18,20 @@ class CuratedPaths extends Component {
   }
 
   render() {
-    const { curatedPaths: { list } } = this.props;
+    const { curatedPaths } = this.props;
     return (
       <List>
-        {this.renderPaths(list)}
+        {this.renderPaths(curatedPaths)}
       </List>
     );
   }
 }
 
 CuratedPaths.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  curatedPaths: React.PropTypes.object.isRequired
+  actions: React.PropTypes.shape({
+    fetchCuratedPaths: React.PropTypes.func,
+  }).isRequired,
+  curatedPaths: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
 };
 
 export default CuratedPaths;

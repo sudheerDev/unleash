@@ -13,16 +13,17 @@ describe('Skill Details', () => {
   let mockedActions;
   let mockedRouter;
   const skills = generate('skill', 15);
-  const mockedSkills = { list: keyBy(skills, 'name') };
-  const profiles = generate('profile', 15);
-  const mockedProfiles = { list: keyBy(profiles, 'id') };
-  const mockedProfilesBySkill = { profiles: map(sampleSize(profiles, 3), 'id') };
+  const mockedSkills = keyBy(skills, 'name');
+  const profiles = { list: generate('profile', 15) };
+  const mockedProfiles = keyBy(profiles, 'id');
+  const mockedProfilesBySkill = { profiles: map(sampleSize(profiles.list, 3), 'id') };
 
   beforeEach(() => {
     mockedActions = {
       skillList: sinon.spy(),
       profileList: sinon.spy(),
       profileListBySkill: sinon.spy(),
+      resourceAdd: sinon.spy(),
     }
     mockedRouter = {
       params: { slug: skills[0].slug }
@@ -37,11 +38,14 @@ describe('Skill Details', () => {
     component = mount(
       <Skill
         actions={mockedActions}
-        skills={mockedSkills}
-        profiles={mockedProfiles}
+        skills={skills}
+        profiles={profiles}
         profilesBySkill={mockedProfilesBySkill}
         router={mockedRouter}
         params={mockedRouter.params}
+        skillsLoading={false}
+        profilesLoading={false}
+        bySkillLoading={false}
       />,
       {
         context,

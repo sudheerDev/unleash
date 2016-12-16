@@ -10,8 +10,9 @@ import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ActionReceipt from 'material-ui/svg-icons/action/receipt';
 import { blueGrey50, blueGrey800 } from 'material-ui/styles/colors';
-import LogoImg from '../assets/logo.png';
 import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
+import { routerShape } from 'react-router/lib/PropTypes';
+import LogoImg from '../assets/logo.png';
 import config from '../../config';
 
 const styles = {
@@ -107,9 +108,9 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
-  userId: React.PropTypes.string,
-  router: React.PropTypes.object,
-  userLogoutProcess: React.PropTypes.func,
+  userId: React.PropTypes.string.isRequired,
+  router: routerShape.isRequired,
+  userLogoutProcess: React.PropTypes.func.isRequired,
 };
 
 export default Menu;

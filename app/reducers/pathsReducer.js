@@ -5,8 +5,8 @@
  * @author Rubens Mariuzzo <rubens@x-team.com>
  */
 
-import { PATHS } from '../actions/PathsActions';
 import { map, keyBy, reject, cloneDeep } from 'lodash';
+import { PATHS } from '../actions/PathsActions';
 
 /**
  * Create a new array as the result of merging matching objects in two given arrays.
@@ -17,7 +17,7 @@ import { map, keyBy, reject, cloneDeep } from 'lodash';
  */
 function merge(arrA, arrB, key = 'id') {
   const hash = keyBy(arrB, key);
-  return map(arrA, (item) => Object.assign(item, hash[item[key]]));
+  return map(arrA, item => Object.assign(item, hash[item[key]]));
 }
 
 /**
@@ -28,7 +28,7 @@ function merge(arrA, arrB, key = 'id') {
  * @return {*}
  */
 function removePath(pathsList, pathId) {
-  return pathsList.filter((path) => path.id !== pathId);
+  return pathsList.filter(path => path.id !== pathId);
 }
 
 const initialState = {

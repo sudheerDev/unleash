@@ -4,11 +4,11 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import ChipInput from 'material-ui-chip-input';
 import FlatButton from 'material-ui/FlatButton';
-import Loading from './Loading';
-import IconSelector from './IconSelector';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
+import Loading from './Loading';
+import IconSelector from './IconSelector';
 
 let styles = {};
 
@@ -25,15 +25,15 @@ class AddGoalsModal extends React.Component {
         {this.generateDueDateField()}
         <IconSelector
           value={parameters.icon}
-          onChange={(value) => actions.updateAddGoalsField('icon', value)}
+          onChange={value => actions.updateAddGoalsField('icon', value)}
         />
         <ChipInput
           style={styles.textFields}
           floatingLabelText="Tags"
           dataSource={tagsOptions}
           value={parameters.tags}
-          onRequestAdd={(chip) => this.handleChipChange('add', chip)}
-          onRequestDelete={(chip) => this.handleChipChange('remove', chip)}
+          onRequestAdd={chip => this.handleChipChange('add', chip)}
+          onRequestDelete={chip => this.handleChipChange('remove', chip)}
         />
       </div>
     );
@@ -140,11 +140,23 @@ class AddGoalsModal extends React.Component {
 }
 
 AddGoalsModal.propTypes = {
-  actions: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    resetGoalModal: React.PropTypes.func,
+    addGoalRequest: React.PropTypes.func,
+    updateAddGoalsField: React.PropTypes.func,
+  }).isRequired,
+  parameters: React.PropTypes.shape({
+    showModal: React.PropTypes.bool,
+    showSpinner: React.PropTypes.bool,
+    name: React.PropTypes.string,
+    description: React.PropTypes.string,
+    tags: React.PropTypes.array,
+    icon: React.PropTypes.string,
+    level: React.PropTypes.string,
+  }).isRequired,
+  tagsOptions: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
   onSubmit: React.PropTypes.func.isRequired,
-  parameters: React.PropTypes.object.isRequired,
-  tagsOptions: React.PropTypes.array.isRequired,
-  withPath: React.PropTypes.bool
+  withPath: React.PropTypes.bool,
 };
 
 styles = {
@@ -165,7 +177,7 @@ styles = {
   dueDateField: {
     paddingTop: 20,
     width: '100%',
-  }
+  },
 };
 
 export default AddGoalsModal;

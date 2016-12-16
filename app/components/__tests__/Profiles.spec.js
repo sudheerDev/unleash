@@ -2,7 +2,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { keyBy, random } from 'lodash';
+import { keyBy, random, mapValues } from 'lodash';
 import sinon from 'sinon';
 import generate from '../../testUtils/fixtures';
 import Profiles from '../Profiles';
@@ -12,26 +12,26 @@ describe('Profiles List', () => {
   let component;
   const profiles = generate('profile', 15);
   const skills = generate('skill', 5);
-  const mockedProfiles = { list: keyBy(profiles, 'username') };
-  const mockedSkills = { list: keyBy(skills, 'name') };
+  const mockedProfiles = keyBy(profiles, 'username');
+  const mockedSkills = keyBy(skills, 'name');
   let mockedActions;
   let profileListSpy;
   let skillListSpy;
   let clearSkillSpy;
   let routerSpy;
+  let profileListBySkill;
 
   beforeEach(() => {
     profileListSpy = sinon.spy();
     skillListSpy = sinon.spy();
     clearSkillSpy = sinon.spy();
     routerSpy = sinon.spy();
+    profileListBySkill = sinon.spy();
     mockedActions = {
       profileList: profileListSpy,
       skillList: skillListSpy,
       clearSkill: clearSkillSpy,
-    };
-    const router = {
-      push: routerSpy,
+      profileListBySkill: profileListBySkill,
     };
     const context = {
       muiTheme: getMuiTheme()
@@ -42,10 +42,10 @@ describe('Profiles List', () => {
 
     component = mount(
       <Profiles
-        profiles={mockedProfiles}
-        skills={mockedSkills}
+        profiles={profiles}
+        skills={skills}
         actions={mockedActions}
-        router={router}
+        router={routerSpy}
       />,
       {
         context,

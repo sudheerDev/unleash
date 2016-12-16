@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
-import toggleHOC from '../hocs/toggleHOC';
-import MilestoneImg from '../assets/milestone.png';
-import Loading from './Loading';
 import DatePicker from 'material-ui/DatePicker';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import toggleHOC from '../hocs/toggleHOC';
+import MilestoneImg from '../assets/milestone.png';
+import Loading from './Loading';
 
 const DIALOG_TOGGLE = 'dialog';
 const NOTIFY_ON_SLACK = 'notify-on-slack';
@@ -87,7 +87,7 @@ class GoalCard extends Component {
         label="Close"
         secondary
         onTouchTap={() => this.closeDialog()}
-      />
+      />,
     ];
     let editableInputs = null;
 
@@ -97,7 +97,7 @@ class GoalCard extends Component {
           label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
           primary
           onTouchTap={() => this.toggleAchievement()}
-        />
+        />,
       );
 
       const notifySlackValue = this.props.getToggleState(NOTIFY_ON_SLACK);
@@ -121,7 +121,7 @@ class GoalCard extends Component {
               />
               {notifySlackValue && (
                 <TextField
-                  onChange={(event) => this.handleSlackMessageChange(event)}
+                  onChange={event => this.handleSlackMessageChange(event)}
                   style={styles.additionalMessageInput}
                   hintText="Additional message (optional)"
                 />
@@ -212,7 +212,7 @@ styles = {
     fontSize: '22px',
     fontWeight: '200',
     padding: '5px',
-    marginTop: '10px'
+    marginTop: '10px',
   },
   details: {
     color: '#ffffff',
@@ -261,14 +261,14 @@ styles = {
   },
   dueDatePicker: {
     marginTop: '15px',
-    width: '100%'
+    width: '100%',
   },
   notifySlackCheckbox: {
     marginTop: '15px',
   },
   additionalMessageInput: {
     width: '100%',
-  }
+  },
 };
 
 export default toggleHOC(GoalCard);

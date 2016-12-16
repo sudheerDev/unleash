@@ -13,19 +13,18 @@ describe('User Card', () => {
   let routerSpy;
 
   beforeEach(() => {
-    routerSpy = sinon.spy();
+    routerSpy = {
+      push: sinon.spy()
+    };
     const context = {
       muiTheme: getMuiTheme()
     };
     const childContextTypes = {
       muiTheme: React.PropTypes.object
     };
-    const router = {
-      push: routerSpy,
-    };
 
     component = mount(
-      <UserCard user={user} router={router} />,
+      <UserCard user={user} router={routerSpy} />,
       {
         context,
         childContextTypes
@@ -40,6 +39,6 @@ describe('User Card', () => {
     const userElement = component.find('UserCard');
     userElement.node.handleProfileSelect(user.id);
     const expectedRoute = `/profiles/${user.id}`;
-    expect(routerSpy.getCall(0).args[0]).to.equal(expectedRoute);
+    expect(routerSpy.push.getCall(0).args[0]).to.equal(expectedRoute);
   });
 });

@@ -11,7 +11,7 @@ function mapStateToProps(state) {
     isLoggedIn,
     isLoading,
     authServiceInit,
-    notifications: state.notifications
+    notifications: state.notifications,
   };
 }
 
@@ -22,7 +22,7 @@ function mapDispatchToProps(dispatch) {
     },
     removeNotification: () => {
       dispatch(removeNotification());
-    }
+    },
   };
 }
 

@@ -1,5 +1,4 @@
 /* eslint-disable */
-import _ from 'lodash';
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
@@ -14,11 +13,10 @@ describe('Menu Component', () => {
   let userLogoutProcess;
 
   beforeEach(() => {
-    routerSpy = sinon.spy();
-    userLogoutProcess = sinon.spy();
-    const router = {
-      push: routerSpy,
+    routerSpy = {
+      push: sinon.spy()
     };
+    userLogoutProcess = sinon.spy();
     const context = {
       muiTheme: getMuiTheme()
     };
@@ -29,7 +27,7 @@ describe('Menu Component', () => {
     component = mount(
       <Menu
         userId={userId}
-        router={router}
+        router={routerSpy}
         userLogoutProcess={userLogoutProcess}
       />,
       {
@@ -46,7 +44,7 @@ describe('Menu Component', () => {
     const element = component.find('Menu');
     const expectedRoute = '/heroes/unleash';
     element.node.handleMenuClick(expectedRoute);
-    expect(routerSpy.getCall(0).args[0]).to.equal(expectedRoute);
+    expect(routerSpy.push.getCall(0).args[0]).to.equal(expectedRoute);
   });
 
   it('should change the page to my path', () => {
@@ -55,7 +53,7 @@ describe('Menu Component', () => {
     });
     menuItem.props().onTouchTap();
     const expectedValue = `/profiles/${userId}`;
-    expect(routerSpy.getCall(0).args[0]).to.equal(expectedValue);
+    expect(routerSpy.push.getCall(0).args[0]).to.equal(expectedValue);
   });
 
   it('should call the userLogoutProcess function', () => {

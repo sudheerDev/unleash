@@ -7,10 +7,10 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import _ from 'lodash';
 import * as ProfileActions from '../actions/ProfileActions';
 import * as SkillActions from '../actions/SkillActions';
 import Profiles from '../components/Profiles';
-import _ from 'lodash';
 
 function getProfilesBySkills(state) {
   const profiles = state.profiles;
@@ -19,7 +19,7 @@ function getProfilesBySkills(state) {
 
   if (searching) {
     return {
-      list: _.filter(profiles.list, (profile) => _.includes(profilesBySkill.profiles, profile.id)),
+      list: _.filter(profiles.list, profile => _.includes(profilesBySkill.profiles, profile.id)),
     };
   }
 
@@ -28,8 +28,8 @@ function getProfilesBySkills(state) {
 
 function mapStateToProps(state) {
   return {
-    profiles: getProfilesBySkills(state),
-    skills: state.skills,
+    profiles: getProfilesBySkills(state).list,
+    skills: state.skills.list,
   };
 }
 
@@ -41,5 +41,5 @@ function mapDispatchToProps(dispatch) {
 
 export default withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Profiles));

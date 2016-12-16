@@ -9,9 +9,6 @@ let styles = {};
 
 class Paths extends Component {
 
-  componentDidMount() {
-  }
-
   handleCreatePath() {
     const { actions, userId } = this.props;
     actions.pathsCreate(userId);
@@ -77,7 +74,7 @@ class Paths extends Component {
 
     return (
       <div>
-        {map(paths.list, (path) => this.renderPath(path))}
+        {map(paths.list, path => this.renderPath(path))}
         {this.renderCreateAPathButton()}
       </div>
     );
@@ -85,11 +82,20 @@ class Paths extends Component {
 }
 
 Paths.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  editable: React.PropTypes.bool.isRequired,
-  loggedInUser: React.PropTypes.object.isRequired,
-  paths: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    pathsCreate: React.PropTypes.func,
+  }).isRequired,
   userId: React.PropTypes.string.isRequired,
+  paths: React.PropTypes.shape({
+    goals: React.PropTypes.array,
+    list: React.PropTypes.array,
+    isLoading: React.PropTypes.boolean,
+  }).isRequired,
+  loggedInUser: React.PropTypes.shape({
+    isAdmin: React.PropTypes.bool.isRequired,
+    id: React.PropTypes.string.isRequired,
+  }).isRequired,
+  editable: React.PropTypes.bool.isRequired,
 };
 
 styles = {
@@ -109,7 +115,7 @@ styles = {
     justifyContent: 'space-around',
     margin: '20px auto 0 auto',
     width: '40%',
-  }
+  },
 };
 
 export default Paths;

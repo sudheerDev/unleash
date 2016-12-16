@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import FlipMove from 'react-flip-move';
+import { routerShape } from 'react-router/lib/PropTypes';
 import _ from 'lodash';
 import UserCard from './UserCard';
 
@@ -8,11 +9,11 @@ let styles = {};
 
 class Profiles extends Component {
   componentDidMount() {
-    if (!this.props.skills.list) {
+    if (this.props.skills < 1) {
       this.props.actions.skillList();
     }
 
-    if (!this.props.profiles.list) {
+    if (this.props.profiles.length < 1) {
       this.props.actions.profileList();
     }
   }
@@ -34,14 +35,12 @@ class Profiles extends Component {
   }
 
   renderProfiles(profiles) {
-    return _.map(profiles, (profile) =>
-      <UserCard user={profile} router={this.props.router} key={profile.id} />
-    );
+    const { router } = this.props;
+    return _.map(profiles, profile => <UserCard user={profile} router={router} key={profile.id} />);
   }
 
   render() {
-    const profiles = this.props.profiles.list;
-    const skills = this.props.skills.list;
+    const { profiles, skills } = this.props;
     const autoCompleteData = _.map(skills, 'name');
 
     return (
@@ -51,7 +50,7 @@ class Profiles extends Component {
           dataSource={autoCompleteData}
           floatingLabelText="Search by Skill"
           filter={AutoComplete.caseInsensitiveFilter}
-          onNewRequest={(selection) => this.renderProfilesBySkill(skills, selection)}
+          onNewRequest={selection => this.renderProfilesBySkill(skills, selection)}
           onUpdateInput={(searchText, dataSource) => this.updateResults(searchText, dataSource)}
           fullWidth
         />
@@ -64,10 +63,15 @@ class Profiles extends Component {
 }
 
 Profiles.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  profiles: React.PropTypes.object.isRequired,
-  skills: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    skillList: React.PropTypes.func.isRequired,
+    profileList: React.PropTypes.func.isRequired,
+    profileListBySkill: React.PropTypes.func.isRequired,
+    clearSkill: React.PropTypes.func.isRequired,
+  }).isRequired,
+  profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  router: routerShape.isRequired,
 };
 
 styles = {
@@ -80,7 +84,7 @@ styles = {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-  }
+  },
 };
 
 export default Profiles;

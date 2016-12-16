@@ -10,7 +10,7 @@ let applyMiddlewareConfig = applyMiddleware(...middleware);
 if (process.env.NODE_ENV !== 'production') {
   applyMiddlewareConfig = compose(
     applyMiddleware(...middleware, logger),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
+    window.devToolsExtension ? window.devToolsExtension() : f => f,
   );
 }
 

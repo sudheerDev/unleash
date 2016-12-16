@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import unleashLogo from '../assets/logo.png';
 import Paper from 'material-ui/Paper';
 import Loading from './Loading';
+import unleashLogo from '../assets/logo.png';
 
 let styles = {};
 
@@ -61,7 +61,7 @@ styles = {
     color: '#f54e45',
   },
   logoStyle: {
-    width: '200px'
+    width: '200px',
   },
   buttonStyle: {
     background: '#d14836',
@@ -74,7 +74,7 @@ styles = {
     fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'Inconsolata',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
 };
 

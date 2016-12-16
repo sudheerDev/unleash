@@ -7,14 +7,14 @@ const errorCodes = {
   404: 'Not Found',
   409: 'Conflict',
   410: 'Gone',
-  fallback: 'Unrecognized Error'
+  fallback: 'Unrecognized Error',
 };
 
 const errorMsg = {
   401: 'Oops! You are not logged in!',
   403: 'Oops! You do not have permissions to view this page!',
   404: 'Oops! You have come to the wrong link!',
-  fallback: 'Oops! There was a problem with your request.'
+  fallback: 'Oops! There was a problem with your request.',
 };
 
 function getErrorCode(code) {
@@ -27,5 +27,5 @@ function getErrorMsg(code) {
 
 export {
   getErrorCode,
-  getErrorMsg
+  getErrorMsg,
 };

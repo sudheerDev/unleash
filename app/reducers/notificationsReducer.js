@@ -7,11 +7,11 @@ function notificationsReducer(state = initialState, action) {
     case NOTIFICATION.ADD:
       return [
         ...state,
-        action.payload
+        action.payload,
       ];
     case NOTIFICATION.REMOVE:
       return [
-        ...state.slice(1)   // remove the first one only
+        ...state.slice(1),   // remove the first one only
       ];
     default:
       return state;

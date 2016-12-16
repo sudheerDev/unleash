@@ -14,9 +14,12 @@ import Skill from '../components/Skill';
 
 function mapStateToProps(state) {
   return {
-    profilesBySkill: state.profilesBySkill,
-    skills: state.skills,
-    profiles: state.profiles,
+    profilesBySkill: state.profilesBySkill.profiles,
+    bySkillLoading: state.profilesBySkill.isLoading,
+    skills: state.skills.list,
+    skillsLoading: state.skills.isLoading,
+    profiles: state.profiles.list,
+    profilesLoading: state.profiles.isLoading,
   };
 }
 
@@ -31,5 +34,5 @@ function mapDispatchToProps(dispatch) {
 
 export default withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Skill));

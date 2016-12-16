@@ -28,11 +28,11 @@ function mapDispatchToProps(dispatch) {
       ...ProfileActions,
       ...PathsActions,
       ...GoalsActions,
-    }, dispatch)
+    }, dispatch),
   };
 }
 
 export default withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Profile));

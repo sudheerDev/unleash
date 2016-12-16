@@ -45,7 +45,7 @@ export function profileListBySkill(slug, calledBy) {
     dispatch({ type: PROFILE.LIST_BY_SKILL.START });
 
     return httpClient.get(`${config.profiles_api_url}?skillId=${slug}`)
-      .then(profilesBySkill => {
+      .then((profilesBySkill) => {
         const skill = { ...profilesBySkill, calledBy };
         dispatch({ type: PROFILE.LIST_BY_SKILL.SUCCESS, skill });
       })
@@ -54,5 +54,5 @@ export function profileListBySkill(slug, calledBy) {
 }
 
 export function clearSkill() {
-  return (dispatch) => dispatch({ type: PROFILE.LIST_BY_SKILL.CLEAR });
+  return dispatch => dispatch({ type: PROFILE.LIST_BY_SKILL.CLEAR });
 }

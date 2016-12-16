@@ -1,7 +1,7 @@
 import { CURATED_PATHS } from '../actions/CuratedPathsActions';
 
 const initialState = {
-  list: []
+  list: [],
 };
 
 function curatedPathsReducer(state = initialState, action) {
@@ -9,7 +9,7 @@ function curatedPathsReducer(state = initialState, action) {
     case CURATED_PATHS.FETCH.SUCCESS:
       return {
         ...state,
-        list: action.paths
+        list: action.paths,
       };
     default:
       return state;

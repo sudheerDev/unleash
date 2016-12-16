@@ -4,6 +4,6 @@ export default function generateProfile() {
   return {
     id: faker.random.uuid(),
     username: faker.internet.userName(),
-    fullName: faker.name.title()
+    fullName: faker.name.title(),
   };
 }

@@ -13,7 +13,7 @@ const initialState = {
     icon: '',
     level: '',
     dueDate: '',
-  }
+  },
 };
 
 function goalsReducer(state = initialState, action) {
@@ -21,18 +21,18 @@ function goalsReducer(state = initialState, action) {
     case GOALS.FETCH.START:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     case GOALS.FETCH.SUCCESS:
       return {
         ...state,
         list: action.goals,
-        isLoading: false
+        isLoading: false,
       };
     case GOALS.FETCH.FAILURE:
       return {
         ...state,
-        isLoading: false
+        isLoading: false,
       };
     case GOALS.ADD.SHOW_MODAL:
       return {
@@ -40,7 +40,7 @@ function goalsReducer(state = initialState, action) {
         addGoalsModal: {
           ...state.addGoalsModal,
           showModal: action.showModal,
-        }
+        },
       };
     case GOALS.ADD.SHOW_SPINNER:
       return {
@@ -48,7 +48,7 @@ function goalsReducer(state = initialState, action) {
         addGoalsModal: {
           ...state.addGoalsModal,
           showModal: action.showSpinner,
-        }
+        },
       };
     case GOALS.ADD.UPDATE_FIELD:
       return {
@@ -56,7 +56,7 @@ function goalsReducer(state = initialState, action) {
         addGoalsModal: {
           ...state.addGoalsModal,
           [action.fieldKey]: action.fieldValue,
-        }
+        },
       };
     case GOALS.ADD.RESET:
       return {
@@ -64,7 +64,7 @@ function goalsReducer(state = initialState, action) {
         addGoalsModal: {
           ...initialState.addGoalsModal,
           tags: [],
-        }
+        },
       };
     default:
       return state;
