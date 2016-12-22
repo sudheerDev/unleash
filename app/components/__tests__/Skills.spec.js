@@ -12,15 +12,23 @@ describe('Skills List', () => {
   let component;
   const skills = generate('skill', 15);
   const mockedSkills = { list: keyBy(skills, 'name') };
+  const modalParameters = {
+    showModal: false,
+    showSpinner: false,
+    name: '',
+  };
   let mockedActions;
   let skillListSpy;
   let routerSpy;
+  let showAddSkillModalSpy;
 
   beforeEach(() => {
     skillListSpy = sinon.spy();
     routerSpy = sinon.spy();
+    showAddSkillModalSpy = sinon.spy();
     mockedActions = {
       skillList: skillListSpy,
+      showAddSkillModal: showAddSkillModalSpy,
     };
     const router = {
       push: routerSpy,
@@ -37,6 +45,7 @@ describe('Skills List', () => {
         skills={mockedSkills}
         actions={mockedActions}
         router={router}
+        addModalParameters={modalParameters}
       />,
       {
         context,
@@ -64,5 +73,18 @@ describe('Skills List', () => {
     skillElement.node.handleSkillSelect(skill.name);
     const expectedRoute = `/skills/${skill.name}`;
     expect(routerSpy.getCall(0).args[0]).to.equal(expectedRoute);
+  });
+
+  it('should render add goal button', () => {
+    const addButton = component.find('FloatingActionButton');
+    expect(addButton.length).to.equal(1);
+  });
+
+  it('should call the showAddSkillModal action when we click the add button and send `showModal`' +
+    ' parameter true', () => {
+    const addButton = component.find('FloatingActionButton');
+    addButton.props().onClick();
+    expect(showAddSkillModalSpy.callCount).to.equal(1);
+    expect(showAddSkillModalSpy.getCall(0).args[0]).to.equal(true);
   });
 });
