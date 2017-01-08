@@ -13,6 +13,7 @@ import Skills from '../components/Skills';
 function mapStateToProps(state) {
   return {
     skills: state.skills,
+    addModalParameters: state.skills.addSkillModal,
   };
 }
 

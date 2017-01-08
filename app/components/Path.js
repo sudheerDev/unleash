@@ -37,6 +37,27 @@ class Paths extends Component {
     );
   }
 
+  renderCreateAPathButton() {
+    const { loggedInUser, userId } = this.props;
+    const isUserAdmin = loggedInUser.isAdmin;
+    const isBrowsingOwnProfile = loggedInUser.id === userId;
+
+    let createAPathButton = null;
+    if (isUserAdmin || isBrowsingOwnProfile) {
+      createAPathButton = (
+        <RaisedButton
+          label="Create A Path"
+          backgroundColor="#8FD694"
+          labelColor="#FFFFFF"
+          onTouchTap={() => this.handleCreatePath()}
+          style={styles.addPathButton}
+        />
+      );
+    }
+
+    return createAPathButton;
+  }
+
   render() {
     const { paths } = this.props;
 
@@ -47,13 +68,7 @@ class Paths extends Component {
     return (
       <div>
         {map(paths.list, (path) => this.renderPath(path))}
-        <RaisedButton
-          label="Create Path"
-          backgroundColor="#8FD694"
-          labelColor="#FFFFFF"
-          onTouchTap={() => this.handleCreatePath()}
-          style={styles.addPathButton}
-        />
+        {this.renderCreateAPathButton()}
       </div>
     );
   }
@@ -63,6 +78,7 @@ Paths.propTypes = {
   actions: React.PropTypes.object.isRequired,
   userId: React.PropTypes.string.isRequired,
   paths: React.PropTypes.object.isRequired,
+  loggedInUser: React.PropTypes.object.isRequired
 };
 
 styles = {

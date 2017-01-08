@@ -7,20 +7,32 @@ import sinon from 'sinon';
 import generate from '../../testUtils/fixtures';
 import Goals from '../Goals';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 describe('Goals List', () => {
   let component;
   const goals = generate('goal', 15);
-  const mockedData = { list: goals };
+  const modalParameters =  {
+    showModal: false,
+    showSpinner: false,
+    name: '',
+    description: '',
+    tags: [],
+    icon: '',
+    level: '',
+  };
   let mockedActions;
   let fetchGoalsSpy;
   let routerSpy;
+  let showAddGoalsModalSpy;
 
   beforeEach(() => {
     fetchGoalsSpy = sinon.spy();
     routerSpy = sinon.spy();
+    showAddGoalsModalSpy = sinon.spy();
     mockedActions = {
       fetchGoals: fetchGoalsSpy,
+      showAddGoalsModal: showAddGoalsModalSpy,
     };
     const context = {
       muiTheme: getMuiTheme()
@@ -31,8 +43,9 @@ describe('Goals List', () => {
 
     component = mount(
       <Goals
-        goals={mockedData}
+        list={goals}
         actions={mockedActions}
+        addModalParameters={modalParameters}
       />,
       {
         context,
@@ -51,5 +64,18 @@ describe('Goals List', () => {
 
   it('should fetch the list of goals when components is mounted', () => {
     expect(fetchGoalsSpy.callCount).to.equal(1);
+  });
+
+  it('should render add goal button', () => {
+    const addButton = component.find('FloatingActionButton');
+    expect(addButton.length).to.equal(1);
+  });
+
+  it('should call the showAddGoalsModal action when we click the add button and send `showModal`' +
+    ' parameter true', () => {
+    const addButton = component.find('FloatingActionButton');
+    addButton.props().onClick();
+    expect(showAddGoalsModalSpy.callCount).to.equal(1);
+    expect(showAddGoalsModalSpy.getCall(0).args[0]).to.equal(true);
   });
 });
