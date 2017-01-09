@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Loading from './Loading';
-import { find, every, some, values, map, random, sample } from 'lodash';
+import { find, every, some, values, map, random } from 'lodash';
 import UserCard from './UserCard';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
@@ -15,9 +15,19 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import toggleHOC from '../hocs/toggleHOC';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 const DIALOG_TOGGLE = 'addResource';
 let styles = {};
+
+const resourceTypes = {
+  post: <ContentCreate />,
+  course: <SocialSchool />,
+  video: <NotificationOnDemandVideo />,
+  tool: <ActionExtension />,
+  other: <ContentLink />
+};
 
 class Skill extends Component {
 
@@ -26,7 +36,8 @@ class Skill extends Component {
 
     this.state = {
       resource_url: '',
-      resource_description: ''
+      resource_description: '',
+      resource_type: 'other'
     };
   }
 
@@ -64,6 +75,16 @@ class Skill extends Component {
     });
   }
 
+  /**
+   * Handle SelectField change.
+   * @param {Object} event - SelectField event.
+   */
+  handleResourceTypeChange = (event, index, value) => {
+    this.setState({
+      resource_type: value,
+    });
+  }
+
   handleAddResource() {
     this.props.toggleOn(DIALOG_TOGGLE);
   }
@@ -72,7 +93,8 @@ class Skill extends Component {
     const { actions, toggleOff } = this.props;
     if (this.state.resource_url !== '' && this.state.resource_description !== '') {
       actions.resourceAdd(skillSlug, {
-        url: this.state.resource_url, description: this.state.resource_description
+        url: this.state.resource_url, description: this.state.resource_description,
+        type: this.state.resource_type
       });
       toggleOff(DIALOG_TOGGLE);
     }
@@ -116,6 +138,18 @@ class Skill extends Component {
           onChange={this.handleResourceDescriptionChange}
           fullWidth
         />
+        <SelectField
+          floatingLabelText="Type"
+          value={this.state.resource_type}
+          onChange={this.handleResourceTypeChange}
+        >
+          <MenuItem value={'post'} primaryText="Post" />
+          <MenuItem value={'course'} primaryText="Course" />
+          <MenuItem value={'video'} primaryText="Video" />
+          <MenuItem value={'tool'} primaryText="Tool" />
+          <MenuItem value={'other'} primaryText="Other" />
+        </SelectField>
+
       </Dialog>
     );
   }
@@ -146,14 +180,6 @@ class Skill extends Component {
         </div>
       );
     }
-
-    const resourceTypes = {
-      post: <ContentCreate />,
-      course: <SocialSchool />,
-      video: <NotificationOnDemandVideo />,
-      tool: <ActionExtension />,
-      other: <ContentLink />
-    };
 
     return (
       <div style={styles.resources}>
@@ -201,7 +227,7 @@ class Skill extends Component {
       url: resource.url,
       upvotes: random(0, 10),
       upvoted: random(0, 3) === 0,
-      type: sample(['post', 'course', 'video', 'tool', 'other'])
+      type: resourceTypes[resource.type] ? resource.type : 'other',
     })).sort((a, b) => b.upvotes - a.upvotes);
 
     return (
