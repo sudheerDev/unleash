@@ -1,7 +1,7 @@
 <span ng-show="!users" class="initializing-spinner icon-spinner8"></span>
 
 <ul class="paths-list" ng-if="users.length">
-  <li ng-repeat="user in users track by user.username">
+  <li ng-repeat="user in users track by user.username | orderBy:'lastName'">
     <a ng-href="/paths/{{ user.username }}">
       <unleash-person name="{{ user.fullName }}" thumb="{{ user.picture }}" picurl="{{ picurl }}"></unleash-person>
     </a>

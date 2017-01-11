@@ -22,13 +22,8 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./deploy.sh latest
+    script: ./deploy.sh $TRAVIS_TAG
     on:
       tags: true
       all_branches: true
       condition: "$TRAVIS_TAG =~ ^1.*$"
-  - provider: script
-    skip_cleanup: true
-    script: ./deploy.sh staging
-    on:
-      branch: develop
