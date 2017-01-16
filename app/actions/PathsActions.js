@@ -22,6 +22,11 @@ export const PATHS = {
     SUCCESS: 'UPDATE_PATHS_SUCCESS',
     FAILURE: 'UPDATE_PATHS_FAILURE'
   },
+  REMOVE: {
+    START: 'REMOVE_PATHS_START',
+    SUCCESS: 'REMOVE_PATHS_SUCCESS',
+    FAILURE: 'REMOVE_PATHS_FAILURE',
+  },
   UPDATE_GOAL: {
     START: 'UPDATE_PATHS_GOAL_START',
     SUCCESS: 'UPDATE_PATHS_GOAL_SUCCESS',
@@ -75,6 +80,19 @@ export function pathsRename(pathId, newName) {
       .then(response => response.json())
       .then(paths => dispatch({ type: PATHS.UPDATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.UPDATE.FAILURE, errors }));
+  };
+}
+
+export function pathsRemove(pathId) {
+  return (dispatch) => {
+    dispatch({ type: PATHS.REMOVE.START, pathId });
+
+    return fetch(`${config.paths_api_url}/${pathId}`, {
+      method: 'delete',
+    })
+      .then((response) => (response.status >= 400 ? Promise.reject(response.text()) : null))
+      .then(() => dispatch({ type: PATHS.REMOVE.SUCCESS, pathId }))
+      .catch((errors) => dispatch({ type: PATHS.REMOVE.FAILURE, errors }));
   };
 }
 
