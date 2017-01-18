@@ -8,6 +8,7 @@ services:
 before_install:
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
+  - export UNLEASH_APP_VERSION=$TRAVIS_BUILD_NUMBER
   - cp config.js config.local.js
 
 install:

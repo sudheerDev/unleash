@@ -12,6 +12,7 @@ import ActionReceipt from 'material-ui/svg-icons/action/receipt';
 import { blueGrey50, blueGrey800 } from 'material-ui/styles/colors';
 import LogoImg from '../assets/logo.png';
 import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
+import config from '../../config';
 
 const styles = {
   titleBar: {
@@ -93,6 +94,11 @@ class Menu extends Component {
             style={styles.menuItem}
           >
             Log Out
+          </MenuItem>
+          <MenuItem
+            disabled
+          >
+            Version: {config.unleash_app_version}
           </MenuItem>
         </MaterialUIMenu>
       </Drawer>
