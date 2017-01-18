@@ -18,10 +18,20 @@ class Paths extends Component {
   }
 
   renderGoals(path) {
-    const { actions, paths } = this.props;
+    const { actions, paths, editable } = this.props;
+
     return map(path.goals, (goal) => {
       const loading = some(paths.goals, { id: goal.id, path: { id: path.id } });
-      return <GoalCard key={goal.id} goal={goal} path={path} actions={actions} loading={loading} />;
+      return (
+        <GoalCard
+          key={goal.id}
+          goal={goal}
+          path={path}
+          actions={actions}
+          loading={loading}
+          editable={editable}
+        />
+      );
     });
   }
 
@@ -38,12 +48,10 @@ class Paths extends Component {
   }
 
   renderCreateAPathButton() {
-    const { loggedInUser, userId } = this.props;
-    const isUserAdmin = loggedInUser.isAdmin;
-    const isBrowsingOwnProfile = loggedInUser.id === userId;
+    const { editable } = this.props;
 
     let createAPathButton = null;
-    if (isUserAdmin || isBrowsingOwnProfile) {
+    if (editable) {
       createAPathButton = (
         <RaisedButton
           label="Create A Path"
@@ -78,7 +86,7 @@ Paths.propTypes = {
   actions: React.PropTypes.object.isRequired,
   userId: React.PropTypes.string.isRequired,
   paths: React.PropTypes.object.isRequired,
-  loggedInUser: React.PropTypes.object.isRequired
+  editable: React.PropTypes.bool.isRequired,
 };
 
 styles = {

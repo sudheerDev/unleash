@@ -17,6 +17,7 @@ class Profile extends Component {
   render() {
     const { actions, params, paths, profiles, loggedInUser } = this.props;
     const userId = params.userId;
+    const editable = loggedInUser.isAdmin || loggedInUser.id === userId;
     const skills = [
       { name: 'mongoDB', id: 'c390be96-168b-4f42-a0cd-933fbc46e249' },
       { name: 'React', id: 'c390be96-168b-4f42-a0cd-933fbc46e240' }
@@ -33,7 +34,7 @@ class Profile extends Component {
             </Paper>
           ))}
         </div>
-        <Path userId={userId} actions={actions} paths={paths} loggedInUser={loggedInUser} />
+        <Path userId={userId} actions={actions} paths={paths} editable={editable} />
       </div>
     );
   }
