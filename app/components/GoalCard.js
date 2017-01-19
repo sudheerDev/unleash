@@ -5,6 +5,7 @@ import Paper from 'material-ui/Paper';
 import toggleHOC from '../hocs/toggleHOC';
 import MilestoneImg from '../assets/milestone.png';
 import Loading from './Loading';
+import DatePicker from 'material-ui/DatePicker';
 
 const DIALOG_TOGGLE = 'dialog';
 let styles = {};
@@ -41,6 +42,11 @@ class GoalCard extends Component {
     this.props.toggleOff(DIALOG_TOGGLE);
   }
 
+  updateDueDate(dueDate) {
+    const { goal, path } = this.props;
+    this.props.actions.pathsUpdateGoal(path, goal, { dueDate });
+  }
+
   /**
    * Render dialog with description
    *
@@ -55,6 +61,7 @@ class GoalCard extends Component {
         onTouchTap={() => this.props.toggleOff(DIALOG_TOGGLE)}
       />
     ];
+    let editableInputs = null;
 
     if (path && editable) {
       actions.unshift(
@@ -62,6 +69,15 @@ class GoalCard extends Component {
           label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
           primary
           onTouchTap={() => this.toggleAchievement()}
+        />
+      );
+      editableInputs = (
+        <DatePicker
+          hintText="Due Date"
+          container="inline"
+          mode="landscape"
+          defaultDate={new Date(goal.dueDate)}
+          onChange={(event, date) => this.updateDueDate(date)}
         />
       );
     }
@@ -73,7 +89,12 @@ class GoalCard extends Component {
         open={this.props.getToggleState(DIALOG_TOGGLE)}
         onRequestClose={() => this.props.toggleOff(DIALOG_TOGGLE)}
       >
-        {goal.description}
+        <div>
+          {goal.description}
+        </div>
+        <div>
+          {editableInputs}
+        </div>
       </Dialog>
     );
   }
