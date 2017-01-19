@@ -12,6 +12,7 @@ let styles = {};
 const propTypes = {
   loading: React.PropTypes.bool,
   actions: React.PropTypes.object,
+  editable: React.PropTypes.bool,
   goal: React.PropTypes.object.isRequired,
   path: React.PropTypes.object,
   getToggleState: React.PropTypes.func.isRequired,
@@ -46,7 +47,7 @@ class GoalCard extends Component {
    * @returns {Object} dialog element
    */
   renderDialog() {
-    const { goal, path } = this.props;
+    const { goal, path, editable } = this.props;
     const actions = [
       <FlatButton
         label="Close"
@@ -55,7 +56,7 @@ class GoalCard extends Component {
       />
     ];
 
-    if (path && actions) {
+    if (path && editable) {
       actions.unshift(
         <FlatButton
           label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
