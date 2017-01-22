@@ -1,6 +1,8 @@
 import { USER } from '../actions/UserActions';
 
 export const initialState = {
+  authServiceInit: false,
+  isLoading: false,
   isLoggedIn: false,
   userData: {
     id: null,
@@ -16,18 +18,31 @@ export const initialState = {
 
 function userReducer(state = initialState, action = {}) {
   switch (action.type) {
-    case USER.LOGIN:
+    case USER.AUTH.LOGIN_SUCCESS:
       return {
         ...state,
         userData: {
           ...state.userData,
           ...action.userData
         },
-        isLoggedIn: true
+        isLoggedIn: true,
+        authServiceInit: true,
       };
-    case USER.LOGOUT:
+    case USER.AUTH.LOGOUT:
       return {
-        ...initialState
+        ...initialState,
+        authServiceInit: true,
+      };
+    case USER.AUTH.LOGIN_START:
+      return {
+        ...initialState,
+        isLoading: true,
+        authServiceInit: true,
+      };
+    case USER.AUTH.LOGIN_FAILURE:
+      return {
+        ...initialState,
+        authServiceInit: true,
       };
     default:
       return state;

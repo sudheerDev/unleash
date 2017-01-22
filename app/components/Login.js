@@ -1,21 +1,36 @@
 import React, { PropTypes } from 'react';
 import unleashLogo from '../assets/logo.png';
 import Paper from 'material-ui/Paper';
+import Loading from './Loading';
 
 let styles = {};
 
-const Login = ({ userLoginProcess }) => (
-  <div style={styles.principalContainerStyle}>
-    <Paper zDepth={3} style={styles.paperStyle}>
-      <img src={unleashLogo} style={styles.logoStyle} alt="Unleash Logo" />
-      <h1 style={styles.headerStyle}>Unleash your potential</h1>
-      <button style={styles.buttonStyle} onClick={() => userLoginProcess()}>Login</button>
-    </Paper>
-  </div>
-);
+const Login = ({ userLoginProcess, isLoading, authServiceInit }) => {
+  const loginButton = (
+    <button style={styles.buttonStyle} onClick={() => userLoginProcess()}>Login</button>
+  );
+  const message = isLoading ? 'Loading your superpowers' : 'Unleash your potential';
+  const actionElement = isLoading ? <Loading style={styles.spinner} /> : loginButton;
+
+  return (
+    <div style={styles.principalContainerStyle}>
+      <Paper zDepth={3} style={styles.paperStyle}>
+        <img src={unleashLogo} style={styles.logoStyle} alt="Unleash Logo" />
+        {authServiceInit && (
+          <div style={styles.centerContainer}>
+            <h1 style={styles.headerStyle}>{message}</h1>
+            {actionElement}
+          </div>
+        )}
+      </Paper>
+    </div>
+  );
+};
 
 Login.propTypes = {
   userLoginProcess: PropTypes.func,
+  isLoading: PropTypes.bool,
+  authServiceInit: PropTypes.bool,
 };
 
 styles = {
@@ -24,6 +39,15 @@ styles = {
     alignItems: 'center',
     marginTop: '40px',
     justifyContent: 'center',
+  },
+  centerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    display: 'flex',
+  },
+  spinner: {
+    marginTop: 0,
   },
   paperStyle: {
     padding: '30px',

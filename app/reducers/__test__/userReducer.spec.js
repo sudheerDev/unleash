@@ -21,6 +21,7 @@ describe('User Reducer', () => {
 
     const expectedValue = {
       ...initialState,
+      authServiceInit: true,
       isLoggedIn: true,
       userData: fakeUser
     };
@@ -30,10 +31,45 @@ describe('User Reducer', () => {
   it('should return the user state with the isLogged false and the user data empty', () => {
     const fakeUser = generate('user', 1)[0];
     const state = {
+      authServiceInit: true,
       isLoggedIn: true,
       userData: fakeUser
     };
+    const expectedValue = Object.assign({}, initialState, { authServiceInit: true});
     const action = UserActions.userLogout();
-    expect(userReducer(state, action)).to.deep.equal(initialState);
+    expect(userReducer(state, action)).to.deep.equal(expectedValue);
+  });
+
+  it('should return the user state with the isLogged false, the user data empty and the loading' +
+    'equal to true', () => {
+    const expectedValue = {
+      authServiceInit: true,
+      isLoggedIn: false,
+      isLoading: true,
+      userData: {
+        id: null,
+        fullName: null,
+        isAdmin: false,
+        picture: null,
+        firstName: null,
+        lastName: null,
+        email: null,
+        username: null
+      }
+    };
+    const action = UserActions.startLoginProcess();
+    expect(userReducer(initialState, action)).to.deep.equal(expectedValue);
+  });
+
+  it('should return the user state with the isLogged false and the user data empty when the login process fail', () => {
+    const fakeUser = generate('user', 1)[0];
+    const state = {
+      authServiceInit: true,
+      isLoggedIn: true,
+      userData: fakeUser
+    };
+    const expectedValue = Object.assign({}, initialState, { authServiceInit: true});
+    const action = UserActions.userLoginFailure();
+    expect(userReducer(state, action)).to.deep.equal(expectedValue);
   });
 });
