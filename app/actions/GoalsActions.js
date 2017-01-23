@@ -1,5 +1,6 @@
 import { toastr } from 'react-redux-toastr';
 import config from '../../config';
+import httpClient from '../services/httpClient';
 import fetchHelper from '../helpers/fetchHelper';
 
 export const GOALS = {
@@ -48,8 +49,7 @@ export function fetchGoals() {
   return (dispatch) => {
     dispatch({ type: GOALS.FETCH.START });
 
-    return fetch(config.goals_api_url)
-      .then(response => response.json())
+    return httpClient.get(config.goals_api_url)
       .then(goals => dispatch({ type: GOALS.FETCH.SUCCESS, goals }))
       .catch(errors => dispatch({ type: GOALS.FETCH.FAILURE, errors }));
   };
