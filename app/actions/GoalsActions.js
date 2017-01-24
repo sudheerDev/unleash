@@ -1,7 +1,6 @@
 import { toastr } from 'react-redux-toastr';
 import config from '../../config';
 import httpClient from '../services/httpClient';
-import fetchHelper from '../helpers/fetchHelper';
 
 export const GOALS = {
   FETCH: {
@@ -58,16 +57,15 @@ export function fetchGoals() {
 export function addGoalRequest() {
   return (dispatch, getState) => {
     const { name, description, tags, level, icon } = getState().goals.addGoalsModal;
-    const parameters = fetchHelper.urlEncodedPostOptions({
+    const body = {
       name,
       description,
       tags,
       level,
-      icon,
-    });
+      icon
+    };
     dispatch(showAddGoalsSpinner(true));
-    return fetch(config.goals_api_url, parameters)
-      .then(rawResponse => rawResponse.json())
+    return httpClient.post(config.goals_api_url, body)
       .then(() => {
         dispatch(resetGoalModal());
         dispatch(fetchGoals());

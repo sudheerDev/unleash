@@ -1,6 +1,6 @@
 import { toastr } from 'react-redux-toastr';
+import httpClient from '../services/httpClient';
 import config from '../../config';
-import fetchHelper from '../helpers/fetchHelper';
 
 export const SKILL = {
   FETCH: {
@@ -25,8 +25,7 @@ export function skillList() {
   return (dispatch) => {
     dispatch({ type: SKILL.FETCH.START });
 
-    return fetch(`${config.skills_api_url}.json`)
-      .then(response => response.json())
+    return httpClient.get(config.skills_api_url)
       .then(skills => dispatch({ type: SKILL.FETCH.SUCCESS, skills }))
       .catch(errors => dispatch({ type: SKILL.FETCH.FAILURE, errors }));
   };
@@ -35,9 +34,7 @@ export function skillList() {
 export function resourceAdd(skillSlug, resource) {
   return (dispatch) => {
     dispatch({ type: SKILL.ADD_RESOURCE.START });
-    const parameters = fetchHelper.postOptions(resource);
-    return fetch(`${config.skills_api_url}/${skillSlug}/resources.json`, parameters)
-      .then(response => response.json())
+    return httpClient.post(`${config.skills_api_url}/${skillSlug}/resources.json`, resource)
       .then(updatedSkill => dispatch({ type: SKILL.ADD_RESOURCE.SUCCESS, updatedSkill }))
       .catch(errors => dispatch({ type: SKILL.ADD_RESOURCE.FAILURE, errors }));
   };
@@ -74,12 +71,8 @@ export function updateAddSkillField(fieldKey, fieldValue) {
 export function addSkillRequest() {
   return (dispatch, getState) => {
     const { name } = getState().skills.addSkillModal;
-    const parameters = fetchHelper.urlEncodedPostOptions({
-      name,
-    });
     dispatch(showAddSkillSpinner(true));
-    return fetch(config.skills_api_url, parameters)
-      .then(rawResponse => rawResponse.json())
+    return httpClient.post(config.skills_api_url, { name })
       .then(() => {
         dispatch(resetSkillModal());
         dispatch(skillList());

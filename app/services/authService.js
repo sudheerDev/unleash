@@ -2,8 +2,8 @@ import _ from 'lodash';
 import { toastr } from 'react-redux-toastr';
 import config from '../../config';
 import * as UserActions from '../actions/UserActions';
+import httpClient from './httpClient';
 import authHelper from '../helpers/authHelper';
-import fetchHelper from '../helpers/fetchHelper';
 
 class AuthService {
 
@@ -40,30 +40,23 @@ class AuthService {
   }
 
   getUserById(userId) {
-    return fetch(config.profiles_api_url).then(response => response.json()).then(result => {
-      const user = _.find(result.Items, ['id', userId]);
-      return user;
-    })
-    .catch(exception => {
-      toastr.error('', exception);
-    });
+    return httpClient.get(config.profiles_api_url)
+      .then(result => _.find(result.Items, ['id', userId]))
+      .catch(exception => toastr.error('', exception));
   }
 
   registerTheUser(userProviderData) {
     const newUser = authHelper.setUpUnleashUser(userProviderData);
-    const parameters = fetchHelper.postOptions(newUser);
-    return fetch(config.profiles_api_url, parameters).then(response => response.json()).then(() => {
-      this.getUserById(newUser.id).then(unleashUser => {
+    return httpClient.post(config.profiles_api_url, newUser)
+      .then(() => this.getUserById(newUser.id))
+      .then(unleashUser => {
         if (unleashUser) {
           this.dispatch(UserActions.userLogin(unleashUser));
         } else {
           this.dispatch(UserActions.userLogout());
         }
-      });
-    })
-    .catch(() => {
-      toastr.error('', 'There was a problem registering the user.');
-    });
+      })
+      .catch(() => toastr.error('', 'There was a problem registering the user.'));
   }
 
   static userLogin() {

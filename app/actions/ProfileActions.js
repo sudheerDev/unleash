@@ -1,3 +1,4 @@
+import httpClient from '../services/httpClient';
 import config from '../../config';
 
 export const PROFILE = {
@@ -23,8 +24,7 @@ export function fetchProfile(id) {
   return (dispatch) => {
     dispatch({ type: PROFILE.FETCH.START });
 
-    return fetch(`${config.profiles_api_url}/${id}`)
-      .then(response => response.json())
+    return httpClient.get(`${config.profiles_api_url}/${id}`)
       .then(fetchedProfile => dispatch({ type: PROFILE.FETCH.SUCCESS, fetchedProfile }))
       .catch(error => dispatch({ type: PROFILE.FETCH.FAILURE, error }));
   };
@@ -34,8 +34,7 @@ export function profileList() {
   return (dispatch) => {
     dispatch({ type: PROFILE.LIST.START });
 
-    return fetch(config.profiles_api_url)
-      .then(response => response.json())
+    return httpClient.get(config.profiles_api_url)
       .then(profiles => dispatch({ type: PROFILE.LIST.SUCCESS, profiles }))
       .catch(errors => dispatch({ type: PROFILE.LIST.FAILURE, errors }));
   };
@@ -45,8 +44,7 @@ export function profileListBySkill(slug, calledBy) {
   return (dispatch) => {
     dispatch({ type: PROFILE.LIST_BY_SKILL.START });
 
-    return fetch(`${config.profiles_api_url}?skillId=${slug}`)
-      .then(response => response.json())
+    return httpClient.get(`${config.profiles_api_url}?skillId=${slug}`)
       .then(profilesBySkill => {
         const skill = { ...profilesBySkill, calledBy };
         dispatch({ type: PROFILE.LIST_BY_SKILL.SUCCESS, skill });

@@ -4,6 +4,7 @@
  * @author Kelvin De Moya <kelvin.demoya@x-team.com>
  */
 
+import httpClient from '../services/httpClient';
 import config from '../../config';
 
 export const PATHS = {
@@ -33,8 +34,7 @@ export function pathsList(userId) {
   return (dispatch) => {
     dispatch({ type: PATHS.FETCH.START });
 
-    return fetch(`${config.paths_api_url}?userId=${userId}`)
-      .then(response => response.json())
+    return httpClient.get(`${config.paths_api_url}?userId=${userId}`)
       .then(paths => dispatch({ type: PATHS.FETCH.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.FETCH.FAILURE, errors }));
   };
@@ -44,16 +44,7 @@ export function pathsCreate(pathOwnerId) {
   return (dispatch) => {
     dispatch({ type: PATHS.CREATE.START });
 
-    return fetch(config.paths_api_url,
-      {
-        method: 'post',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId: pathOwnerId })
-      })
-      .then(response => response.json())
+    return httpClient.post(config.paths_api_url, { userId: pathOwnerId })
       .then(paths => dispatch({ type: PATHS.CREATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.CREATE.FAILURE, errors }));
   };
@@ -63,16 +54,7 @@ export function pathsRename(pathId, newName) {
   return (dispatch) => {
     dispatch({ type: PATHS.UPDATE.START });
 
-    return fetch(`${config.paths_api_url}/${pathId}`,
-      {
-        method: 'put',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: newName }),
-      })
-      .then(response => response.json())
+    return httpClient.put(`${config.paths_api_url}/${pathId}`, { name: newName })
       .then(paths => dispatch({ type: PATHS.UPDATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.UPDATE.FAILURE, errors }));
   };
@@ -84,16 +66,7 @@ export function pathsUpdateGoal(path, goal, data) {
   return (dispatch) => {
     dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
 
-    return fetch(`${config.paths_api_url}/${path.id}/goals/${goal.id}`,
-      {
-        method: 'put',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-      })
-      .then(response => response.json())
+    return httpClient.put(`${config.paths_api_url}/${path.id}/goals/${goal.id}`, data)
       .then(paths => dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal }))
       .catch(errors => dispatch({ type: PATHS.UPDATE_GOAL.FAILURE, errors, goal: inflatedGoal }));
   };
