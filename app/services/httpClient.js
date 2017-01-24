@@ -5,8 +5,7 @@ function handleResponse(res) {
     .then(([response, json]) => {
       if (response.status < 200 || response.status >= 300) {
         if (errorPages.includes(response.status)) {
-          // TODO: create error page
-          // location.href = `/error/${response.status}`;
+          location.href = `/error/${response.status}`;
           return json;
         }
         const error = new Error(json.message);
