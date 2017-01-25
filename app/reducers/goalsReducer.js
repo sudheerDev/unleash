@@ -6,6 +6,7 @@ const initialState = {
   addGoalsModal: {
     showModal: false,
     showSpinner: false,
+    path: '',
     name: '',
     description: '',
     tags: [],

@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import * as ProfileActions from '../actions/ProfileActions';
 import * as PathsActions from '../actions/PathsActions';
+import * as GoalsActions from '../actions/GoalsActions';
 import Profile from '../components/Profile';
 
 function mapStateToProps(state) {
@@ -16,7 +17,8 @@ function mapStateToProps(state) {
     userId: state.userId,
     paths: state.paths,
     profiles: state.profiles,
-    loggedInUser: state.user.userData
+    loggedInUser: state.user.userData,
+    addModalParameters: state.goals.addGoalsModal,
   };
 }
 
@@ -25,6 +27,7 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({
       ...ProfileActions,
       ...PathsActions,
+      ...GoalsActions,
     }, dispatch)
   };
 }
