@@ -48,7 +48,6 @@ describe('Goal Card', () => {
       expect(component.find('Dialog').props().open).to.be.false;
       childComponent.props().onTouchTap();
       expect(component.find('Dialog').props().open).to.be.true;
-      expect(component.find('Dialog').props().children[0].props.children).to.equal(goalData.description);
     });
   });
 });
