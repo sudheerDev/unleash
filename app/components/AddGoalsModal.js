@@ -6,6 +6,8 @@ import ChipInput from 'material-ui-chip-input';
 import FlatButton from 'material-ui/FlatButton';
 import Loading from './Loading';
 import IconSelector from './IconSelector';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 let styles = {};
 
@@ -18,6 +20,7 @@ class AddGoalsModal extends React.Component {
         {this.generateTextField('name')}
         {this.generateTextField('description')}
         {this.generateTextField('level')}
+        {this.generatePathsSelectField()}
         <IconSelector
           value={parameters.icon}
           onChange={(value) => actions.updateAddGoalsField('icon', value)}
@@ -32,6 +35,28 @@ class AddGoalsModal extends React.Component {
         />
       </div>
     );
+  }
+
+  generatePathsSelectField() {
+    const { actions, parameters, withPath } = this.props;
+    let pathsSelectField = null;
+
+    if (withPath) {
+      pathsSelectField = (
+        <SelectField
+          floatingLabelText="Path"
+          style={styles.textFields}
+          value={parameters.path}
+          onChange={(event, index, value) => actions.updateAddGoalsField('path', value)}
+        >
+          {parameters.paths.map(path => (
+            <MenuItem key={path.id} value={path.id} primaryText={path.name} />
+          ))}
+        </SelectField>
+      );
+    }
+
+    return pathsSelectField;
   }
 
   generateTextField(fieldName) {
@@ -59,7 +84,7 @@ class AddGoalsModal extends React.Component {
   }
 
   render() {
-    const { actions, parameters } = this.props;
+    const { actions, parameters, onSubmit } = this.props;
     const modalContent = parameters.showSpinner ? <Loading /> : this.getGoalForm();
 
     const cancelButton = (
@@ -72,7 +97,7 @@ class AddGoalsModal extends React.Component {
       <FlatButton
         label="Submit"
         secondary
-        onTouchTap={() => actions.addGoalRequest()}
+        onTouchTap={() => onSubmit().then(() => actions.resetGoalModal())}
         disabled={parameters.showSpinner}
       />);
 
@@ -94,8 +119,10 @@ class AddGoalsModal extends React.Component {
 
 AddGoalsModal.propTypes = {
   actions: React.PropTypes.object.isRequired,
+  onSubmit: React.PropTypes.func.isRequired,
   parameters: React.PropTypes.object.isRequired,
   tagsOptions: React.PropTypes.array.isRequired,
+  withPath: React.PropTypes.bool
 };
 
 styles = {

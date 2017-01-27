@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Path from './Path';
 import UserCard from './UserCard';
 import Paper from 'material-ui/Paper';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import AddGoalsModal from './AddGoalsModal';
 
 let styles = {};
 
@@ -15,13 +18,37 @@ class Profile extends Component {
   }
 
   render() {
-    const { actions, params, paths, profiles, loggedInUser } = this.props;
+    const { actions, params, paths, profiles, loggedInUser, addModalParameters } = this.props;
     const userId = params.userId;
     const editable = loggedInUser.isAdmin || loggedInUser.id === userId;
     const skills = [
       { name: 'mongoDB', id: 'c390be96-168b-4f42-a0cd-933fbc46e249' },
       { name: 'React', id: 'c390be96-168b-4f42-a0cd-933fbc46e240' }
     ];
+    const tags = [];
+    let addGoalButton = null;
+    if (editable) {
+      addGoalButton = (
+        <div>
+          <FloatingActionButton
+            style={styles.addButton}
+            onClick={() => actions.showAddGoalsModal(true)}
+          >
+            <ContentAdd />
+          </FloatingActionButton>
+          <AddGoalsModal
+            parameters={addModalParameters}
+            actions={actions}
+            tagsOptions={tags}
+            onSubmit={actions.addGoalToPathRequest}
+            withPath
+          />
+        </div>
+      );
+    }
+
+    addModalParameters.paths = paths.list;
+
     return (
       <div>
         <div style={styles.userWrapper}>
@@ -41,6 +68,7 @@ class Profile extends Component {
           editable={editable}
           loggedInUser={loggedInUser}
         />
+        {addGoalButton}
       </div>
     );
   }
@@ -53,7 +81,8 @@ Profile.propTypes = {
   params: React.PropTypes.object.isRequired,
   paths: React.PropTypes.object.isRequired,
   profiles: React.PropTypes.object.isRequired,
-  loggedInUser: React.PropTypes.object.isRequired
+  loggedInUser: React.PropTypes.object.isRequired,
+  addModalParameters: React.PropTypes.object.isRequired,
 };
 
 export default Profile;
@@ -97,5 +126,10 @@ styles = {
     margin: 'auto',
     width: '90%',
     maxWidth: '1150px',
+  },
+  addButton: {
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
   },
 };
