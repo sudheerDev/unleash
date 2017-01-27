@@ -34,7 +34,13 @@ class Profile extends Component {
             </Paper>
           ))}
         </div>
-        <Path userId={userId} actions={actions} paths={paths} editable={editable} />
+        <Path
+          userId={userId}
+          actions={actions}
+          paths={paths}
+          editable={editable}
+          loggedInUser={loggedInUser}
+        />
       </div>
     );
   }
