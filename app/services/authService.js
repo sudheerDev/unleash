@@ -26,6 +26,7 @@ class AuthService {
     if (user) {
       const userProviderData = _.head(user.providerData);
       const userId = userProviderData.uid;
+      this.dispatch(UserActions.startLoginProcess());
       this.getUserById(userId).then(unleashUser => {
         if (unleashUser) {
           this.dispatch(UserActions.userLogin(unleashUser));
@@ -33,6 +34,8 @@ class AuthService {
         } else {
           this.registerTheUser(userProviderData);
         }
+      }).catch(() => {
+        toastr.error('', 'There was a problem with the server, please try again.');
       });
     } else {
       this.dispatch(UserActions.userLogout());
