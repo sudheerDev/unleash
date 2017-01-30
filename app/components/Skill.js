@@ -176,7 +176,16 @@ class Skill extends Component {
     if (resources.length === 0) {
       return (
         <div style={styles.resources}>
-          <p style={styles.empty}>No resources added yet for this skill.</p>
+          <RaisedButton
+            label="Add Resource"
+            backgroundColor="#8FD694"
+            labelColor="#FFFFFF"
+            onTouchTap={() => this.handleAddResource()}
+            style={styles.addResourceButton}
+          />
+          <div style={styles.resources}>
+            <p style={styles.empty}>No resources added yet for this skill.</p>
+          </div>
         </div>
       );
     }
