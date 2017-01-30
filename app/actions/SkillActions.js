@@ -18,6 +18,11 @@ export const SKILL = {
     SUCCESS: 'VOTE_RESOURCE_SUCCESS',
     FAILURE: 'VOTE_RESOURCE_FAILURE',
   },
+  REMOVE_RESOURCE: {
+    START: 'REMOVE_RESOURCE_START',
+    SUCCESS: 'REMOVE_RESOURCE_SUCCESS',
+    FAILURE: 'REMOVE_RESOURCE_FAILURE',
+  },
   ADD: {
     UPDATE_FIELD: 'SKILL_ADD_UPDATE_FIELD',
     SHOW_MODAL: 'SKILL_ADD_SHOW_MODAL',
@@ -51,6 +56,16 @@ export function resourceAddVote(skillSlug, resource) {
     return httpClient.post(`${config.skills_api_url}/${skillSlug}/resources/${resource.id}/votes.json`, resource)
       .then(updatedSkill => dispatch({ type: SKILL.VOTE_RESOURCE.SUCCESS, updatedSkill }))
       .catch(errors => dispatch({ type: SKILL.VOTE_RESOURCE.FAILURE, errors }));
+  };
+}
+
+export function resourceRemove(resource, skillSlug) {
+  return (dispatch) => {
+    dispatch({ type: SKILL.REMOVE_RESOURCE.START });
+
+    return httpClient.delete(`${config.skills_api_url}/${skillSlug}/resources/${resource.id}.json`)
+      .then(updatedSkill => dispatch({ type: SKILL.REMOVE_RESOURCE.SUCCESS, updatedSkill }))
+      .catch(errors => dispatch({ type: SKILL.REMOVE_RESOURCE.FAILURE, errors }));
   };
 }
 
