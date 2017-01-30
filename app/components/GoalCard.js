@@ -38,8 +38,8 @@ class GoalCard extends Component {
   toggleAchievement() {
     const { goal, path } = this.props;
     const achieved = !goal.achieved;
-    this.props.actions.pathsUpdateGoal(path, goal, { achieved });
-    this.props.toggleOff(DIALOG_TOGGLE);
+    this.props.actions.pathsUpdateGoal(path, goal, { achieved })
+      .then(() => this.props.toggleOff(DIALOG_TOGGLE));
   }
 
   updateDueDate(dueDate) {
@@ -53,7 +53,7 @@ class GoalCard extends Component {
    * @returns {Object} dialog element
    */
   renderDialog() {
-    const { goal, path, editable } = this.props;
+    const { goal, path, loading, editable } = this.props;
     const actions = [
       <FlatButton
         label="Close"
@@ -76,25 +76,25 @@ class GoalCard extends Component {
           hintText="Due Date"
           container="inline"
           mode="landscape"
-          defaultDate={new Date(goal.dueDate)}
           onChange={(event, date) => this.updateDueDate(date)}
+          value={goal.dueDate ? new Date(goal.dueDate) : null}
         />
       );
     }
 
     return (
       <Dialog
-        actions={actions}
-        title={goal.name}
+        actions={!loading ? actions : null}
+        title={!loading ? goal.name : null}
         open={this.props.getToggleState(DIALOG_TOGGLE)}
         onRequestClose={() => this.props.toggleOff(DIALOG_TOGGLE)}
       >
-        <div>
-          {goal.description}
-        </div>
-        <div>
-          {editableInputs}
-        </div>
+        <Loading loading={loading}>
+          <div>
+            {goal.description}
+            {editableInputs}
+          </div>
+        </Loading>
       </Dialog>
     );
   }
@@ -107,26 +107,22 @@ class GoalCard extends Component {
     // @TODO: (Kelvin De Moya) - Just for testing. Update once goal type is implemented in the api.
     const isMilestone = dueDays >= 10 || goal.level === 4;
 
-    if (loading) {
-      return (
-        <Paper style={goalStyle} zDepth={2}>
-          <Loading />
-        </Paper>
-      );
-    }
-
     return (
       <Paper style={goalStyle} zDepth={2} onTouchTap={() => this.props.toggleOn(DIALOG_TOGGLE)} >
-        {isMilestone && <img src={MilestoneImg} style={styles.milestone} alt="milestone" />}
-        <i className={goal.icon} style={styles.icon} />
-        <span style={styles.title}>{goal.name}</span>
-        <div style={styles.details}>
-          <span style={styles.level}>Lvl {goal.level}</span>
-          <div style={Object.assign({}, styles.status, achieved && styles.achieved)}>
-            <i className={achieved ? 'icon-checkmark' : 'icon-hour-glass'} />
+        <Loading loading={loading}>
+          <div>
+            {isMilestone && <img src={MilestoneImg} style={styles.milestone} alt="milestone" />}
+            <i className={goal.icon} style={styles.icon} />
+            <span style={styles.title}>{goal.name}</span>
+            <div style={styles.details}>
+              <span style={styles.level}>Lvl {goal.level}</span>
+              <div style={Object.assign({}, styles.status, achieved && styles.achieved)}>
+                <i className={achieved ? 'icon-checkmark' : 'icon-hour-glass'} />
+              </div>
+              <span style={styles.dueDate}><i className="icon-history" /> {dueDays}</span>
+            </div>
           </div>
-          <span style={styles.dueDate}><i className="icon-history" /> {dueDays}</span>
-        </div>
+        </Loading>
         {this.renderDialog()}
       </Paper>
     );
