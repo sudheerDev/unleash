@@ -7,6 +7,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { Router, browserHistory } from 'react-router';
+import { IntlProvider } from 'react-intl';
 import routes from './config/routes';
 import configureStore from './store/configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -22,9 +23,11 @@ authService.init();
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={browserHistory}>
-      {routes}
-    </Router>
+    <IntlProvider locale="en">
+      <Router history={browserHistory}>
+        {routes}
+      </Router>
+    </IntlProvider>
   </Provider>,
   document.getElementById('app')
 );
