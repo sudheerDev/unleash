@@ -10,6 +10,7 @@ module.exports = {
   announcements_api_url: '',
   unleash_app_version: 'local',
   news_api_url: '',
+  slack_bot_url: '',
   firebaseApiKey: '',
   firebaseAuthDomain: '',
   firebaseDatabaseURL: '',
