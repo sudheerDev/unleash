@@ -126,14 +126,15 @@ export function pathsUpdateGoal(path, goal, data) {
 
 export function addGoalToPathRequest() {
   return (dispatch, getState) => {
-    const { name, description, tags, level, icon, path } = getState().goals.addGoalsModal;
+    const { name, description, tags, level, icon, path, dueDate } = getState().goals.addGoalsModal;
     const { profile } = getState().profiles;
     const parameters = fetchHelper.urlEncodedPostOptions({
       name,
       description,
       tags,
       level,
-      icon
+      icon,
+      dueDate,
     });
 
     dispatch({ type: PATHS.ADD_GOAL.START });

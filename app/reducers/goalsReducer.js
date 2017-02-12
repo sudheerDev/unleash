@@ -12,6 +12,7 @@ const initialState = {
     tags: [],
     icon: '',
     level: '',
+    dueDate: '',
   }
 };
 
