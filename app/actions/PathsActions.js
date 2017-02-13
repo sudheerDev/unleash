@@ -4,8 +4,8 @@
  * @author Kelvin De Moya <kelvin.demoya@x-team.com>
  */
 
+import httpClient from '../services/httpClient';
 import config from '../../config';
-import fetchHelper from '../helpers/fetchHelper';
 import slackService from '../services/slackService';
 import { toastr } from 'react-redux-toastr';
 
@@ -46,8 +46,7 @@ export function pathsList(userId) {
   return (dispatch) => {
     dispatch({ type: PATHS.FETCH.START });
 
-    return fetch(`${config.paths_api_url}?userId=${userId}`)
-      .then(response => response.json())
+    return httpClient.get(`${config.paths_api_url}?userId=${userId}`)
       .then(paths => dispatch({ type: PATHS.FETCH.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.FETCH.FAILURE, errors }));
   };
@@ -57,16 +56,7 @@ export function pathsCreate(pathOwnerId) {
   return (dispatch) => {
     dispatch({ type: PATHS.CREATE.START });
 
-    return fetch(config.paths_api_url,
-      {
-        method: 'post',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId: pathOwnerId })
-      })
-      .then(response => response.json())
+    return httpClient.post(config.paths_api_url, { userId: pathOwnerId })
       .then(paths => dispatch({ type: PATHS.CREATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.CREATE.FAILURE, errors }));
   };
@@ -76,16 +66,7 @@ export function pathsRename(pathId, newName) {
   return (dispatch) => {
     dispatch({ type: PATHS.UPDATE.START });
 
-    return fetch(`${config.paths_api_url}/${pathId}`,
-      {
-        method: 'put',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: newName }),
-      })
-      .then(response => response.json())
+    return httpClient.put(`${config.paths_api_url}/${pathId}`, { name: newName })
       .then(paths => dispatch({ type: PATHS.UPDATE.SUCCESS, paths }))
       .catch(errors => dispatch({ type: PATHS.UPDATE.FAILURE, errors }));
   };
@@ -95,10 +76,7 @@ export function pathsRemove(pathId) {
   return (dispatch) => {
     dispatch({ type: PATHS.REMOVE.START, pathId });
 
-    return fetch(`${config.paths_api_url}/${pathId}`, {
-      method: 'delete',
-    })
-      .then((response) => (response.status >= 400 ? Promise.reject(response.text()) : null))
+    return httpClient.delete(`${config.paths_api_url}/${pathId}`)
       .then(() => dispatch({ type: PATHS.REMOVE.SUCCESS, pathId }))
       .catch((errors) => dispatch({ type: PATHS.REMOVE.FAILURE, errors }));
   };
@@ -110,16 +88,7 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
   return (dispatch, getState) => {
     dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
 
-    return fetch(`${config.paths_api_url}/${path.id}/goals/${goal.id}`,
-      {
-        method: 'put',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-      })
-      .then(response => response.json())
+    return httpClient.put(`${config.paths_api_url}/${path.id}/goals/${goal.id}`, data)
       .then(paths => {
         dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal });
 
@@ -142,19 +111,18 @@ export function addGoalToPathRequest() {
   return (dispatch, getState) => {
     const { name, description, tags, level, icon, path, dueDate } = getState().goals.addGoalsModal;
     const { profile } = getState().profiles;
-    const parameters = fetchHelper.urlEncodedPostOptions({
+    const parameters = {
       name,
       description,
       tags,
       level,
       icon,
       dueDate,
-    });
+    };
 
     dispatch({ type: PATHS.ADD_GOAL.START });
 
-    return fetch(`${config.paths_api_url}/${path}/goals`, parameters)
-      .then(rawResponse => rawResponse.json())
+    return httpClient.post(`${config.paths_api_url}/${path}/goals`, parameters)
       .then(() => {
         dispatch({ type: PATHS.ADD_GOAL.SUCCESS });
         dispatch(pathsList(profile.id));

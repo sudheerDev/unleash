@@ -1,12 +1,6 @@
 import _ from 'lodash';
-import fetchHelper from '../helpers/fetchHelper';
+import httpClient from '../services/httpClient';
 import config from '../../config';
-
-const notify = (slackPayload) => {
-  const options = fetchHelper.postOptions(slackPayload);
-
-  return fetch(`${config.slack_bot_url}/notify`, options).then((response) => response.text());
-};
 
 const notifyAchieved = (parameters) => {
   const profileLink = `${window.location.protocol}//${window.location.host}/profiles/${parameters.user.id}`; // eslint-disable-line
@@ -40,7 +34,7 @@ const notifyAchieved = (parameters) => {
     user: 'general',
   };
 
-  return notify(payload);
+  return httpClient(`${config.slack_bot_url}/notify`, payload);
 };
 
 

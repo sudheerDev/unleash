@@ -1,5 +1,6 @@
-import config from '../../config';
 import { range } from 'lodash';
+import config from '../../config';
+import httpClient from '../services/httpClient';
 
 import generateNews from '../testUtils/fixtures/news';
 
@@ -28,8 +29,7 @@ export function newsList() {
       return dispatch(newsListSuccess(news));
     }
 
-    return fetch(config.news_api_url)
-      .then(response => response.json())
+    return httpClient.get(config.news_api_url)
       .then(news => dispatch(newsListSuccess(news)))
       .catch(errors => dispatch(newsListFailure(errors)));
   };

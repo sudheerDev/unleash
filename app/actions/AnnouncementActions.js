@@ -1,5 +1,6 @@
-import config from '../../config';
 import { range } from 'lodash';
+import config from '../../config';
+import httpClient from '../services/httpClient';
 
 import generateAnnouncement from '../testUtils/fixtures/announcement';
 
@@ -28,8 +29,7 @@ export function announcementList() {
       return dispatch(announcementListSuccess(announcements));
     }
 
-    return fetch(config.announcements_api_url)
-      .then(response => response.json())
+    return httpClient.get(config.announcements_api_url)
       .then(announcements => dispatch(announcementListSuccess(announcements)))
       .catch(errors => dispatch(announcementListFailure(errors)));
   };
