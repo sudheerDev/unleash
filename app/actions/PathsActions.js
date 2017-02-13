@@ -6,6 +6,7 @@
 
 import config from '../../config';
 import fetchHelper from '../helpers/fetchHelper';
+import slackService from '../services/slackService';
 import { toastr } from 'react-redux-toastr';
 
 export const PATHS = {
@@ -103,10 +104,10 @@ export function pathsRemove(pathId) {
   };
 }
 
-export function pathsUpdateGoal(path, goal, data) {
+export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
   const inflatedGoal = { ...goal, path };
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
 
     return fetch(`${config.paths_api_url}/${path.id}/goals/${goal.id}`,
@@ -119,7 +120,20 @@ export function pathsUpdateGoal(path, goal, data) {
         body: JSON.stringify(data),
       })
       .then(response => response.json())
-      .then(paths => dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal }))
+      .then(paths => {
+        dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal });
+
+        if (slackOptions.notifyOnSlack) {
+          const notificationParameters = {
+            goal: inflatedGoal,
+            user: getState().user.userData,
+            additionalMessage: slackOptions.additionalMessage,
+          };
+
+          slackService.notifyAchieved(notificationParameters)
+            .catch(() => toastr.error('', 'There was a problem with the slack notification'));
+        }
+      })
       .catch(errors => dispatch({ type: PATHS.UPDATE_GOAL.FAILURE, errors, goal: inflatedGoal }));
   };
 }
