@@ -8,6 +8,7 @@ import Loading from './Loading';
 import IconSelector from './IconSelector';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import DatePicker from 'material-ui/DatePicker';
 
 let styles = {};
 
@@ -21,6 +22,7 @@ class AddGoalsModal extends React.Component {
         {this.generateTextField('description')}
         {this.generateTextField('level')}
         {this.generatePathsSelectField()}
+        {this.generateDueDateField()}
         <IconSelector
           value={parameters.icon}
           onChange={(value) => actions.updateAddGoalsField('icon', value)}
@@ -34,6 +36,26 @@ class AddGoalsModal extends React.Component {
           onRequestDelete={(chip) => this.handleChipChange('remove', chip)}
         />
       </div>
+    );
+  }
+
+  generateDueDateField() {
+    const { actions, parameters, withPath } = this.props;
+
+    if (!withPath) {
+      return null;
+    }
+
+    return (
+      <DatePicker
+        style={styles.dueDateField}
+        textFieldStyle={styles.textFields}
+        hintText="Due Date"
+        container="inline"
+        mode="landscape"
+        onChange={(event, date) => actions.updateAddGoalsField('dueDate', date)}
+        value={parameters.dueDate}
+      />
     );
   }
 
@@ -140,6 +162,10 @@ styles = {
   textFields: {
     width: '100%',
   },
+  dueDateField: {
+    paddingTop: 20,
+    width: '100%',
+  }
 };
 
 export default AddGoalsModal;
