@@ -34,7 +34,7 @@ const notifyAchieved = (parameters) => {
     user: 'general',
   };
 
-  return httpClient(`${config.slack_bot_url}/notify`, payload);
+  return httpClient.post(`${config.slack_bot_url}/notify`, payload);
 };
 
 
