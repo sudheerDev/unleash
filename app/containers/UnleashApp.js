@@ -4,8 +4,12 @@ import AuthService from '../services/authService';
 
 function mapStateToProps(state) {
   const isLoggedIn = state.user.isLoggedIn;
+  const isLoading = state.user.isLoading;
+  const authServiceInit = state.user.authServiceInit;
   return {
-    isLoggedIn
+    isLoggedIn,
+    isLoading,
+    authServiceInit,
   };
 }
 

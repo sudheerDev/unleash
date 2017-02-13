@@ -36,10 +36,12 @@ class Paths extends Component {
   }
 
   renderPath(path) {
-    const { actions } = this.props;
+    const { actions, loggedInUser } = this.props;
+    const userCanEditPath = loggedInUser.isAdmin || loggedInUser.id === path.userId;
+
     return (
       <div key={path.id}>
-        <PathHeader path={path} actions={actions} />
+        <PathHeader path={path} actions={actions} showActions={userCanEditPath} />
         <div style={styles.pathsWrapper}>
           {this.renderGoals(path)}
         </div>
@@ -69,7 +71,7 @@ class Paths extends Component {
   render() {
     const { paths } = this.props;
 
-    if (paths.loading) {
+    if (paths.isLoading) {
       return <Loading />;
     }
 
@@ -84,9 +86,10 @@ class Paths extends Component {
 
 Paths.propTypes = {
   actions: React.PropTypes.object.isRequired,
-  userId: React.PropTypes.string.isRequired,
-  paths: React.PropTypes.object.isRequired,
   editable: React.PropTypes.bool.isRequired,
+  loggedInUser: React.PropTypes.object.isRequired,
+  paths: React.PropTypes.object.isRequired,
+  userId: React.PropTypes.string.isRequired,
 };
 
 styles = {

@@ -6,8 +6,12 @@ import toggleHOC from '../hocs/toggleHOC';
 import MilestoneImg from '../assets/milestone.png';
 import Loading from './Loading';
 import DatePicker from 'material-ui/DatePicker';
+import Checkbox from 'material-ui/Checkbox';
+import TextField from 'material-ui/TextField';
 
 const DIALOG_TOGGLE = 'dialog';
+const NOTIFY_ON_SLACK = 'notify-on-slack';
+
 let styles = {};
 
 const propTypes = {
@@ -19,9 +23,17 @@ const propTypes = {
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
+  toggle: React.PropTypes.func.isRequired,
 };
 
 class GoalCard extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      slackAdditionalMessage: '',
+    };
+  }
 
   /**
    * Calculate days left for Due Date.
@@ -38,13 +50,29 @@ class GoalCard extends Component {
   toggleAchievement() {
     const { goal, path } = this.props;
     const achieved = !goal.achieved;
-    this.props.actions.pathsUpdateGoal(path, goal, { achieved });
-    this.props.toggleOff(DIALOG_TOGGLE);
+    const slackOptions = {
+      notifyOnSlack: this.props.getToggleState(NOTIFY_ON_SLACK),
+      additionalMessage: this.state.slackAdditionalMessage,
+    };
+
+    this.props.actions.pathsUpdateGoal(path, goal, { achieved }, slackOptions)
+      .then(() => this.closeDialog());
   }
 
   updateDueDate(dueDate) {
     const { goal, path } = this.props;
     this.props.actions.pathsUpdateGoal(path, goal, { dueDate });
+  }
+
+  handleSlackMessageChange(event) {
+    this.setState({
+      slackAdditionalMessage: event.target.value,
+    });
+  }
+
+  closeDialog() {
+    this.props.toggleOff(NOTIFY_ON_SLACK);
+    this.props.toggleOff(DIALOG_TOGGLE);
   }
 
   /**
@@ -53,12 +81,12 @@ class GoalCard extends Component {
    * @returns {Object} dialog element
    */
   renderDialog() {
-    const { goal, path, editable } = this.props;
+    const { goal, path, loading, editable } = this.props;
     const actions = [
       <FlatButton
         label="Close"
         secondary
-        onTouchTap={() => this.props.toggleOff(DIALOG_TOGGLE)}
+        onTouchTap={() => this.closeDialog()}
       />
     ];
     let editableInputs = null;
@@ -71,30 +99,52 @@ class GoalCard extends Component {
           onTouchTap={() => this.toggleAchievement()}
         />
       );
+
+      const notifySlackValue = this.props.getToggleState(NOTIFY_ON_SLACK);
       editableInputs = (
-        <DatePicker
-          hintText="Due Date"
-          container="inline"
-          mode="landscape"
-          defaultDate={new Date(goal.dueDate)}
-          onChange={(event, date) => this.updateDueDate(date)}
-        />
+        <div>
+          <DatePicker
+            style={styles.dueDatePicker}
+            hintText="Due Date"
+            container="inline"
+            mode="landscape"
+            onChange={(event, date) => this.updateDueDate(date)}
+            value={goal.dueDate ? new Date(goal.dueDate) : null}
+          />
+          {!goal.achieved && (
+            <div>
+              <Checkbox
+                style={styles.notifySlackCheckbox}
+                checked={notifySlackValue}
+                onCheck={() => this.props.toggle(NOTIFY_ON_SLACK)}
+                label="Notify on Slack"
+              />
+              {notifySlackValue && (
+                <TextField
+                  onChange={(event) => this.handleSlackMessageChange(event)}
+                  style={styles.additionalMessageInput}
+                  hintText="Additional message (optional)"
+                />
+              )}
+            </div>
+          )}
+        </div>
       );
     }
 
     return (
       <Dialog
-        actions={actions}
-        title={goal.name}
+        actions={!loading ? actions : null}
+        title={!loading ? goal.name : null}
         open={this.props.getToggleState(DIALOG_TOGGLE)}
-        onRequestClose={() => this.props.toggleOff(DIALOG_TOGGLE)}
+        onRequestClose={() => this.closeDialog()}
       >
-        <div>
-          {goal.description}
-        </div>
-        <div>
-          {editableInputs}
-        </div>
+        <Loading loading={loading}>
+          <div>
+            {goal.description}
+            {editableInputs}
+          </div>
+        </Loading>
       </Dialog>
     );
   }
@@ -107,26 +157,22 @@ class GoalCard extends Component {
     // @TODO: (Kelvin De Moya) - Just for testing. Update once goal type is implemented in the api.
     const isMilestone = dueDays >= 10 || goal.level === 4;
 
-    if (loading) {
-      return (
-        <Paper style={goalStyle} zDepth={2}>
-          <Loading />
-        </Paper>
-      );
-    }
-
     return (
       <Paper style={goalStyle} zDepth={2} onTouchTap={() => this.props.toggleOn(DIALOG_TOGGLE)} >
-        {isMilestone && <img src={MilestoneImg} style={styles.milestone} alt="milestone" />}
-        <i className={goal.icon} style={styles.icon} />
-        <span style={styles.title}>{goal.name}</span>
-        <div style={styles.details}>
-          <span style={styles.level}>Lvl {goal.level}</span>
-          <div style={Object.assign({}, styles.status, achieved && styles.achieved)}>
-            <i className={achieved ? 'icon-checkmark' : 'icon-hour-glass'} />
+        <Loading loading={loading}>
+          <div>
+            {isMilestone && <img src={MilestoneImg} style={styles.milestone} alt="milestone" />}
+            <i className={goal.icon} style={styles.icon} />
+            <span style={styles.title}>{goal.name}</span>
+            <div style={styles.details}>
+              <span style={styles.level}>Lvl {goal.level}</span>
+              <div style={Object.assign({}, styles.status, achieved && styles.achieved)}>
+                <i className={achieved ? 'icon-checkmark' : 'icon-hour-glass'} />
+              </div>
+              <span style={styles.dueDate}><i className="icon-history" /> {dueDays}</span>
+            </div>
           </div>
-          <span style={styles.dueDate}><i className="icon-history" /> {dueDays}</span>
-        </div>
+        </Loading>
         {this.renderDialog()}
       </Paper>
     );
@@ -213,6 +259,16 @@ styles = {
     backgroundColor: '#8FD694',
     color: '#ffffff',
   },
+  dueDatePicker: {
+    marginTop: '15px',
+    width: '100%'
+  },
+  notifySlackCheckbox: {
+    marginTop: '15px',
+  },
+  additionalMessageInput: {
+    width: '100%',
+  }
 };
 
 export default toggleHOC(GoalCard);

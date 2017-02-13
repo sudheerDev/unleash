@@ -12,10 +12,17 @@ const muiTheme = getMuiTheme({
   },
 });
 
-const UnleashApp = ({ isLoggedIn, userLoginProcess, children }) => {
+const UnleashApp = ({ isLoggedIn, userLoginProcess, children, isLoading, authServiceInit }) => {
   const loggedContainer = <LoggedWrapper children={children} />;
-  const loginContainer = <Login userLoginProcess={userLoginProcess} />;
+  const loginContainer = (
+    <Login
+      userLoginProcess={userLoginProcess}
+      isLoading={isLoading}
+      authServiceInit={authServiceInit}
+    />
+  );
   const container = isLoggedIn ? loggedContainer : loginContainer;
+
   return (
     <MuiThemeProvider muiTheme={muiTheme}>
       <div>
@@ -34,6 +41,8 @@ UnleashApp.propTypes = {
   isLoggedIn: PropTypes.bool,
   userLoginProcess: PropTypes.func,
   children: PropTypes.node,
+  isLoading: PropTypes.bool,
+  authServiceInit: PropTypes.bool,
 };
 
 export default UnleashApp;

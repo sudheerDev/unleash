@@ -6,6 +6,8 @@
 
 import httpClient from '../services/httpClient';
 import config from '../../config';
+import slackService from '../services/slackService';
+import { toastr } from 'react-redux-toastr';
 
 export const PATHS = {
   FETCH: {
@@ -23,10 +25,20 @@ export const PATHS = {
     SUCCESS: 'UPDATE_PATHS_SUCCESS',
     FAILURE: 'UPDATE_PATHS_FAILURE'
   },
+  REMOVE: {
+    START: 'REMOVE_PATHS_START',
+    SUCCESS: 'REMOVE_PATHS_SUCCESS',
+    FAILURE: 'REMOVE_PATHS_FAILURE',
+  },
   UPDATE_GOAL: {
     START: 'UPDATE_PATHS_GOAL_START',
     SUCCESS: 'UPDATE_PATHS_GOAL_SUCCESS',
     FAILURE: 'UPDATE_PATHS_GOAL_FAILURE'
+  },
+  ADD_GOAL: {
+    START: 'ADD_PATHS_GOAL_START',
+    SUCCESS: 'ADD_PATHS_GOAL_SUCCESS',
+    FAILURE: 'ADD_PATHS_GOAL_FAILURE'
   }
 };
 
@@ -60,14 +72,65 @@ export function pathsRename(pathId, newName) {
   };
 }
 
-export function pathsUpdateGoal(path, goal, data) {
+export function pathsRemove(pathId) {
+  return (dispatch) => {
+    dispatch({ type: PATHS.REMOVE.START, pathId });
+
+    return httpClient.delete(`${config.paths_api_url}/${pathId}`)
+      .then(() => dispatch({ type: PATHS.REMOVE.SUCCESS, pathId }))
+      .catch((errors) => dispatch({ type: PATHS.REMOVE.FAILURE, errors }));
+  };
+}
+
+export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
   const inflatedGoal = { ...goal, path };
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
 
     return httpClient.put(`${config.paths_api_url}/${path.id}/goals/${goal.id}`, data)
-      .then(paths => dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal }))
+      .then(paths => {
+        dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal });
+
+        if (slackOptions.notifyOnSlack) {
+          const notificationParameters = {
+            goal: inflatedGoal,
+            user: getState().user.userData,
+            additionalMessage: slackOptions.additionalMessage,
+          };
+
+          slackService.notifyAchieved(notificationParameters)
+            .catch(() => toastr.error('', 'There was a problem with the slack notification'));
+        }
+      })
       .catch(errors => dispatch({ type: PATHS.UPDATE_GOAL.FAILURE, errors, goal: inflatedGoal }));
+  };
+}
+
+export function addGoalToPathRequest() {
+  return (dispatch, getState) => {
+    const { name, description, tags, level, icon, path, dueDate } = getState().goals.addGoalsModal;
+    const { profile } = getState().profiles;
+    const parameters = {
+      name,
+      description,
+      tags,
+      level,
+      icon,
+      dueDate,
+    };
+
+    dispatch({ type: PATHS.ADD_GOAL.START });
+
+    return httpClient.post(`${config.paths_api_url}/${path}/goals`, parameters)
+      .then(() => {
+        dispatch({ type: PATHS.ADD_GOAL.SUCCESS });
+        dispatch(pathsList(profile.id));
+        toastr.success('', `Goal ${name} added.`);
+      })
+      .catch(() => {
+        dispatch({ type: PATHS.ADD_GOAL.FAILURE });
+        toastr.error('', 'Sorry, something bad happen...');
+      });
   };
 }

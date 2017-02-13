@@ -22,7 +22,7 @@ describe('Add Goals Modal', () => {
   let mockedActions;
   let updateAddGoalsFieldSpy;
 
-  const renderAddGoalsModal = (options = {}) => {
+  const renderAddGoalsModal = (options = {}, props = {}) => {
     updateAddGoalsFieldSpy = sinon.spy();
     mockedActions = {
       updateAddGoalsField: updateAddGoalsFieldSpy,
@@ -35,16 +35,16 @@ describe('Add Goals Modal', () => {
       muiTheme: React.PropTypes.object
     };
 
-    component = shallow(
-      <AddGoalsModal
-        tagsOptions={tags}
-        actions={mockedActions}
-        parameters={_.assign(modalParameters, options)}
-      />,
-      {
-        context,
-        childContextTypes
-      });
+    const defaultProps = {
+      tagsOptions: tags,
+      actions: mockedActions,
+      parameters: _.assign(modalParameters, options)
+    };
+
+    component = shallow(<AddGoalsModal {...defaultProps} {...props} />, {
+      context,
+      childContextTypes
+    });
   };
 
   it('should render without problems', () => {
@@ -64,10 +64,40 @@ describe('Add Goals Modal', () => {
     expect(iconSelector.length).to.equal(1);
   });
 
+  it('should render icon select component', () => {
+    renderAddGoalsModal();
+    const iconSelector = component.find('IconSelector');
+    expect(iconSelector.length).to.equal(1);
+  });
+
   it('should render chip component for the tags', () => {
     renderAddGoalsModal();
     const chipInput = component.find('ChipInput');
     expect(chipInput.length).to.equal(1);
+  });
+
+  it('should not render the dueDate field if withPath prop is not provided', () => {
+    renderAddGoalsModal();
+    const dueDateField = component.find('DatePicker');
+    expect(dueDateField.length).to.equal(0);
+  });
+
+  it('should render the dueDate field if withPath prop is true', () => {
+    renderAddGoalsModal({ paths: [] }, { withPath: true });
+    const dueDateField = component.find('DatePicker');
+    expect(dueDateField.length).to.equal(1);
+  });
+
+  it('should call updateAddGoalFields when dueDate changes', () => {
+    renderAddGoalsModal({ paths: [] }, { withPath: true });
+    const dueDateField = component.find('DatePicker');
+    const onDueDateChange = dueDateField.prop('onChange');
+
+    expect(onDueDateChange).to.be.a('function');
+    expect(mockedActions.updateAddGoalsField.callCount).to.equal(0);
+    onDueDateChange('evt', 'test-date');
+    expect(mockedActions.updateAddGoalsField.callCount).to.equal(1);
+    expect(mockedActions.updateAddGoalsField.getCall(0).args).to.eql(['dueDate', 'test-date']);
   });
 
   it('should hide all the element and show the spinner', () => {

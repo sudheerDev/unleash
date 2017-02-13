@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MenuItem from 'material-ui/MenuItem';
 import toggleHOC from '../hocs/toggleHOC';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
-const DIALOG_TOGGLE = 'rename';
+const RENAME_DIALOG = 'rename';
+const REMOVE_DIALOG = 'remove';
 let styles = {};
 
 class PathHeader extends Component {
@@ -28,15 +33,25 @@ class PathHeader extends Component {
   };
 
   /**
+   * Open confirmation modal with delete path request bound
+   * to confirm button
+   */
+  handleRemovePath(pathId) {
+    const { actions, toggleOff } = this.props;
+    actions.pathsRemove(pathId);
+    toggleOff(RENAME_DIALOG);
+  }
+
+  /**
    * Send rename request to API and close dialog.
    * @param {String} pathId - Edited Path's id.
    */
-  renamePath(pathId) {
+  handleRenamePath(pathId) {
     const newName = this.state.renameText;
     const { actions, toggleOff } = this.props;
 
     actions.pathsRename(pathId, newName);
-    toggleOff(DIALOG_TOGGLE);
+    toggleOff(RENAME_DIALOG);
   }
 
   /**
@@ -46,22 +61,22 @@ class PathHeader extends Component {
   renderDialog(pathId) {
     const actions = [
       <FlatButton
-        label="Cancel"
-        onTouchTap={() => this.props.toggleOff(DIALOG_TOGGLE)}
+        label="Rename"
+        primary
+        onTouchTap={() => this.handleRenamePath(pathId)}
       />,
       <FlatButton
-        label="Rename Path"
-        primary
-        onTouchTap={() => this.renamePath(pathId)}
-      />
+        label="Cancel"
+        onTouchTap={() => this.props.toggleOff(RENAME_DIALOG)}
+      />,
     ];
 
     return (
       <Dialog
         actions={actions}
         title="Rename Path"
-        open={this.props.getToggleState(DIALOG_TOGGLE)}
-        onRequestClose={() => this.props.toggleOff(DIALOG_TOGGLE)}
+        open={this.props.getToggleState(RENAME_DIALOG)}
+        onRequestClose={() => this.props.toggleOff(RENAME_DIALOG)}
       >
         <TextField
           id="rename-path"
@@ -73,17 +88,62 @@ class PathHeader extends Component {
     );
   }
 
+  renderRemoveDialog(pathId) {
+    const actions = [
+      <FlatButton
+        label="Continue"
+        secondary
+        onTouchTap={() => this.handleRemovePath(pathId)}
+      />,
+      <FlatButton
+        label="Cancel"
+        onTouchTap={() => this.props.toggleOff(REMOVE_DIALOG)}
+      />,
+    ];
+
+    const pathName = this.state.renameText || 'Empty Path';
+    return (
+      <Dialog
+        title={`You are about to remove "${pathName}"`}
+        actions={actions}
+        open={this.props.getToggleState(REMOVE_DIALOG)}
+        onRequestClose={() => this.props.toggleOff(REMOVE_DIALOG)}
+      >
+        This action can not be undone.
+      </Dialog>
+    );
+  }
+
   render() {
     const { path } = this.props;
 
     return (
-      <div className="pathHeader" style={styles.pathHeader}>
-        <div style={styles.divider}></div>
-        <div style={styles.name} onTouchTap={() => this.props.toggleOn(DIALOG_TOGGLE)}>
-          <i className="icon-map" /> {path.name || 'Empty Path'}
+      <div className="pathHeader">
+        <div style={styles.pathHeader}>
+          <div style={styles.divider}></div>
+          <div style={styles.name}>
+            <i className="icon-map" /> {path.name || 'Empty Path'}
+          </div>
+          <div style={styles.divider}></div>
         </div>
-        <div style={styles.divider}></div>
-        {this.renderDialog(path.id)}
+        {this.props.showActions && (
+          <div className="pathActions" style={styles.pathHeaderActions}>
+            <IconMenu
+              iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+            >
+              <MenuItem
+                primaryText="Rename path"
+                onTouchTap={() => this.props.toggleOn(RENAME_DIALOG)}
+              />
+              <MenuItem
+                primaryText="Delete path"
+                onTouchTap={() => this.props.toggleOn(REMOVE_DIALOG)}
+              />
+            </IconMenu>
+            {this.renderDialog(path.id)}
+            {this.renderRemoveDialog(path.id)}
+          </div>
+        )}
       </div>
     );
   }
@@ -91,6 +151,7 @@ class PathHeader extends Component {
 
 PathHeader.propTypes = {
   path: React.PropTypes.object.isRequired,
+  showActions: React.PropTypes.bool.isRequired,
   actions: React.PropTypes.object.isRequired,
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
@@ -111,6 +172,13 @@ styles = {
     fontSize: '26px',
     textTransform: 'capitalize',
     color: '#969696',
+  },
+  pathHeaderActions: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    padding: '0 40px',
+    justifyContent: 'flex-end',
   },
   divider: {
     flexGrow: 1,

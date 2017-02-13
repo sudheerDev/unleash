@@ -17,6 +17,16 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/static/'
   },
+  resolve: {
+    alias: {
+      react: path.resolve(__dirname, './node_modules/react'),
+      React: path.resolve(__dirname, './node_modules/react')
+    },
+    fallback: path.resolve(__dirname, './node_modules')
+  },
+  resolveLoader: {
+      fallback: path.resolve(__dirname, './node_modules')
+  },
   module: {
     preLoaders: [
       {

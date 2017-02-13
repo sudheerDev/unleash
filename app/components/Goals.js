@@ -39,7 +39,12 @@ class Goals extends Component {
         >
           <ContentAdd />
         </FloatingActionButton>
-        <AddGoalsModal parameters={addModalParameters} actions={actions} tagsOptions={tags} />
+        <AddGoalsModal
+          parameters={addModalParameters}
+          actions={actions}
+          tagsOptions={tags}
+          onSubmit={actions.addGoalRequest}
+        />
       </div>
     );
   }
