@@ -15,7 +15,7 @@ class Paths extends Component {
   }
 
   renderGoals(path) {
-    const { actions, paths, editable } = this.props;
+    const { actions, paths, editable, userId } = this.props;
 
     return map(path.goals, (goal) => {
       const loading = some(paths.goals, { id: goal.id, path: { id: path.id } });
@@ -24,6 +24,7 @@ class Paths extends Component {
           key={goal.id}
           goal={goal}
           path={path}
+          userId={userId}
           actions={actions}
           loading={loading}
           editable={editable}

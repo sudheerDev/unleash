@@ -20,6 +20,7 @@ const propTypes = {
   editable: React.PropTypes.bool,
   goal: React.PropTypes.object.isRequired,
   path: React.PropTypes.object,
+  userId: React.PropTypes.string,
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
@@ -59,6 +60,12 @@ class GoalCard extends Component {
       .then(() => this.closeDialog());
   }
 
+  handleRemove() {
+    const { actions, goal, path, userId } = this.props;
+
+    actions.removeGoalFromPath(goal, path, userId);
+  }
+
   updateDueDate(dueDate) {
     const { goal, path } = this.props;
     this.props.actions.pathsUpdateGoal(path, goal, { dueDate });
@@ -85,7 +92,6 @@ class GoalCard extends Component {
     const actions = [
       <FlatButton
         label="Close"
-        secondary
         onTouchTap={() => this.closeDialog()}
       />,
     ];
@@ -97,6 +103,13 @@ class GoalCard extends Component {
           label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
           primary
           onTouchTap={() => this.toggleAchievement()}
+        />,
+      );
+      actions.unshift(
+        <FlatButton
+          label="Remove"
+          secondary
+          onTouchTap={() => this.handleRemove()}
         />,
       );
 

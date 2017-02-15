@@ -45,6 +45,11 @@ export const PATHS = {
     SUCCESS: 'ADD_PATHS_EXISTING_GOAL_SUCCESS',
     FAILURE: 'ADD_PATHS_EXISTING_GOAL_FAILURE',
   },
+  REMOVE_GOAL: {
+    START: 'REMOVE_PATHS_GOAL_START',
+    SUCCESS: 'REMOVE_PATHS_GOAL_SUCCESS',
+    FAILURE: 'REMOVE_PATHS_GOAL_FAILURE',
+  },
 };
 
 export function pathsList(userId) {
@@ -84,6 +89,23 @@ export function pathsRemove(pathId) {
     return httpClient.delete(`${config.paths_api_url}/${pathId}`)
       .then(() => dispatch({ type: PATHS.REMOVE.SUCCESS, pathId }))
       .catch(errors => dispatch({ type: PATHS.REMOVE.FAILURE, errors }));
+  };
+}
+
+export function removeGoalFromPath(goal, path, userId) {
+  return (dispatch) => {
+    dispatch({ type: PATHS.REMOVE_GOAL.START });
+
+    return httpClient.delete(`${config.paths_api_url}/${path.id}/goals/${goal.id}`)
+      .then(() => {
+        dispatch({ type: PATHS.REMOVE_GOAL.SUCCESS });
+        dispatch(pathsList(userId));
+        dispatch(addNotification(`Goal ${goal.name} removed.`, 'success'));
+      })
+      .catch(() => {
+        dispatch({ type: PATHS.REMOVE_GOAL.FAILURE });
+        dispatch(addNotification('Sorry, something bad happen...'));
+      });
   };
 }
 
