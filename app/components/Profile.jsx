@@ -5,7 +5,9 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { routerShape } from 'react-router/lib/PropTypes';
 import Path from './Path';
 import UserCard from './UserCard';
+import ContentPaste from 'material-ui/svg-icons/content/content-paste';
 import AddGoalsModal from './AddGoalsModal';
+import AddExistingGoalsModal from './AddExistingGoalsModal';
 
 let styles = {};
 
@@ -16,10 +18,21 @@ class Profile extends Component {
     const userId = params.userId;
     actions.fetchProfile(userId);
     actions.pathsList(userId);
+    actions.fetchGoals();
   }
 
   render() {
-    const { actions, params, paths, profiles, loggedInUser, addModalParameters } = this.props;
+    const {
+      actions,
+      params,
+      paths,
+      goals,
+      profiles,
+      loggedInUser,
+      addModalParameters,
+      addExistingGoalsModalParameters
+    } = this.props;
+
     const userId = params.userId;
     const editable = loggedInUser.isAdmin || loggedInUser.id === userId;
     const skills = [
@@ -32,10 +45,23 @@ class Profile extends Component {
       addGoalButton = (
         <div>
           <FloatingActionButton
-            style={styles.addButton}
+            style={styles.addCustomButton}
             onClick={() => actions.showAddGoalsModal(true)}
           >
             <ContentAdd />
+          </FloatingActionButton>
+          <AddExistingGoalsModal
+            parameters={addExistingGoalsModalParameters}
+            paths={paths.list}
+            goals={goals}
+            profile={profiles.profile}
+            actions={actions}
+          />
+          <FloatingActionButton
+            style={styles.addExistingButton}
+            onClick={() => actions.showAddExistingGoalsModal(true)}
+          >
+            <ContentPaste />
           </FloatingActionButton>
           <AddGoalsModal
             parameters={addModalParameters}
@@ -104,6 +130,13 @@ Profile.propTypes = {
     icon: React.PropTypes.string,
     level: React.PropTypes.string,
   }).isRequired,
+  goals: React.PropTypes.array.isRequired,
+  addExistingGoalsModalParameters: React.PropTypes.shape({
+    showModal: React.PropTypes.bool,
+    showSpinner: React.PropTypes.bool,
+    selectedPath: React.PropTypes.object,
+    selectedGoal: React.PropTypes.object,
+  }).isRequired
 };
 
 export default Profile;
@@ -148,9 +181,14 @@ styles = {
     width: '90%',
     maxWidth: '1150px',
   },
-  addButton: {
+  addCustomButton: {
     position: 'fixed',
     bottom: '20px',
     right: '20px',
+  },
+  addExistingButton: {
+    position: 'fixed',
+    bottom: '20px',
+    right: '100px',
   },
 };

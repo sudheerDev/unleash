@@ -40,6 +40,11 @@ export const PATHS = {
     SUCCESS: 'ADD_PATHS_GOAL_SUCCESS',
     FAILURE: 'ADD_PATHS_GOAL_FAILURE',
   },
+  ADD_EXISTING_GOAL: {
+    START: 'ADD_PATHS_EXISTING_GOAL_START',
+    SUCCESS: 'ADD_PATHS_EXISTING_GOAL_SUCCESS',
+    FAILURE: 'ADD_PATHS_EXISTING_GOAL_FAILURE'
+  }
 };
 
 export function pathsList(userId) {
@@ -106,6 +111,26 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
         }
       })
       .catch(errors => dispatch({ type: PATHS.UPDATE_GOAL.FAILURE, errors, goal: inflatedGoal }));
+  };
+}
+
+export function addExistingGoalToPathRequest(goal, path, profile) {
+  return (dispatch) => {
+    const { name, description, tags, level, icon } = goal;
+    const parameters = { name, description, tags, level, icon };
+
+    dispatch({ type: PATHS.ADD_EXISTING_GOAL.START });
+
+    return httpClient.post(`${config.paths_api_url}/${path}/goals`, parameters)
+      .then(() => {
+        dispatch({ type: PATHS.ADD_EXISTING_GOAL.SUCCESS });
+        dispatch(pathsList(profile.id));
+        toastr.success('', `Goal ${name} added.`);
+      })
+      .catch(() => {
+        dispatch({ type: PATHS.ADD_EXISTING_GOAL.FAILURE });
+        toastr.error('', 'Sorry, something bad happen...');
+      });
   };
 }
 

@@ -16,9 +16,11 @@ function mapStateToProps(state) {
   return {
     userId: state.userId,
     paths: state.paths,
+    goals: state.goals.list,
     profiles: state.profiles,
     loggedInUser: state.user.userData,
     addModalParameters: state.goals.addGoalsModal,
+    addExistingGoalsModalParameters: state.goals.addExistingGoalsModal,
   };
 }
 

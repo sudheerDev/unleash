@@ -14,12 +14,31 @@ export const GOALS = {
     SHOW_SPINNER: 'GOALS_ADD_SHOW_SPINNER',
     RESET: 'GOALS_ADD_RESET',
   },
+  ADD_EXISTING: {
+    SHOW_MODAL: 'GOALS_ADD_EXISTING_SHOW_MODAL',
+    RESET: 'GOALS_ADD_EXISTING_RESET',
+    UPDATE_PATH: 'GOALS_ADD_EXISTING_UPDATE_PATH',
+    UPDATE_GOAL: 'GOALS_ADD_EXISTING_UPDATE_GOAL',
+  }
 };
 
 export function showAddGoalsModal(showModal) {
   return {
     type: GOALS.ADD.SHOW_MODAL,
     showModal,
+  };
+}
+
+export function showAddExistingGoalsModal(showModal) {
+  return {
+    type: GOALS.ADD_EXISTING.SHOW_MODAL,
+    showModal,
+  };
+}
+
+export function resetExistingGoalModal() {
+  return {
+    type: GOALS.ADD_EXISTING.RESET,
   };
 }
 
@@ -35,6 +54,20 @@ export function updateAddGoalsField(fieldKey, fieldValue) {
     type: GOALS.ADD.UPDATE_FIELD,
     fieldKey,
     fieldValue,
+  };
+}
+
+export function updateSelectedPath(selectedPath) {
+  return {
+    type: GOALS.ADD_EXISTING.UPDATE_PATH,
+    selectedPath
+  };
+}
+
+export function updateSelectedGoal(selectedGoal) {
+  return {
+    type: GOALS.ADD_EXISTING.UPDATE_GOAL,
+    selectedGoal
   };
 }
 
