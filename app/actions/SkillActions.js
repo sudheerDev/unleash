@@ -1,6 +1,6 @@
-import { toastr } from 'react-redux-toastr';
 import httpClient from '../services/httpClient';
 import config from '../../config';
+import { addNotifcation } from './NotificationActions';
 
 export const SKILL = {
   FETCH: {
@@ -76,11 +76,11 @@ export function addSkillRequest() {
       .then(() => {
         dispatch(resetSkillModal());
         dispatch(skillList());
-        toastr.success('', `${name} skill added.`);
+        dispatch(addNotifcation(`${name} skill added.`, 'success'));
       })
       .catch(() => {
         dispatch(resetSkillModal());
-        toastr.error('', 'Sorry, something bad happened...');
+        dispatch(addNotifcation('Sorry, something bad happened...'));
       });
   };
 }

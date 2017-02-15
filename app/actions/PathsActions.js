@@ -7,7 +7,7 @@
 import httpClient from '../services/httpClient';
 import config from '../../config';
 import slackService from '../services/slackService';
-import { toastr } from 'react-redux-toastr';
+import { addNotifcation } from './NotificationActions';
 
 export const PATHS = {
   FETCH: {
@@ -100,7 +100,9 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
           };
 
           slackService.notifyAchieved(notificationParameters)
-            .catch(() => toastr.error('', 'There was a problem with the slack notification'));
+            .catch(() => {
+              dispatch(addNotifcation('There was a problem with the slack notification'));
+            });
         }
       })
       .catch(errors => dispatch({ type: PATHS.UPDATE_GOAL.FAILURE, errors, goal: inflatedGoal }));
@@ -126,11 +128,11 @@ export function addGoalToPathRequest() {
       .then(() => {
         dispatch({ type: PATHS.ADD_GOAL.SUCCESS });
         dispatch(pathsList(profile.id));
-        toastr.success('', `Goal ${name} added.`);
+        dispatch(addNotifcation(`Goal ${name} added.`, 'success'));
       })
       .catch(() => {
         dispatch({ type: PATHS.ADD_GOAL.FAILURE });
-        toastr.error('', 'Sorry, something bad happen...');
+        dispatch(addNotifcation('Sorry, something bad happen...'));
       });
   };
 }

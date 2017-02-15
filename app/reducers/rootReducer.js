@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr';
 import announcementsReducer from './announcementsReducer';
 import newsReducer from './newsReducer';
 import skillsReducer from './skillsReducer';
@@ -9,6 +8,7 @@ import profilesReducer from './profilesReducer';
 import pathsReducer from './pathsReducer';
 import userReducer from './userReducer';
 import curatedPathsReducer from './curatedPathsReducer';
+import notificationsReducer from './notificationsReducer';
 
 const rootReducer = combineReducers({
   announcements: announcementsReducer,
@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   profiles: profilesReducer,
   paths: pathsReducer,
   user: userReducer,
-  toastr: toastrReducer,
+  notifications: notificationsReducer,
   curatedPaths: curatedPathsReducer
 });
 

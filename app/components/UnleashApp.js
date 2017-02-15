@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
-import Login from './Login';
-import LoggedWrapper from './LoggedWrapper';
-import ReduxToastr from 'react-redux-toastr';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { red300 } from 'material-ui/styles/colors';
+import Login from './Login';
+import LoggedWrapper from './LoggedWrapper';
+import NotificationBar from './NotificationBar';
 
 const muiTheme = getMuiTheme({
   appBar: {
@@ -12,7 +12,8 @@ const muiTheme = getMuiTheme({
   },
 });
 
-const UnleashApp = ({ isLoggedIn, userLoginProcess, children, isLoading, authServiceInit }) => {
+const UnleashApp = ({ isLoggedIn, userLoginProcess, children, isLoading, notifications,
+  authServiceInit, removeNotification }) => {
   const loggedContainer = <LoggedWrapper children={children} />;
   const loginContainer = (
     <Login
@@ -27,11 +28,7 @@ const UnleashApp = ({ isLoggedIn, userLoginProcess, children, isLoading, authSer
     <MuiThemeProvider muiTheme={muiTheme}>
       <div>
         {container}
-        <ReduxToastr
-          timeOut={5000}
-          newestOnTop={false}
-          position="top-right"
-        />
+        <NotificationBar notifications={notifications} removeNotification={removeNotification} />
       </div>
     </MuiThemeProvider>
   );
@@ -42,7 +39,9 @@ UnleashApp.propTypes = {
   userLoginProcess: PropTypes.func,
   children: PropTypes.node,
   isLoading: PropTypes.bool,
+  notifications: PropTypes.array,
   authServiceInit: PropTypes.bool,
+  removeNotification: PropTypes.func,
 };
 
 export default UnleashApp;
