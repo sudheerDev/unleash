@@ -33,9 +33,9 @@ class AddExistingGoalsModal extends React.Component {
     actions.addExistingGoalToPathRequest(
       parameters.selectedGoal,
       parameters.selectedPath,
-      profile
+      profile,
     ).then(
-      actions.resetExistingGoalModal()
+      actions.resetExistingGoalModal(),
     );
   }
   generateGoalCard() {
@@ -120,11 +120,24 @@ class AddExistingGoalsModal extends React.Component {
 }
 
 AddExistingGoalsModal.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  parameters: React.PropTypes.object.isRequired,
-  profile: React.PropTypes.object.isRequired,
-  goals: React.PropTypes.array.isRequired,
-  paths: React.PropTypes.array.isRequired,
+  actions: React.PropTypes.shape({
+    fetchGoals: React.PropTypes.func,
+    updateSelectedGoal: React.PropTypes.func,
+    resetExistingGoalModal: React.PropTypes.func,
+    addExistingGoalToPathRequest: React.PropTypes.func,
+    updateSelectedPath: React.PropTypes.func,
+  }).isRequired,
+  parameters: React.PropTypes.shape({
+    showModal: React.PropTypes.bool,
+    showSpinner: React.PropTypes.bool,
+    selectedPath: React.PropTypes.object,
+    selectedGoal: React.PropTypes.object,
+  }).isRequired,
+  profile: React.PropTypes.shape({
+    id: React.PropTypes.string,
+  }).isRequired,
+  goals: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  paths: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
 };
 
 styles = {

@@ -43,8 +43,8 @@ export const PATHS = {
   ADD_EXISTING_GOAL: {
     START: 'ADD_PATHS_EXISTING_GOAL_START',
     SUCCESS: 'ADD_PATHS_EXISTING_GOAL_SUCCESS',
-    FAILURE: 'ADD_PATHS_EXISTING_GOAL_FAILURE'
-  }
+    FAILURE: 'ADD_PATHS_EXISTING_GOAL_FAILURE',
+  },
 };
 
 export function pathsList(userId) {
@@ -125,11 +125,11 @@ export function addExistingGoalToPathRequest(goal, path, profile) {
       .then(() => {
         dispatch({ type: PATHS.ADD_EXISTING_GOAL.SUCCESS });
         dispatch(pathsList(profile.id));
-        toastr.success('', `Goal ${name} added.`);
+        dispatch(addNotification(`Goal ${name} added.`, 'success'));
       })
       .catch(() => {
         dispatch({ type: PATHS.ADD_EXISTING_GOAL.FAILURE });
-        toastr.error('', 'Sorry, something bad happen...');
+        dispatch(addNotification('Sorry, something bad happen...'));
       });
   };
 }

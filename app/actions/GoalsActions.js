@@ -19,7 +19,7 @@ export const GOALS = {
     RESET: 'GOALS_ADD_EXISTING_RESET',
     UPDATE_PATH: 'GOALS_ADD_EXISTING_UPDATE_PATH',
     UPDATE_GOAL: 'GOALS_ADD_EXISTING_UPDATE_GOAL',
-  }
+  },
 };
 
 export function showAddGoalsModal(showModal) {
@@ -60,14 +60,14 @@ export function updateAddGoalsField(fieldKey, fieldValue) {
 export function updateSelectedPath(selectedPath) {
   return {
     type: GOALS.ADD_EXISTING.UPDATE_PATH,
-    selectedPath
+    selectedPath,
   };
 }
 
 export function updateSelectedGoal(selectedGoal) {
   return {
     type: GOALS.ADD_EXISTING.UPDATE_GOAL,
-    selectedGoal
+    selectedGoal,
   };
 }
 

@@ -19,7 +19,7 @@ const initialState = {
     showSpinner: false,
     selectedPath: null,
     selectedGoal: null,
-  }
+  },
 };
 
 function goalsReducer(state = initialState, action) {
@@ -54,14 +54,14 @@ function goalsReducer(state = initialState, action) {
         addExistingGoalsModal: {
           ...state.addExistingGoalsModal,
           showModal: action.showModal,
-        }
+        },
       };
     case GOALS.ADD_EXISTING.RESET:
       return {
         ...state,
         addExistingGoalsModal: {
-          ...initialState.addExistingGoalsModal
-        }
+          ...initialState.addExistingGoalsModal,
+        },
       };
     case GOALS.ADD_EXISTING.UPDATE_PATH:
       return {
@@ -69,7 +69,7 @@ function goalsReducer(state = initialState, action) {
         addExistingGoalsModal: {
           ...state.addExistingGoalsModal,
           selectedPath: action.selectedPath,
-        }
+        },
       };
     case GOALS.ADD_EXISTING.UPDATE_GOAL:
       return {
@@ -77,7 +77,7 @@ function goalsReducer(state = initialState, action) {
         addExistingGoalsModal: {
           ...state.addExistingGoalsModal,
           selectedGoal: action.selectedGoal,
-        }
+        },
       };
     case GOALS.ADD.SHOW_SPINNER:
       return {

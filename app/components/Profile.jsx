@@ -3,9 +3,9 @@ import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { routerShape } from 'react-router/lib/PropTypes';
+import ContentPaste from 'material-ui/svg-icons/content/content-paste';
 import Path from './Path';
 import UserCard from './UserCard';
-import ContentPaste from 'material-ui/svg-icons/content/content-paste';
 import AddGoalsModal from './AddGoalsModal';
 import AddExistingGoalsModal from './AddExistingGoalsModal';
 
@@ -30,7 +30,7 @@ class Profile extends Component {
       profiles,
       loggedInUser,
       addModalParameters,
-      addExistingGoalsModalParameters
+      addExistingGoalsModalParameters,
     } = this.props;
 
     const userId = params.userId;
@@ -130,13 +130,13 @@ Profile.propTypes = {
     icon: React.PropTypes.string,
     level: React.PropTypes.string,
   }).isRequired,
-  goals: React.PropTypes.array.isRequired,
+  goals: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   addExistingGoalsModalParameters: React.PropTypes.shape({
     showModal: React.PropTypes.bool,
     showSpinner: React.PropTypes.bool,
     selectedPath: React.PropTypes.object,
     selectedGoal: React.PropTypes.object,
-  }).isRequired
+  }).isRequired,
 };
 
 export default Profile;
