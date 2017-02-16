@@ -1,25 +1,23 @@
 const errorPages = [401, 403, 404];
 
-function handleResponse(res) {
-  return Promise.all([res])
-    .then(([response]) => {
-      if (response.status < 200 || response.status >= 300) {
-        if (errorPages.includes(response.status)) {
-          location.href = `/error/${response.status}`;
-          return response.json();
-        }
-        const error = new Error(response.json().message);
-        error.body = response.json();
-        throw error;
-      }
+function handleResponse(response) {
+  if (response.status === 204) {
+    return response;
+  }
 
-      let responseBody = {};
-      if (response.status !== 204) {
-        responseBody = response.json();
-      }
+  const json = response.json();
 
-      return responseBody;
-    });
+  if (response.status < 200 || response.status >= 300) {
+    if (errorPages.includes(response.status)) {
+      location.href = `/error/${response.status}`;
+      return json;
+    }
+    const error = new Error(json.message);
+    error.body = json;
+    throw error;
+  }
+
+  return json;
 }
 
 function prepareRequestBody(method, data) {
