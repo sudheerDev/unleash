@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import { red700, green700 } from 'material-ui/styles/colors';
 import Snackbar from 'material-ui/Snackbar';
 
-const styles = {};
+let styles = {};
 
 const NotificationBar = ({ notifications, removeNotification }) => {
   const openSnackbar = !!notifications && !!notifications[0];
@@ -26,12 +26,13 @@ NotificationBar.propTypes = {
   removeNotification: PropTypes.func,
 };
 
-styles.success = {
-  backgroundColor: green700
-};
-
-styles.error = {
-  backgroundColor: red700
+styles = {
+  success: {
+    backgroundColor: green700
+  },
+  error: {
+    backgroundColor: red700
+  }
 };
 
 export default NotificationBar;
