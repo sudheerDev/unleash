@@ -3,7 +3,7 @@ export const NOTIFICATION = {
   REMOVE: 'REMOVE_NOTIFICATION'
 };
 
-export function addNotifcation(message, type = 'error') {
+export function addNotification(message, type = 'error') {
   return {
     type: NOTIFICATION.ADD,
     payload: {
@@ -13,7 +13,7 @@ export function addNotifcation(message, type = 'error') {
   };
 }
 
-export function removeNotifcation() {
+export function removeNotification() {
   return {
     type: NOTIFICATION.REMOVE
   };

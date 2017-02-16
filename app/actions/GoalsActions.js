@@ -1,6 +1,6 @@
 import config from '../../config';
 import httpClient from '../services/httpClient';
-import { addNotifcation } from './NotificationActions';
+import { addNotification } from './NotificationActions';
 
 export const GOALS = {
   FETCH: {
@@ -69,11 +69,11 @@ export function addGoalRequest() {
       .then(() => {
         dispatch(resetGoalModal());
         dispatch(fetchGoals());
-        dispatch(addNotifcation(`Goal ${name} added.`, 'success'));
+        dispatch(addNotification(`Goal ${name} added.`, 'success'));
       })
       .catch(() => {
         dispatch(resetGoalModal());
-        dispatch(addNotifcation('Sorry, something bad happen...'));
+        dispatch(addNotification('Sorry, something bad happen...'));
       });
   };
 }

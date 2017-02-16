@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import config from '../../config';
 import * as UserActions from '../actions/UserActions';
-import { addNotifcation } from '../actions/NotificationActions';
+import { addNotification } from '../actions/NotificationActions';
 import httpClient from './httpClient';
 import authHelper from '../helpers/authHelper';
 
@@ -32,7 +32,7 @@ class AuthService {
           if (unleashUser) {
             this.dispatch(UserActions.userLogin(unleashUser));
             this.dispatch(
-              addNotifcation(`Welcome ${unleashUser.fullName}, unleash your potential today!`,
+              addNotification(`Welcome ${unleashUser.fullName}, unleash your potential today!`,
                 'success')
             );
           } else {
@@ -40,7 +40,7 @@ class AuthService {
           }
         })
         .catch(() => {
-          this.dispatch(addNotifcation('There was a problem with the server, please try again.'));
+          this.dispatch(addNotification('There was a problem with the server, please try again.'));
         });
     } else {
       this.dispatch(UserActions.userLogout());
@@ -50,7 +50,7 @@ class AuthService {
   getUserById(userId) {
     return httpClient.get(config.profiles_api_url)
       .then(result => _.find(result.Items, ['id', userId]))
-      .catch(exception => this.dispatch(addNotifcation(exception)));
+      .catch(exception => this.dispatch(addNotification(exception)));
   }
 
   registerTheUser(userProviderData) {
@@ -64,7 +64,7 @@ class AuthService {
           this.dispatch(UserActions.userLogout());
         }
       })
-      .catch(() => this.dispatch(addNotifcation('There was a problem registering the user.')));
+      .catch(() => this.dispatch(addNotification('There was a problem registering the user.')));
   }
 
   static userLogin() {

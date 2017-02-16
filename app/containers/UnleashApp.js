@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import UnleashApp from '../components/UnleashApp';
 import AuthService from '../services/authService';
-import { removeNotifcation } from '../actions/NotificationActions';
+import { removeNotification } from '../actions/NotificationActions';
 
 function mapStateToProps(state) {
   const isLoggedIn = state.user.isLoggedIn;
@@ -21,7 +21,7 @@ function mapDispatchToProps(dispatch) {
       AuthService.userLogin();
     },
     removeNotification: () => {
-      dispatch(removeNotifcation());
+      dispatch(removeNotification());
     }
   };
 }

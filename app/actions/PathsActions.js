@@ -7,7 +7,7 @@
 import httpClient from '../services/httpClient';
 import config from '../../config';
 import slackService from '../services/slackService';
-import { addNotifcation } from './NotificationActions';
+import { addNotification } from './NotificationActions';
 
 export const PATHS = {
   FETCH: {
@@ -101,7 +101,7 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
 
           slackService.notifyAchieved(notificationParameters)
             .catch(() => {
-              dispatch(addNotifcation('There was a problem with the slack notification'));
+              dispatch(addNotification('There was a problem with the slack notification'));
             });
         }
       })
@@ -128,11 +128,11 @@ export function addGoalToPathRequest() {
       .then(() => {
         dispatch({ type: PATHS.ADD_GOAL.SUCCESS });
         dispatch(pathsList(profile.id));
-        dispatch(addNotifcation(`Goal ${name} added.`, 'success'));
+        dispatch(addNotification(`Goal ${name} added.`, 'success'));
       })
       .catch(() => {
         dispatch({ type: PATHS.ADD_GOAL.FAILURE });
-        dispatch(addNotifcation('Sorry, something bad happen...'));
+        dispatch(addNotification('Sorry, something bad happen...'));
       });
   };
 }

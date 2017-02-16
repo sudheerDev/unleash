@@ -1,6 +1,6 @@
 import httpClient from '../services/httpClient';
 import config from '../../config';
-import { addNotifcation } from './NotificationActions';
+import { addNotification } from './NotificationActions';
 
 export const SKILL = {
   FETCH: {
@@ -76,11 +76,11 @@ export function addSkillRequest() {
       .then(() => {
         dispatch(resetSkillModal());
         dispatch(skillList());
-        dispatch(addNotifcation(`${name} skill added.`, 'success'));
+        dispatch(addNotification(`${name} skill added.`, 'success'));
       })
       .catch(() => {
         dispatch(resetSkillModal());
-        dispatch(addNotifcation('Sorry, something bad happened...'));
+        dispatch(addNotification('Sorry, something bad happened...'));
       });
   };
 }

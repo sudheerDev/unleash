@@ -11,7 +11,7 @@ describe('Notifications Actions', () => {
         type: 'success'
       }
     };
-    expect(NotificationActions.addNotifcation(message, 'success')).to.deep.equal(expectedAction);
+    expect(NotificationActions.addNotification(message, 'success')).to.deep.equal(expectedAction);
   });
 
   it('should create an error message', () => {
@@ -23,6 +23,6 @@ describe('Notifications Actions', () => {
         type: 'error'
       }
     };
-    expect(NotificationActions.addNotifcation(message)).to.deep.equal(expectedAction);
+    expect(NotificationActions.addNotification(message)).to.deep.equal(expectedAction);
   });
 });
