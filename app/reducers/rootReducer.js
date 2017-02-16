@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   paths: pathsReducer,
   user: userReducer,
   notifications: notificationsReducer,
-  curatedPaths: curatedPathsReducer
+  curatedPaths: curatedPathsReducer,
 });
 
 export default rootReducer;

@@ -8,7 +8,7 @@ const generateGoal = () => ({
   level: 1,
   achieved: false,
   comments: [],
-  unread: 0
+  unread: 0,
 });
 
 const generatePath = (userId) => {
@@ -17,7 +17,8 @@ const generatePath = (userId) => {
   return {
     userId,
     goals,
-    id: faker.random.uuid()
+    id: faker.random.uuid(),
+    name: faker.name.title(),
   };
 };
 

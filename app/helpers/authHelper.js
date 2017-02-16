@@ -10,10 +10,10 @@ const setUpUnleashUser = userProviderData => ({
   firstName: _.words(userProviderData.displayName)[0],
   lastName: _.words(userProviderData.displayName)[1],
   email: userProviderData.email,
-  username: parseEmail(userProviderData.email)
+  username: parseEmail(userProviderData.email),
 });
 
 export default {
   parseEmail,
-  setUpUnleashUser
+  setUpUnleashUser,
 };

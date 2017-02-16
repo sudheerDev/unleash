@@ -1,27 +1,25 @@
 import { PROFILE } from '../actions/ProfileActions';
 
 const initialState = {
-  list: null,
+  list: [],
   isLoading: false,
-  profile: {}
+  profile: {},
 };
 
 function profilesReducer(state = initialState, action) {
-  const profiles = {};
+  const profiles = [];
   const { fetchedProfile, error = [] } = action;
 
   switch (action.type) {
     case PROFILE.LIST.START:
       return {
         ...state,
-        list: null,
+        list: [],
         isLoading: true,
       };
     case PROFILE.LIST.SUCCESS:
       if (action.profiles.Count) {
-        action.profiles.Items.forEach((profile) => {
-          profiles[profile.username] = profile;
-        });
+        profiles.push(...action.profiles.Items);
       }
       return {
         ...state,
@@ -31,14 +29,12 @@ function profilesReducer(state = initialState, action) {
     case PROFILE.LIST.FAILURE:
       return {
         ...state,
-        list: null,
         isLoading: false,
       };
     case PROFILE.FETCH.SUCCESS:
       return { ...state, profile: fetchedProfile.Item };
     case PROFILE.FETCH.FAILURE:
       return { ...state, error, profile: {} };
-
     default:
       return state;
   }

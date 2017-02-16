@@ -22,17 +22,17 @@ const NotificationBar = ({ notifications, removeNotification }) => {
 };
 
 NotificationBar.propTypes = {
-  notifications: PropTypes.array,
+  notifications: PropTypes.arrayOf(PropTypes.object),
   removeNotification: PropTypes.func,
 };
 
 styles = {
   success: {
-    backgroundColor: green700
+    backgroundColor: green700,
   },
   error: {
-    backgroundColor: red700
-  }
+    backgroundColor: red700,
+  },
 };
 
 export default NotificationBar;

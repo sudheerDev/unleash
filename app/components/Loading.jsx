@@ -18,11 +18,11 @@ styles = {
   loading: {
     textAlign: 'center',
     marginTop: '60px',
-  }
+  },
 };
 
 Loading.propTypes = {
-  style: React.PropTypes.object,
+  style: PropTypes.instanceOf(Object),
   children: PropTypes.node,
   loading: PropTypes.bool,
 };

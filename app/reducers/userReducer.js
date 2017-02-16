@@ -12,8 +12,8 @@ export const initialState = {
     firstName: null,
     lastName: null,
     email: null,
-    username: null
-  }
+    username: null,
+  },
 };
 
 function userReducer(state = initialState, action = {}) {
@@ -23,7 +23,7 @@ function userReducer(state = initialState, action = {}) {
         ...state,
         userData: {
           ...state.userData,
-          ...action.userData
+          ...action.userData,
         },
         isLoggedIn: true,
         authServiceInit: true,

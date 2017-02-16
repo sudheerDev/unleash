@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, IndexRoute } from 'react-router';
 import UnleashApp from '../containers/UnleashApp';
 import DashboardContainer from '../containers/DashboardContainer';
 import ProfilesContainer from '../containers/ProfilesContainer';
@@ -8,7 +9,6 @@ import SkillContainer from '../containers/SkillContainer';
 import GoalsContainer from '../containers/GoalsContainer';
 import CuratedPathsContainer from '../containers/CuratedPathsContainer';
 import ErrorContainer from '../containers/ErrorContainer';
-import { Route, IndexRoute } from 'react-router';
 
 export default (
   <Route>

@@ -22,8 +22,8 @@ class Dashboard extends Component {
         <Avatar className="avatar" style={styles.avatar} />
         <div className="event" style={styles.event}>
           <Card style={styles.card}>
-            <div style={styles.arrowShadow}></div>
-            <div style={styles.arrow}></div>
+            <div style={styles.arrowShadow} />
+            <div style={styles.arrow} />
             <CardHeader
               title={announcement.title}
               subtitle={
@@ -48,8 +48,8 @@ class Dashboard extends Component {
         <Avatar className="avatar" style={styles.avatar} />
         <div className="event" style={styles.event}>
           <Card style={styles.card}>
-            <div style={styles.arrowShadow}></div>
-            <div style={styles.arrow}></div>
+            <div style={styles.arrowShadow} />
+            <div style={styles.arrow} />
             <CardHeader
               title={news.title}
               subtitle={
@@ -103,7 +103,7 @@ class Dashboard extends Component {
           markerSelector=".avatar"
           timelineStyle={styles.timeline}
         >
-          {map(events, (event) => this.renderEvent(event))}
+          {map(events, event => this.renderEvent(event))}
         </Chronology>
       </div>
     );
@@ -111,10 +111,18 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
-  announcements: React.PropTypes.object.isRequired,
-  news: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    announcementList: React.PropTypes.func,
+    newsList: React.PropTypes.func,
+  }).isRequired,
+  announcements: React.PropTypes.shape({
+    isLoading: React.PropTypes.bool,
+    list: React.PropTypes.object,
+  }).isRequired,
+  news: React.PropTypes.shape({
+    isLoading: React.PropTypes.bool,
+    list: React.PropTypes.object,
+  }).isRequired,
 };
 
 styles = {
@@ -140,7 +148,7 @@ styles = {
   card: {
     position: 'relative',
     marginBottom: '40px',
-  }
+  },
 };
 
 export default Dashboard;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { routerShape } from 'react-router/lib/PropTypes';
 import DefaultHero from '../assets/default_hero.jpg';
 
 let styles = {};
@@ -24,8 +25,13 @@ class UserCard extends Component {
 }
 
 UserCard.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
+  user: React.PropTypes.shape({
+    id: React.PropTypes.string,
+    picture: React.PropTypes.string,
+    firstName: React.PropTypes.string,
+    fullName: React.PropTypes.string,
+  }).isRequired,
+  router: routerShape.isRequired,
 };
 
 styles = {

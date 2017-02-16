@@ -6,7 +6,7 @@ import CuratedPaths from '../components/CuratedPaths';
 
 function mapStateToProps(state) {
   return {
-    curatedPaths: state.curatedPaths,
+    curatedPaths: state.curatedPaths.list,
   };
 }
 
@@ -18,5 +18,5 @@ function mapDispatchToProps(dispatch) {
 
 export default withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(CuratedPaths));

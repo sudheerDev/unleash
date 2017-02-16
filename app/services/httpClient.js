@@ -22,8 +22,8 @@ function prepareRequestBody(method, data) {
     credentials: 'same-origin',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   if (data) {
@@ -37,7 +37,7 @@ const HttpClient = {
   get: uri => fetch(uri, { credentials: 'same-origin' }).then(handleResponse),
   post: (uri, data) => fetch(uri, prepareRequestBody('POST', data)).then(handleResponse),
   put: (uri, data) => fetch(uri, prepareRequestBody('PUT', data)).then(handleResponse),
-  delete: (uri, data) => fetch(uri, prepareRequestBody('DELETE', data)).then(handleResponse)
+  delete: (uri, data) => fetch(uri, prepareRequestBody('DELETE', data)).then(handleResponse),
 };
 
 export default HttpClient;

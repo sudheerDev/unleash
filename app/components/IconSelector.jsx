@@ -1,7 +1,7 @@
 import React from 'react';
-import iconNames from '../constants/icons';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
+import iconNames from '../constants/icons';
 
 const IconSelector = ({ label, value, onChange }) => {
   const iconElements = iconNames.map((iconSelectorName) => {
@@ -30,7 +30,7 @@ IconSelector.propTypes = {
 };
 
 IconSelector.defaultProps = {
-  label: 'Icon'
+  label: 'Icon',
 };
 
 export default IconSelector;

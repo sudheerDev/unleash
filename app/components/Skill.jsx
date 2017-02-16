@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import Loading from './Loading';
 import { find, every, some, values, map, random } from 'lodash';
-import UserCard from './UserCard';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
@@ -14,9 +12,12 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
-import toggleHOC from '../hocs/toggleHOC';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import { routerShape } from 'react-router/lib/PropTypes';
+import toggleHOC from '../hocs/toggleHOC';
+import Loading from './Loading';
+import UserCard from './UserCard';
 
 const DIALOG_TOGGLE = 'addResource';
 let styles = {};
@@ -26,7 +27,7 @@ const resourceTypes = {
   course: <SocialSchool />,
   video: <NotificationOnDemandVideo />,
   tool: <ActionExtension />,
-  other: <ContentLink />
+  other: <ContentLink />,
 };
 
 class Skill extends Component {
@@ -37,7 +38,7 @@ class Skill extends Component {
     this.state = {
       resource_url: '',
       resource_description: '',
-      resource_type: 'other'
+      resource_type: 'other',
     };
   }
 
@@ -52,7 +53,7 @@ class Skill extends Component {
   }
 
   getProfilesInIds(profiles = {}, ids = []) {
-    return values(profiles).filter((profile) => ids.indexOf(profile.id) > -1);
+    return values(profiles).filter(profile => ids.indexOf(profile.id) > -1);
   }
 
   /**
@@ -93,8 +94,9 @@ class Skill extends Component {
     const { actions, toggleOff } = this.props;
     if (this.state.resource_url !== '' && this.state.resource_description !== '') {
       actions.resourceAdd(skillSlug, {
-        url: this.state.resource_url, description: this.state.resource_description,
-        type: this.state.resource_type
+        url: this.state.resource_url,
+        description: this.state.resource_description,
+        type: this.state.resource_type,
       });
       toggleOff(DIALOG_TOGGLE);
     }
@@ -114,7 +116,7 @@ class Skill extends Component {
         label="Add Resource"
         primary
         onTouchTap={() => this.addResource(skillSlug)}
-      />
+      />,
     ];
 
     return (
@@ -155,6 +157,8 @@ class Skill extends Component {
   }
 
   renderProfiles(profiles) {
+    const { router } = this.props;
+
     if (profiles.length === 0) {
       return (
         <div style={styles.profiles}>
@@ -165,9 +169,7 @@ class Skill extends Component {
 
     return (
       <div style={styles.profiles}>
-        {map(profiles, (profile) =>
-          <UserCard user={profile} router={this.props.router} key={profile.id} />
-        )}
+        {map(profiles, profile => <UserCard user={profile} router={router} key={profile.id} />)}
       </div>
     );
   }
@@ -200,36 +202,43 @@ class Skill extends Component {
           style={styles.addResourceButton}
         />
         <List>
-        {map(resources, (resource) =>
-          <ListItem
-            key={resource.id}
-            leftIcon={resourceTypes[resource.type]}
-            primaryText={resource.url}
-            secondaryText={resource.type}
-            rightIconButton={
-              <FlatButton
-                label={`x ${resource.upvotes}`}
-                icon={<ActionThumbUp />}
-                secondary={resource.upvoted}
-              />
-            }
-          />
-        )}
+          {map(resources, resource =>
+            <ListItem
+              key={resource.id}
+              leftIcon={resourceTypes[resource.type]}
+              primaryText={resource.url}
+              secondaryText={resource.type}
+              rightIconButton={
+                <FlatButton
+                  label={`x ${resource.upvotes}`}
+                  icon={<ActionThumbUp />}
+                  secondary={resource.upvoted}
+                />
+              }
+            />,
+          )}
         </List>
       </div>
     );
   }
 
   render() {
-    const { skills, profiles, profilesBySkill } = this.props;
-    const isLoading = some([skills.isLoading, profiles.isLoading, profilesBySkill.isLoading]);
-    const allLoaded = every([skills.list, profiles.list, profilesBySkill.profiles]);
+    const {
+      skills,
+      skillsLoading,
+      profiles,
+      profilesLoading,
+      profilesBySkill,
+      bySkillLoading,
+    } = this.props;
+    const isLoading = some([skillsLoading, profilesLoading, bySkillLoading]);
+    const allLoaded = every([skills, profiles, profilesBySkill]);
 
     if (isLoading || !allLoaded) {
       return <Loading />;
     }
 
-    const skill = this.getSkillBySlug(skills.list, this.props.params.slug);
+    const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles.list, profilesBySkill.profiles);
     const resources = skill.resources.map(resource => ({
       id: resource.id,
@@ -242,10 +251,10 @@ class Skill extends Component {
     return (
       <div>
         <div style={styles.skillHeader}>
-          <div style={styles.divider}></div>
-          <div>{skill.name}</div>
-          <div style={styles.divider}></div>
-          {this.renderDialog(skill.slug)}
+          <div style={styles.divider} />
+          <div>{skill && skill.name}</div>
+          <div style={styles.divider} />
+          {skill && this.renderDialog(skill.slug)}
         </div>
         <Tabs>
           <Tab label="Profiles" style={styles.tab}>
@@ -261,12 +270,22 @@ class Skill extends Component {
 }
 
 Skill.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  skills: React.PropTypes.object.isRequired,
-  profiles: React.PropTypes.object.isRequired,
-  profilesBySkill: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    skillList: React.PropTypes.func.isRequired,
+    profileList: React.PropTypes.func.isRequired,
+    profileListBySkill: React.PropTypes.func.isRequired,
+    resourceAdd: React.PropTypes.func.isRequired,
+  }).isRequired,
+  skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  skillsLoading: React.PropTypes.bool.isRequired,
+  profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  profilesLoading: React.PropTypes.bool.isRequired,
+  profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  bySkillLoading: React.PropTypes.bool.isRequired,
+  params: React.PropTypes.shape({
+    slug: React.PropTypes.string,
+  }).isRequired,
+  router: routerShape.isRequired,
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
@@ -297,7 +316,7 @@ styles = {
   empty: {
     color: '#969696',
     textAlign: 'center',
-    marginTop: '40px'
+    marginTop: '40px',
   },
   profiles: {
     display: 'flex',
@@ -309,7 +328,7 @@ styles = {
   },
   tab: {
     backgroundColor: '#fff',
-    color: '#757575'
+    color: '#757575',
   },
   addResourceButton: {
     display: 'flex',
@@ -318,7 +337,7 @@ styles = {
     justifyContent: 'space-around',
     margin: '20px auto 0 auto',
     width: '100%',
-  }
+  },
 };
 
 export default toggleHOC(Skill);

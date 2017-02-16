@@ -10,7 +10,7 @@ const fixtures = {
   skill: generateSkill,
   profile: generateProfile,
   path: generatePath,
-  user: generateUser
+  user: generateUser,
 };
 
 export default function generate(fixture, amount = 1, values) {

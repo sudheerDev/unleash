@@ -1,7 +1,7 @@
 import {
   ANNOUNCEMENT_LIST_START,
   ANNOUNCEMENT_LIST_SUCCESS,
-  ANNOUNCEMENT_LIST_FAILURE
+  ANNOUNCEMENT_LIST_FAILURE,
 } from '../actions/AnnouncementActions';
 
 const initialState = {

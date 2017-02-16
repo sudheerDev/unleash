@@ -13,17 +13,17 @@ export const PATHS = {
   FETCH: {
     START: 'FETCH_PATHS_START',
     SUCCESS: 'FETCH_PATHS_SUCCESS',
-    FAILURE: 'FETCH_PATHS_FAILURE'
+    FAILURE: 'FETCH_PATHS_FAILURE',
   },
   CREATE: {
     START: 'CREATE_PATHS_START',
     SUCCESS: 'CREATE_PATHS_SUCCESS',
-    FAILURE: 'CREATE_PATHS_FAILURE'
+    FAILURE: 'CREATE_PATHS_FAILURE',
   },
   UPDATE: {
     START: 'UPDATE_PATHS_START',
     SUCCESS: 'UPDATE_PATHS_SUCCESS',
-    FAILURE: 'UPDATE_PATHS_FAILURE'
+    FAILURE: 'UPDATE_PATHS_FAILURE',
   },
   REMOVE: {
     START: 'REMOVE_PATHS_START',
@@ -33,13 +33,13 @@ export const PATHS = {
   UPDATE_GOAL: {
     START: 'UPDATE_PATHS_GOAL_START',
     SUCCESS: 'UPDATE_PATHS_GOAL_SUCCESS',
-    FAILURE: 'UPDATE_PATHS_GOAL_FAILURE'
+    FAILURE: 'UPDATE_PATHS_GOAL_FAILURE',
   },
   ADD_GOAL: {
     START: 'ADD_PATHS_GOAL_START',
     SUCCESS: 'ADD_PATHS_GOAL_SUCCESS',
-    FAILURE: 'ADD_PATHS_GOAL_FAILURE'
-  }
+    FAILURE: 'ADD_PATHS_GOAL_FAILURE',
+  },
 };
 
 export function pathsList(userId) {
@@ -78,7 +78,7 @@ export function pathsRemove(pathId) {
 
     return httpClient.delete(`${config.paths_api_url}/${pathId}`)
       .then(() => dispatch({ type: PATHS.REMOVE.SUCCESS, pathId }))
-      .catch((errors) => dispatch({ type: PATHS.REMOVE.FAILURE, errors }));
+      .catch(errors => dispatch({ type: PATHS.REMOVE.FAILURE, errors }));
   };
 }
 
@@ -89,7 +89,7 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
     dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
 
     return httpClient.put(`${config.paths_api_url}/${path.id}/goals/${goal.id}`, data)
-      .then(paths => {
+      .then((paths) => {
         dispatch({ type: PATHS.UPDATE_GOAL.SUCCESS, paths, goal: inflatedGoal });
 
         if (slackOptions.notifyOnSlack) {

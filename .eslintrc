@@ -8,7 +8,9 @@
   },
   "plugins": [ "react" ],
   "rules": {
-    "comma-dangle": 0
+    "import/no-extraneous-dependencies": [2, { "devDependencies": true }],
+    "jsx-a11y/no-static-element-interactions": 0,
+    "class-methods-use-this": 0
   },
   "globals": {
     "firebase": false,

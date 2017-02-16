@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import Path from './Path';
-import UserCard from './UserCard';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { routerShape } from 'react-router/lib/PropTypes';
+import Path from './Path';
+import UserCard from './UserCard';
 import AddGoalsModal from './AddGoalsModal';
 
 let styles = {};
@@ -23,7 +24,7 @@ class Profile extends Component {
     const editable = loggedInUser.isAdmin || loggedInUser.id === userId;
     const skills = [
       { name: 'mongoDB', id: 'c390be96-168b-4f42-a0cd-933fbc46e249' },
-      { name: 'React', id: 'c390be96-168b-4f42-a0cd-933fbc46e240' }
+      { name: 'React', id: 'c390be96-168b-4f42-a0cd-933fbc46e240' },
     ];
     const tags = [];
     let addGoalButton = null;
@@ -75,14 +76,34 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
-  paths: React.PropTypes.object.isRequired,
-  profiles: React.PropTypes.object.isRequired,
-  loggedInUser: React.PropTypes.object.isRequired,
-  addModalParameters: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    fetchProfile: React.PropTypes.func.isRequired,
+    pathsList: React.PropTypes.func.isRequired,
+  }).isRequired,
+  router: routerShape.isRequired,
+  params: React.PropTypes.shape({
+    userId: React.PropTypes.string,
+  }).isRequired,
+  paths: React.PropTypes.shape({
+    loading: React.PropTypes.bool,
+    list: React.PropTypes.array.isRequired,
+  }).isRequired,
+  profiles: React.PropTypes.shape({
+    profile: React.PropTypes.object.isRequired,
+  }).isRequired,
+  loggedInUser: React.PropTypes.shape({
+    isAdmin: React.PropTypes.bool.isRequired,
+    id: React.PropTypes.string.isRequired,
+  }).isRequired,
+  addModalParameters: React.PropTypes.shape({
+    showModal: React.PropTypes.bool,
+    showSpinner: React.PropTypes.bool,
+    name: React.PropTypes.string,
+    description: React.PropTypes.string,
+    tags: React.PropTypes.array,
+    icon: React.PropTypes.string,
+    level: React.PropTypes.string,
+  }).isRequired,
 };
 
 export default Profile;
@@ -107,7 +128,7 @@ styles = {
     fontSize: '12px',
     fontWeight: '200',
     padding: '5px',
-    marginTop: '10px'
+    marginTop: '10px',
   },
   skillsWrapper: {
     display: 'flex',

@@ -10,7 +10,7 @@ module.exports = {
     // useful if you run your app from another point like django
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     // And then the actual application
-    './app/App.js'
+    './app/App.jsx'
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -22,7 +22,8 @@ module.exports = {
       react: path.resolve(__dirname, './node_modules/react'),
       React: path.resolve(__dirname, './node_modules/react')
     },
-    fallback: path.resolve(__dirname, './node_modules')
+    fallback: path.resolve(__dirname, './node_modules'),
+    extensions: ['', '.js', '.jsx'],
   },
   resolveLoader: {
       fallback: path.resolve(__dirname, './node_modules')
@@ -30,8 +31,8 @@ module.exports = {
   module: {
     preLoaders: [
       {
-        test: /\.(js|jsx)$/,
-        loaders: ['eslint'],
+        test: /.jsx?$/,
+        loaders: ['eslint-loader'],
         include: path.join(__dirname, 'app')
       }
     ],
@@ -49,7 +50,10 @@ module.exports = {
         test: /\.(png|jpg|)$/,
         loader: 'url-loader?limit=200000'
       },
-      { test: /\.css$/, loader: 'style-loader!css-loader' },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
       {
         test: /\.woff(2)?(\?[a-z0-9]+)?$/,
         loader: 'url-loader?limit=10000&mimetype=application/font-woff'

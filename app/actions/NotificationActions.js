@@ -1,6 +1,6 @@
 export const NOTIFICATION = {
   ADD: 'ADD_NOTIFICATION',
-  REMOVE: 'REMOVE_NOTIFICATION'
+  REMOVE: 'REMOVE_NOTIFICATION',
 };
 
 export function addNotification(message, type = 'error') {
@@ -8,13 +8,13 @@ export function addNotification(message, type = 'error') {
     type: NOTIFICATION.ADD,
     payload: {
       message,
-      type
-    }
+      type,
+    },
   };
 }
 
 export function removeNotification() {
   return {
-    type: NOTIFICATION.REMOVE
+    type: NOTIFICATION.REMOVE,
   };
 }

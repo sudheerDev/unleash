@@ -64,8 +64,20 @@ class AddSkillsModal extends React.Component {
 }
 
 AddSkillsModal.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  parameters: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.shape({
+    updateAddSkillField: React.PropTypes.func,
+    resetSkillModal: React.PropTypes.func,
+    addSkillRequest: React.PropTypes.func,
+  }).isRequired,
+  parameters: React.PropTypes.shape({
+    showModal: React.PropTypes.bool,
+    showSpinner: React.PropTypes.bool,
+    name: React.PropTypes.string,
+    description: React.PropTypes.string,
+    tags: React.PropTypes.array,
+    icon: React.PropTypes.string,
+    level: React.PropTypes.string,
+  }).isRequired,
 };
 
 styles = {

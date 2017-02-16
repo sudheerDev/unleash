@@ -15,7 +15,7 @@ function mapDispatchToProps() {
   return {
     userLogoutProcess: () => {
       AuthService.userLogout();
-    }
+    },
   };
 }
 

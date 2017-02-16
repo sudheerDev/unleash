@@ -1,5 +1,5 @@
-import { SKILL } from '../actions/SkillActions';
 import { cloneDeep } from 'lodash';
+import { SKILL } from '../actions/SkillActions';
 /**
  * Update a skill inside the skills list.
  * @param  {object}  skills     The list of skills.
@@ -19,32 +19,28 @@ const initialState = {
     showModal: false,
     showSpinner: false,
     name: '',
-  }
+  },
 };
 
 function skillsReducer(state = initialState, action) {
-  const skills = {};
   const { updatedSkill, errors = [] } = action;
   switch (action.type) {
     case SKILL.FETCH.START:
       return {
         ...state,
-        list: null,
+        list: [],
         isLoading: true,
       };
     case SKILL.FETCH.SUCCESS:
-      action.skills.forEach((skill) => {
-        skills[skill.name] = skill;
-      });
       return {
         ...state,
-        list: skills,
+        list: action.skills,
         isLoading: false,
       };
     case SKILL.FETCH.FAILURE:
       return {
         ...state,
-        list: null,
+        list: [],
         isLoading: false,
       };
     case SKILL.ADD_RESOURCE.START:
@@ -60,7 +56,7 @@ function skillsReducer(state = initialState, action) {
         addSkillModal: {
           ...state.addSkillModal,
           [action.fieldKey]: action.fieldValue,
-        }
+        },
       };
     case SKILL.ADD.SHOW_MODAL:
       return {
@@ -68,7 +64,7 @@ function skillsReducer(state = initialState, action) {
         addSkillModal: {
           ...state.addSkillModal,
           showModal: action.showModal,
-        }
+        },
       };
     case SKILL.ADD.SHOW_SPINNER:
       return {
@@ -76,14 +72,14 @@ function skillsReducer(state = initialState, action) {
         addSkillModal: {
           ...state.addSkillModal,
           showModal: action.showSpinner,
-        }
+        },
       };
     case SKILL.ADD.RESET:
       return {
         ...state,
         addSkillModal: {
           ...initialState.addSkillModal,
-        }
+        },
       };
     default:
       return state;

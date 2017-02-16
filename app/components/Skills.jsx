@@ -3,6 +3,8 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { routerShape } from 'react-router/lib/PropTypes';
+import _ from 'lodash';
 import Loading from './Loading';
 import AddSkillsModal from './AddSkillsModal';
 
@@ -18,27 +20,27 @@ class Skills extends Component {
   }
 
   renderSkills(skills) {
-    return Object.keys(skills.list).map(skill =>
+    return _.map(skills, skill => (
       <ListItem
-        key={skills.list[skill].id}
-        primaryText={skill}
-        onTouchTap={() => this.handleSkillSelect(skills.list[skill].slug)}
+        key={skill.id}
+        primaryText={skill.name}
+        onTouchTap={() => this.handleSkillSelect(skill.slug)}
       />
-    );
+    ));
   }
 
   render() {
     const { skills, actions, addModalParameters } = this.props;
     const tags = {};
 
-    if (skills.isLoading || skills.list === null) {
+    if (skills.isLoading || skills.list.length < 1) {
       return <Loading />;
     }
 
     return (
       <div>
         <List>
-            {this.renderSkills(skills)}
+          {this.renderSkills(skills.list)}
         </List>
         <FloatingActionButton
           style={styles.addButton}
@@ -52,19 +54,32 @@ class Skills extends Component {
   }
 }
 
-Skills.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  skills: React.PropTypes.object.isRequired,
-  router: React.PropTypes.object.isRequired,
-  addModalParameters: React.PropTypes.object.isRequired,
-};
-
 styles = {
   addButton: {
     position: 'fixed',
     bottom: '20px',
     right: '20px',
   },
+};
+
+Skills.propTypes = {
+  actions: React.PropTypes.shape({
+    skillList: React.PropTypes.func.isRequired,
+  }).isRequired,
+  skills: React.PropTypes.shape({
+    isLoading: React.PropTypes.bool.isRequired,
+    list: React.PropTypes.array.isRequired,
+  }).isRequired,
+  router: routerShape.isRequired,
+  addModalParameters: React.PropTypes.shape({
+    showModal: React.PropTypes.bool,
+    showSpinner: React.PropTypes.bool,
+    name: React.PropTypes.string,
+    description: React.PropTypes.string,
+    tags: React.PropTypes.array,
+    icon: React.PropTypes.string,
+    level: React.PropTypes.string,
+  }).isRequired,
 };
 
 export default Skills;

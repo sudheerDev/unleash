@@ -28,12 +28,12 @@ class AuthService {
       const userId = userProviderData.uid;
       this.dispatch(UserActions.startLoginProcess());
       this.getUserById(userId)
-        .then(unleashUser => {
+        .then((unleashUser) => {
           if (unleashUser) {
             this.dispatch(UserActions.userLogin(unleashUser));
             this.dispatch(
               addNotification(`Welcome ${unleashUser.fullName}, unleash your potential today!`,
-                'success')
+                'success'),
             );
           } else {
             this.registerTheUser(userProviderData);
@@ -57,7 +57,7 @@ class AuthService {
     const newUser = authHelper.setUpUnleashUser(userProviderData);
     return httpClient.post(config.profiles_api_url, newUser)
       .then(() => this.getUserById(newUser.id))
-      .then(unleashUser => {
+      .then((unleashUser) => {
         if (unleashUser) {
           this.dispatch(UserActions.userLogin(unleashUser));
         } else {

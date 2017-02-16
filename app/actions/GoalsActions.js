@@ -6,14 +6,14 @@ export const GOALS = {
   FETCH: {
     START: 'FETCH_GOALS_START',
     SUCCESS: 'FETCH_GOALS_SUCCESS',
-    FAILURE: 'FETCH_GOALS_FAILURE'
+    FAILURE: 'FETCH_GOALS_FAILURE',
   },
   ADD: {
     UPDATE_FIELD: 'GOALS_ADD_UPDATE_FIELD',
     SHOW_MODAL: 'GOALS_ADD_SHOW_MODAL',
     SHOW_SPINNER: 'GOALS_ADD_SHOW_SPINNER',
     RESET: 'GOALS_ADD_RESET',
-  }
+  },
 };
 
 export function showAddGoalsModal(showModal) {
@@ -62,7 +62,7 @@ export function addGoalRequest() {
       description,
       tags,
       level,
-      icon
+      icon,
     };
     dispatch(showAddGoalsSpinner(true));
     return httpClient.post(config.goals_api_url, body)
