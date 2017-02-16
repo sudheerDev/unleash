@@ -3374,6 +3374,10 @@ lodash@^4.0.0, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.2.0, lodash@^4.2.1, lod
   version "4.16.6"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.6.tgz#d22c9ac660288f3843e16ba7d2b5d06cca27d777"
 
+lodash@^4.16.6:
+  version "4.17.4"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
+
 lodash@~4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.9.0.tgz#4c20d742f03ce85dc700e0dd7ab9bcab85e6fc14"
@@ -4356,11 +4360,12 @@ react-addons-transition-group@^15.2.1:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-addons-transition-group/-/react-addons-transition-group-15.3.2.tgz#64f758d18bd1e59128726b1c9a4db79127c4f1ed"
 
-react-chronos@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-chronos/-/react-chronos-1.0.3.tgz#708b2f59416d8b979b390196641220c0238a9b22"
+react-chronos@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-chronos/-/react-chronos-1.0.4.tgz#b20cd190cd885e5e530b8e25aae19a72a389d96a"
   dependencies:
     classnames "^2.2.5"
+    lodash "^4.16.6"
 
 react-deep-force-update@^1.0.0:
   version "1.0.1"
