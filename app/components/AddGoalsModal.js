@@ -54,7 +54,7 @@ class AddGoalsModal extends React.Component {
         container="inline"
         mode="landscape"
         onChange={(event, date) => actions.updateAddGoalsField('dueDate', date)}
-        value={parameters.dueDate}
+        value={new Date(parameters.dueDate)}
       />
     );
   }
