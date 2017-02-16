@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import { toastr } from 'react-redux-toastr';
 import config from '../../config';
 import * as UserActions from '../actions/UserActions';
+import { addNotification } from '../actions/NotificationActions';
 import httpClient from './httpClient';
 import authHelper from '../helpers/authHelper';
 
@@ -27,16 +27,21 @@ class AuthService {
       const userProviderData = _.head(user.providerData);
       const userId = userProviderData.uid;
       this.dispatch(UserActions.startLoginProcess());
-      this.getUserById(userId).then(unleashUser => {
-        if (unleashUser) {
-          this.dispatch(UserActions.userLogin(unleashUser));
-          toastr.success('', `Welcome ${unleashUser.fullName}, unleash your potential today!`);
-        } else {
-          this.registerTheUser(userProviderData);
-        }
-      }).catch(() => {
-        toastr.error('', 'There was a problem with the server, please try again.');
-      });
+      this.getUserById(userId)
+        .then(unleashUser => {
+          if (unleashUser) {
+            this.dispatch(UserActions.userLogin(unleashUser));
+            this.dispatch(
+              addNotification(`Welcome ${unleashUser.fullName}, unleash your potential today!`,
+                'success')
+            );
+          } else {
+            this.registerTheUser(userProviderData);
+          }
+        })
+        .catch(() => {
+          this.dispatch(addNotification('There was a problem with the server, please try again.'));
+        });
     } else {
       this.dispatch(UserActions.userLogout());
     }
@@ -45,7 +50,7 @@ class AuthService {
   getUserById(userId) {
     return httpClient.get(config.profiles_api_url)
       .then(result => _.find(result.Items, ['id', userId]))
-      .catch(exception => toastr.error('', exception));
+      .catch(exception => this.dispatch(addNotification(exception)));
   }
 
   registerTheUser(userProviderData) {
@@ -59,7 +64,7 @@ class AuthService {
           this.dispatch(UserActions.userLogout());
         }
       })
-      .catch(() => toastr.error('', 'There was a problem registering the user.'));
+      .catch(() => this.dispatch(addNotification('There was a problem registering the user.')));
   }
 
   static userLogin() {

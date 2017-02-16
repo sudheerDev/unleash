@@ -1,6 +1,6 @@
-import { toastr } from 'react-redux-toastr';
 import config from '../../config';
 import httpClient from '../services/httpClient';
+import { addNotification } from './NotificationActions';
 
 export const GOALS = {
   FETCH: {
@@ -69,11 +69,11 @@ export function addGoalRequest() {
       .then(() => {
         dispatch(resetGoalModal());
         dispatch(fetchGoals());
-        toastr.success('', `Goal ${name} added.`);
+        dispatch(addNotification(`Goal ${name} added.`, 'success'));
       })
       .catch(() => {
         dispatch(resetGoalModal());
-        toastr.error('', 'Sorry, something bad happen...');
+        dispatch(addNotification('Sorry, something bad happen...'));
       });
   };
 }
