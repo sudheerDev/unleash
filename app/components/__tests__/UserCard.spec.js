@@ -14,7 +14,13 @@ describe('User Card', () => {
 
   beforeEach(() => {
     routerSpy = {
-      push: sinon.spy()
+      push: sinon.spy(),
+      replace: sinon.spy(),
+      go: sinon.spy(),
+      goBack: sinon.spy(),
+      goForward: sinon.spy(),
+      setRouteLeaveHook: sinon.spy(),
+      isActive: sinon.spy()
     };
     const context = {
       muiTheme: getMuiTheme()

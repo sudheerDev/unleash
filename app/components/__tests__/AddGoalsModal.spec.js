@@ -21,9 +21,11 @@ describe('Add Goals Modal', () => {
 
   let mockedActions;
   let updateAddGoalsFieldSpy;
+  let onSubmit;
 
   const renderAddGoalsModal = (options = {}, props = {}) => {
     updateAddGoalsFieldSpy = sinon.spy();
+    onSubmit = sinon.spy();
     mockedActions = {
       updateAddGoalsField: updateAddGoalsFieldSpy,
     };
@@ -38,7 +40,8 @@ describe('Add Goals Modal', () => {
     const defaultProps = {
       tagsOptions: tags,
       actions: mockedActions,
-      parameters: _.assign(modalParameters, options)
+      parameters: _.assign(modalParameters, options),
+      onSubmit: onSubmit
     };
 
     component = shallow(<AddGoalsModal {...defaultProps} {...props} />, {

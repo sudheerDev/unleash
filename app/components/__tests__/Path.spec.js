@@ -17,6 +17,7 @@ describe('Path Component', () => {
   let mockedActions;
   let pathsCreateSpy;
   let pathsRemoveSpy;
+  let pathsRenameSpy;
   let routerSpy;
 
   beforeEach(() => {
@@ -34,13 +35,20 @@ describe('Path Component', () => {
   function getComponent(props) {
     pathsCreateSpy = sinon.spy();
     pathsRemoveSpy = sinon.spy();
-    routerSpy = sinon.spy();
+    pathsRenameSpy = sinon.spy();
+    routerSpy = {
+      push: sinon.spy(),
+      replace: sinon.spy(),
+      go: sinon.spy(),
+      goBack: sinon.spy(),
+      goForward: sinon.spy(),
+      setRouteLeaveHook: sinon.spy(),
+      isActive: sinon.spy()
+    };
     mockedActions = {
       pathsCreate: pathsCreateSpy,
       pathsRemove: pathsRemoveSpy,
-    };
-    const router = {
-      push: routerSpy,
+      pathsRename: pathsRemoveSpy,
     };
     const params = {
       userId: testId
@@ -59,8 +67,8 @@ describe('Path Component', () => {
       loggedInUser: loggedInUser,
       userId: testId,
       location: location,
-      router: router,
-      editable: {false}
+      router: routerSpy,
+      editable: false
     }, props);
 
     return mount(<Paths {...componentProps} />, { context, childContextTypes });

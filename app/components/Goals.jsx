@@ -51,6 +51,7 @@ Goals.propTypes = {
   actions: React.PropTypes.shape({
     fetchGoals: React.PropTypes.func.isRequired,
     showAddGoalsModal: React.PropTypes.func.isRequired,
+    addGoalRequest: React.PropTypes.func.isRequired,
   }).isRequired,
   list: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   addModalParameters: React.PropTypes.shape({
