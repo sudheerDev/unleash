@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { find, every, some, values, map, random } from 'lodash';
+import { get, find, every, some, values, map, random } from 'lodash';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
@@ -240,7 +240,7 @@ class Skill extends Component {
 
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
-    const resources = skill.resources.map(resource => ({
+    const resources = get(skill, 'resources', []).map(resource => ({
       id: resource.id,
       url: resource.url,
       upvotes: random(0, 10),
