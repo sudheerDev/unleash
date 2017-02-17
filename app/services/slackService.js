@@ -2,33 +2,35 @@ import _ from 'lodash';
 import httpClient from '../services/httpClient';
 import config from '../../config';
 
-const notifyAchieved = (parameters) => {
-  const profileLink = `${window.location.protocol}//${window.location.host}/profiles/${parameters.user.id}`;
-  const completeGoalText = `*${parameters.user.fullName}* has completed a goal! :sparkles:\n${parameters.additionalMessage}`;
+const notifyAchieved = (params) => {
+  const { protocol, host } = window.location;
+  const { goal, user, additionalMessage } = params;
+  const profileLink = `${protocol}//${host}/profiles/${params.user.id}`;
+  const completeGoalText = `*${user.fullName}* has completed a goal! :sparkles:\n${additionalMessage}`;
 
   const payload = {
-    uid: `${parameters.user.id}-${parameters.goal.id}`,
+    uid: `${user.id}-${goal.id}`,
     text: completeGoalText,
     attachments: [
       {
         color: 'good',
         fallback: completeGoalText,
-        title: parameters.goal.name || '',
+        title: goal.name || '',
         title_link: profileLink,
-        text: parameters.goal.description || '',
+        text: goal.description || '',
         fields: [
           {
             title: 'Level',
-            value: parameters.goal.level || 'none',
+            value: goal.level || 'none',
             short: true,
           },
           {
             title: 'Comments',
-            value: _.size(parameters.goal.comments) || '0',
+            value: _.size(goal.comments) || '0',
             short: true,
           },
         ],
-        thumb_url: parameters.user.picture,
+        thumb_url: user.picture,
       },
     ],
     user: 'general',
