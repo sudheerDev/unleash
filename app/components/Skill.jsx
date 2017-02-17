@@ -239,7 +239,7 @@ class Skill extends Component {
     }
 
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
-    const skilled = this.getProfilesInIds(profiles.list, profilesBySkill.profiles);
+    const skilled = this.getProfilesInIds(profiles, profilesBySkill);
     const resources = skill.resources.map(resource => ({
       id: resource.id,
       url: resource.url,
