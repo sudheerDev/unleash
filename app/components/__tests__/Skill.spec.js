@@ -11,7 +11,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 describe('Skill Details', () => {
   let component;
   let mockedActions;
-  let mockedRouter;
+  let mockedParams;
+  let routerSpy;
   const skills = generate('skill', 15);
   const mockedSkills = keyBy(skills, 'name');
   const profiles = { list: generate('profile', 15) };
@@ -25,8 +26,17 @@ describe('Skill Details', () => {
       profileListBySkill: sinon.spy(),
       resourceAdd: sinon.spy(),
     }
-    mockedRouter = {
-      params: { slug: skills[0].slug }
+    routerSpy = {
+      push: sinon.spy(),
+      replace: sinon.spy(),
+      go: sinon.spy(),
+      goBack: sinon.spy(),
+      goForward: sinon.spy(),
+      setRouteLeaveHook: sinon.spy(),
+      isActive: sinon.spy()
+    }
+    mockedParams = {
+      slug: skills[0].slug
     }
     const context = {
       muiTheme: getMuiTheme()
@@ -41,8 +51,8 @@ describe('Skill Details', () => {
         skills={skills}
         profiles={profiles}
         profilesBySkill={mockedProfilesBySkill}
-        router={mockedRouter}
-        params={mockedRouter.params}
+        router={routerSpy}
+        params={mockedParams}
         skillsLoading={false}
         profilesLoading={false}
         bySkillLoading={false}

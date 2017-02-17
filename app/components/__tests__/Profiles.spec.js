@@ -25,7 +25,15 @@ describe('Profiles List', () => {
     profileListSpy = sinon.spy();
     skillListSpy = sinon.spy();
     clearSkillSpy = sinon.spy();
-    routerSpy = sinon.spy();
+    routerSpy = {
+      push: sinon.spy(),
+      replace: sinon.spy(),
+      go: sinon.spy(),
+      goBack: sinon.spy(),
+      goForward: sinon.spy(),
+      setRouteLeaveHook: sinon.spy(),
+      isActive: sinon.spy()
+    };
     profileListBySkill = sinon.spy();
     mockedActions = {
       profileList: profileListSpy,

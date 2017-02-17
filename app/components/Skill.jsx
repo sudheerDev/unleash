@@ -278,9 +278,13 @@ Skill.propTypes = {
   }).isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   skillsLoading: React.PropTypes.bool.isRequired,
-  profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  profiles: React.PropTypes.shape({
+    list: React.PropTypes.array,
+  }).isRequired,
   profilesLoading: React.PropTypes.bool.isRequired,
-  profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  profilesBySkill: React.PropTypes.shape({
+    profiles: React.PropTypes.array,
+  }).isRequired,
   bySkillLoading: React.PropTypes.bool.isRequired,
   params: React.PropTypes.shape({
     slug: React.PropTypes.string,

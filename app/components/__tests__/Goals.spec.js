@@ -24,15 +24,20 @@ describe('Goals List', () => {
   let mockedActions;
   let fetchGoalsSpy;
   let routerSpy;
+  let addGoalRequestSpy;
   let showAddGoalsModalSpy;
+  let onSubmit;
 
   beforeEach(() => {
     fetchGoalsSpy = sinon.spy();
     routerSpy = sinon.spy();
     showAddGoalsModalSpy = sinon.spy();
+    addGoalRequestSpy = sinon.spy();
+    onSubmit = sinon.spy();
     mockedActions = {
       fetchGoals: fetchGoalsSpy,
       showAddGoalsModal: showAddGoalsModalSpy,
+      addGoalRequest: addGoalRequestSpy
     };
     const context = {
       muiTheme: getMuiTheme()
@@ -46,6 +51,7 @@ describe('Goals List', () => {
         list={goals}
         actions={mockedActions}
         addModalParameters={modalParameters}
+        onSubmit={onSubmit}
       />,
       {
         context,

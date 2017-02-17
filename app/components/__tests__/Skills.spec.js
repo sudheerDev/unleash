@@ -11,7 +11,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 describe('Skills List', () => {
   let component;
   const skills = generate('skill', 15);
-  const mockedSkills = { list: keyBy(skills, 'name') };
+  const mockedSkills = { list: skills };
   const modalParameters = {
     showModal: false,
     showSpinner: false,
@@ -24,14 +24,20 @@ describe('Skills List', () => {
 
   beforeEach(() => {
     skillListSpy = sinon.spy();
-    routerSpy = sinon.spy();
+    routerSpy = {
+      push: sinon.spy(),
+      replace: sinon.spy(),
+      go: sinon.spy(),
+      goBack: sinon.spy(),
+      goForward: sinon.spy(),
+      setRouteLeaveHook: sinon.spy(),
+      isActive: sinon.spy()
+    };
+    mockedSkills.isLoading = false;
     showAddSkillModalSpy = sinon.spy();
     mockedActions = {
       skillList: skillListSpy,
       showAddSkillModal: showAddSkillModalSpy,
-    };
-    const router = {
-      push: routerSpy,
     };
     const context = {
       muiTheme: getMuiTheme()
@@ -44,7 +50,7 @@ describe('Skills List', () => {
       <Skills
         skills={mockedSkills}
         actions={mockedActions}
-        router={router}
+        router={routerSpy}
         addModalParameters={modalParameters}
       />,
       {
@@ -72,7 +78,7 @@ describe('Skills List', () => {
     const skillElement = component.find('Skills');
     skillElement.node.handleSkillSelect(skill.name);
     const expectedRoute = `/skills/${skill.name}`;
-    expect(routerSpy.getCall(0).args[0]).to.equal(expectedRoute);
+    expect(routerSpy.push.getCall(0).args[0]).to.equal(expectedRoute);
   });
 
   it('should render add goal button', () => {
