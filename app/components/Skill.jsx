@@ -52,8 +52,8 @@ class Skill extends Component {
     return find(values(skills), ['slug', slug]);
   }
 
-  getProfilesInIds(profiles = {}, ids = []) {
-    return values(profiles).filter(profile => ids.indexOf(profile.id) > -1);
+  getProfilesInIds(profiles = [], ids = []) {
+    return profiles.filter(profile => ids.indexOf(profile.id) > -1);
   }
 
   /**
