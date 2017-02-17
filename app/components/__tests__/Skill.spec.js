@@ -13,10 +13,8 @@ describe('Skill Details', () => {
   let mockedActions;
   let mockedRouter;
   const skills = generate('skill', 15);
-  const mockedSkills = keyBy(skills, 'name');
-  const profiles = { list: generate('profile', 15) };
-  const mockedProfiles = keyBy(profiles, 'id');
-  const mockedProfilesBySkill = { profiles: map(sampleSize(profiles.list, 3), 'id') };
+  const profiles = generate('profile', 15);
+  const mockedProfilesBySkill = map(sampleSize(profiles, 3), 'id');
 
   beforeEach(() => {
     mockedActions = {
@@ -59,7 +57,7 @@ describe('Skill Details', () => {
 
   it('should render the list of skilled profiles', () => {
     const listItems = component.find('UserCard');
-    expect(listItems.length).to.equal(mockedProfilesBySkill.profiles.length);
+    expect(listItems.length).to.equal(mockedProfilesBySkill.length);
   });
 
   it('should fetch the skill list when component is mounted', () => {
