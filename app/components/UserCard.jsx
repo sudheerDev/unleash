@@ -12,7 +12,7 @@ class UserCard extends Component {
   render() {
     const { user } = this.props;
     // @TODO: (Kelvin De Moya) - Update after deciding if it should be checked here or by the API.
-    const googleDefaultImage = 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg';
+    const googleDefaultImage = 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg'; // eslint-disable-line
     const userUrl = user.picture === googleDefaultImage ? DefaultHero : user.picture || DefaultHero;
 
     return (

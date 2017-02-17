@@ -10,7 +10,8 @@
   "rules": {
     "import/no-extraneous-dependencies": [2, { "devDependencies": true }],
     "jsx-a11y/no-static-element-interactions": 0,
-    "class-methods-use-this": 0
+    "class-methods-use-this": 0,
+    "max-len": ["error", 120, 2]
   },
   "globals": {
     "firebase": false,
