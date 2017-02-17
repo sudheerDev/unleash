@@ -44,7 +44,7 @@
     "material-ui": "^0.15.2",
     "material-ui-chip-input": "^0.10.0",
     "react": "^15.2.1",
-    "react-chronos": "^1.0.3",
+    "react-chronos": "^1.0.4",
     "react-dom": "^15.2.1",
     "react-flip-move": "^2.6.0",
     "react-intl": "^2.1.5",
