@@ -134,7 +134,7 @@ Profile.propTypes = {
   addExistingGoalsModalParameters: React.PropTypes.shape({
     showModal: React.PropTypes.bool,
     showSpinner: React.PropTypes.bool,
-    selectedPath: React.PropTypes.object,
+    selectedPath: React.PropTypes.string,
     selectedGoal: React.PropTypes.object,
   }).isRequired,
 };
