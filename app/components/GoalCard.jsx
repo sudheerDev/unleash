@@ -194,6 +194,10 @@ class GoalCard extends Component {
 
 GoalCard.propTypes = propTypes;
 
+GoalCard.defaultProps = {
+  loading: false,
+};
+
 styles = {
   goal: {
     position: 'relative',
