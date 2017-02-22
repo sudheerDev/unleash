@@ -40,7 +40,11 @@ make_task_def() {
         { "name": "firebaseAuthDomain", "value": "%s" },
         { "name": "firebaseDatabaseURL", "value": "%s" },
         { "name": "firebaseStorageBucket", "value": "%s" },
-        { "name": "firebaseMessagingSenderId", "value": "%s" }
+        { "name": "firebaseMessagingSenderId", "value": "%s" },
+        { "name": "skills_api_url", "value": "%s" },
+        { "name": "goals_api_url", "value": "%s" },
+        { "name": "profiles_api_url", "value": "%s" },
+        { "name": "paths_api_url", "value": "%s" }
       ],
       "portMappings": [
         {
@@ -52,7 +56,7 @@ make_task_def() {
     }
   ]'
 
-  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $TRAVIS_BUILD_NUMBER $FIREBASE_API_KEY $FIREBASE_AUTH_DOMAIN $FIREBASE_DATABASE_URL $FIREBASE_STORAGE_BUCKET $FIREBASE_MESSAGING_SENDER_ID)
+  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $TRAVIS_BUILD_NUMBER $FIREBASE_API_KEY $FIREBASE_AUTH_DOMAIN $FIREBASE_DATABASE_URL $FIREBASE_STORAGE_BUCKET $FIREBASE_MESSAGING_SENDER_ID, $SKILLS_API_URL, $GOALS_API_URL, $PROFILES_API_URL, $PATHS_API_URL)
 }
 
 push_ecr_image() {
