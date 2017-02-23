@@ -124,7 +124,7 @@ class Skill extends Component {
         url: this.state.resource_url,
         description: this.state.resource_description,
         type: this.state.resource_type,
-        authorId: userId,
+        author_id: userId,
       });
       toggleOff(DIALOG_TOGGLE);
     }
