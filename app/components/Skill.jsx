@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { get, find, every, some, values, map, random } from 'lodash';
+import { routerShape } from 'react-router/lib/PropTypes';
+import { get, find, every, some, values, map } from 'lodash';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
@@ -14,7 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { routerShape } from 'react-router/lib/PropTypes';
+
 import toggleHOC from '../hocs/toggleHOC';
 import Loading from './Loading';
 import UserCard from './UserCard';
@@ -102,6 +103,15 @@ class Skill extends Component {
     }
   }
 
+  addVote = (skillSlug, resource) => () => {
+    const { actions, userId } = this.props;
+    actions.resourceAddVote(skillSlug, {
+      id: resource.id,
+      user: userId,
+      vote: 1,
+    });
+  }
+
   /**
    * Render dialog with description.
    * @returns {Object} dialog element
@@ -175,13 +185,13 @@ class Skill extends Component {
   }
 
   renderResources(resources) {
-    if (resources.length === 0) {
+    if (!resources.length) {
       return (
         <div style={styles.resources}>
           <RaisedButton
             label="Add Resource"
             backgroundColor="#8FD694"
-            labelColor="#FFFFFF"
+            labelColor="#FFF"
             onTouchTap={() => this.handleAddResource()}
             style={styles.addResourceButton}
           />
@@ -192,12 +202,16 @@ class Skill extends Component {
       );
     }
 
+    const { skills } = this.props;
+
+    const skill = this.getSkillBySlug(skills, this.props.params.slug);
+
     return (
       <div style={styles.resources}>
         <RaisedButton
           label="Add Resource"
           backgroundColor="#8FD694"
-          labelColor="#FFFFFF"
+          labelColor="#FFF"
           onTouchTap={() => this.handleAddResource()}
           style={styles.addResourceButton}
         />
@@ -211,8 +225,10 @@ class Skill extends Component {
               rightIconButton={
                 <FlatButton
                   label={`x ${resource.upvotes}`}
-                  icon={<ActionThumbUp />}
                   secondary={resource.upvoted}
+                  disabled={resource.upvoted}
+                  icon={<ActionThumbUp />}
+                  onTouchTap={this.addVote(skill.slug, resource)}
                 />
               }
             />,
@@ -230,6 +246,7 @@ class Skill extends Component {
       profilesLoading,
       profilesBySkill,
       bySkillLoading,
+      userId,
     } = this.props;
     const isLoading = some([skillsLoading, profilesLoading, bySkillLoading]);
     const allLoaded = every([skills, profiles, profilesBySkill]);
@@ -240,13 +257,17 @@ class Skill extends Component {
 
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
-    const resources = get(skill, 'resources', []).map(resource => ({
-      id: resource.id,
-      url: resource.url,
-      upvotes: random(0, 10),
-      upvoted: random(0, 3) === 0,
-      type: resourceTypes[resource.type] ? resource.type : 'other',
-    })).sort((a, b) => b.upvotes - a.upvotes);
+    const resources = get(skill, 'resources', []).map((resource) => {
+      const userHasVoted = some(resource.votes, topic => topic.user === userId);
+
+      return {
+        id: resource.id,
+        url: resource.url,
+        upvotes: resource.votes_total || 0,
+        upvoted: userHasVoted,
+        type: resourceTypes[resource.type] ? resource.type : 'other',
+      };
+    }).sort((a, b) => b.upvotes - a.upvotes);
 
     return (
       <div>
@@ -275,7 +296,9 @@ Skill.propTypes = {
     profileList: React.PropTypes.func.isRequired,
     profileListBySkill: React.PropTypes.func.isRequired,
     resourceAdd: React.PropTypes.func.isRequired,
+    resourceAddVote: React.PropTypes.func.isRequired,
   }).isRequired,
+  userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   skillsLoading: React.PropTypes.bool.isRequired,
   profiles: React.PropTypes.shape({

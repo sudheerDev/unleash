@@ -1,5 +1,7 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+
 import { SKILL } from '../actions/SkillActions';
+
 /**
  * Update a skill inside the skills list.
  * @param  {object}  skills     The list of skills.
@@ -7,9 +9,9 @@ import { SKILL } from '../actions/SkillActions';
  * @return {object}             The updated result.
  */
 function updateOne(skills, skill) {
-  const upsdatedSkills = cloneDeep(skills);
-  upsdatedSkills[skill.name] = skill;
-  return upsdatedSkills;
+  const updatedSkills = cloneDeep(skills);
+  updatedSkills[skill.name] = skill;
+  return updatedSkills;
 }
 
 const initialState = {
@@ -24,6 +26,7 @@ const initialState = {
 
 function skillsReducer(state = initialState, action) {
   const { updatedSkill, errors = [] } = action;
+
   switch (action.type) {
     case SKILL.FETCH.START:
       return {
@@ -49,6 +52,12 @@ function skillsReducer(state = initialState, action) {
       // The API return the affected skill object.
       return { ...state, errors, list: updateOne(state.list, updatedSkill) };
     case SKILL.ADD_RESOURCE.FAILURE:
+      return { ...state, errors };
+    case SKILL.VOTE_RESOURCE.START:
+      return { ...state, errors };
+    case SKILL.VOTE_RESOURCE.SUCCESS:
+      return { ...state, errors, list: updateOne(state.list, updatedSkill) };
+    case SKILL.VOTE_RESOURCE.FAILURE:
       return { ...state, errors };
     case SKILL.ADD.UPDATE_FIELD:
       return {
