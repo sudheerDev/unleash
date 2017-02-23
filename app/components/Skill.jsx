@@ -57,6 +57,20 @@ class Skill extends Component {
     return values(profiles).filter(profile => ids.indexOf(profile.id) > -1);
   }
 
+  getResourcesFromSkill = skill => get(skill, 'resources', []).map((resource) => {
+    const { userId } = this.props;
+    const userHasVoted = some(resource.votes, vote => (vote.user === userId && vote.vote > 0));
+
+    return {
+      id: resource.id,
+      url: resource.url,
+      upvotes: resource.votes_total || 0,
+      upvoted: userHasVoted,
+      type: resourceTypes[resource.type] ? resource.type : 'other',
+    };
+  })
+  .sort((a, b) => b.upvotes - a.upvotes);
+
   /**
    * Handle TextField change.
    * @param {Object} event - TextField event.
@@ -251,7 +265,6 @@ class Skill extends Component {
       profilesLoading,
       profilesBySkill,
       bySkillLoading,
-      userId,
     } = this.props;
     const isLoading = some([skillsLoading, profilesLoading, bySkillLoading]);
     const allLoaded = every([skills, profiles, profilesBySkill]);
@@ -262,17 +275,7 @@ class Skill extends Component {
 
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
-    const resources = get(skill, 'resources', []).map((resource) => {
-      const userHasVoted = some(resource.votes, vote => (vote.user === userId && vote.vote > 0));
-
-      return {
-        id: resource.id,
-        url: resource.url,
-        upvotes: resource.votes_total || 0,
-        upvoted: userHasVoted,
-        type: resourceTypes[resource.type] ? resource.type : 'other',
-      };
-    }).sort((a, b) => b.upvotes - a.upvotes);
+    const resources = this.getResourcesFromSkill(skill);
 
     return (
       <div>
