@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep';
+import findIndex from 'lodash/findIndex';
 
 import { SKILL } from '../actions/SkillActions';
 
@@ -6,12 +6,15 @@ import { SKILL } from '../actions/SkillActions';
  * Update a skill inside the skills list.
  * @param  {object}  skills     The list of skills.
  * @param  {object}  skill      The skill to update.
- * @return {object}             The updated result.
+ * @return {array}              The updated result.
  */
 function updateOne(skills, skill) {
-  const updatedSkills = cloneDeep(skills);
-  updatedSkills[skill.name] = skill;
-  return updatedSkills;
+  const skillIndex = findIndex(skills, { id: skill.id });
+  return [
+    ...skills.slice(0, skillIndex),
+    skill,
+    ...skills.slice(skillIndex + 1),
+  ];
 }
 
 const initialState = {
