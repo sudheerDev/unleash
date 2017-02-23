@@ -5,7 +5,6 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
-import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
 import ContentLink from 'material-ui/svg-icons/content/link';
 import ContentCreate from 'material-ui/svg-icons/content/create';
 import SocialSchool from 'material-ui/svg-icons/social/school';
@@ -191,7 +190,6 @@ class Skill extends Component {
     const { params: { slug }, skills } = this.props;
 
     const skill = this.getSkillBySlug(skills, slug);
-    const ThumbIcon = resource.upvoted ? <ActionThumbDown /> : <ActionThumbUp />;
 
     return (
       <ListItem
@@ -203,7 +201,7 @@ class Skill extends Component {
           <FlatButton
             label={`x ${resource.upvotes}`}
             secondary={resource.upvoted}
-            icon={ThumbIcon}
+            icon={<ActionThumbUp />}
             onTouchTap={this.addVote(skill.slug, resource)}
           />
         }
