@@ -7,55 +7,53 @@ import MenuItem from 'material-ui/MenuItem';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
-import _ from 'lodash';
 
 let styles = {};
 
 class AddExistingGoalsModal extends React.Component {
+
   componentDidMount() {
     const { actions } = this.props;
-
     actions.fetchGoals();
   }
+
   handleSelectedGoal(index) {
     const { actions, goals } = this.props;
-
     actions.updateSelectedGoal(goals[index]);
   }
+
   handleCancel() {
     const { actions } = this.props;
-
     actions.resetExistingGoalModal();
   }
+
   handleSubmit() {
-    const { actions, parameters, profile } = this.props;
+    const { actions, parameters: { selectedGoal, selectedPath }, profile } = this.props;
 
-    actions.addExistingGoalToPathRequest(
-      parameters.selectedGoal,
-      parameters.selectedPath,
-      profile,
-    ).then(
-      actions.resetExistingGoalModal(),
-    );
+    actions.addExistingGoalToPathRequest(selectedGoal, selectedPath, profile)
+      .then(() => actions.resetExistingGoalModal());
   }
-  generateGoalCard() {
-    const { parameters } = this.props;
 
-    let displayedCard = null;
-    if (parameters.selectedGoal) {
-      displayedCard = (
+  generateGoalCard() {
+    const { selectedGoal } = this.props.parameters;
+
+    if (selectedGoal) {
+      const icon = selectedGoal.icon ? <FontIcon className={selectedGoal.icon} /> : null;
+      const avatar = icon ? <Avatar icon={icon} /> : null;
+      return (
         <Card>
           <CardHeader
-            title={parameters.selectedGoal.name}
-            avatar={<Avatar icon={<FontIcon className={parameters.selectedGoal.icon} />} />}
+            title={selectedGoal.name}
+            avatar={avatar}
           />
-          <CardText>{parameters.selectedGoal.description}</CardText>
+          <CardText>{selectedGoal.description}</CardText>
         </Card>
       );
     }
 
-    return displayedCard;
+    return null;
   }
+
   generateActionButtons() {
     const { parameters } = this.props;
     const cancelButton = (
@@ -63,17 +61,20 @@ class AddExistingGoalsModal extends React.Component {
         label="Cancel"
         onTouchTap={() => this.handleCancel()}
         disabled={parameters.showSpinner}
-      />);
+      />
+    );
     const submitButton = (
       <FlatButton
         label="Submit"
         secondary
         onTouchTap={() => this.handleSubmit()}
         disabled={parameters.showSpinner}
-      />);
+      />
+    );
 
     return [cancelButton, submitButton];
   }
+
   generatePathsSelectField() {
     const { actions, parameters, paths } = this.props;
 
@@ -90,9 +91,10 @@ class AddExistingGoalsModal extends React.Component {
       </SelectField>
     );
   }
+
   render() {
     const { parameters, goals } = this.props;
-    const autoCompleteData = _.map(goals, 'name');
+    const autoCompleteData = goals.map(goal => goal.name);
 
     return (
       <Dialog
@@ -130,7 +132,7 @@ AddExistingGoalsModal.propTypes = {
   parameters: React.PropTypes.shape({
     showModal: React.PropTypes.bool,
     showSpinner: React.PropTypes.bool,
-    selectedPath: React.PropTypes.object,
+    selectedPath: React.PropTypes.string,
     selectedGoal: React.PropTypes.object,
   }).isRequired,
   profile: React.PropTypes.shape({
