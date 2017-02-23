@@ -5,6 +5,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
+import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
 import ContentLink from 'material-ui/svg-icons/content/link';
 import ContentCreate from 'material-ui/svg-icons/content/create';
 import SocialSchool from 'material-ui/svg-icons/social/school';
@@ -105,10 +106,12 @@ class Skill extends Component {
 
   addVote = (skillSlug, resource) => () => {
     const { actions, userId } = this.props;
+    const vote = resource.upvoted ? -1 : 1;
+
     actions.resourceAddVote(skillSlug, {
       id: resource.id,
       user: userId,
-      vote: 1,
+      vote,
     });
   }
 
@@ -184,6 +187,30 @@ class Skill extends Component {
     );
   }
 
+  renderResourceItem = (resource) => {
+    const { params: { slug }, skills } = this.props;
+
+    const skill = this.getSkillBySlug(skills, slug);
+    const ThumbIcon = resource.upvoted ? <ActionThumbDown /> : <ActionThumbUp />;
+
+    return (
+      <ListItem
+        key={resource.id}
+        leftIcon={resourceTypes[resource.type]}
+        primaryText={resource.url}
+        secondaryText={resource.type}
+        rightIconButton={
+          <FlatButton
+            label={`x ${resource.upvotes}`}
+            secondary={resource.upvoted}
+            icon={ThumbIcon}
+            onTouchTap={this.addVote(skill.slug, resource)}
+          />
+        }
+      />
+    );
+  }
+
   renderResources(resources) {
     if (!resources.length) {
       return (
@@ -202,10 +229,6 @@ class Skill extends Component {
       );
     }
 
-    const { skills } = this.props;
-
-    const skill = this.getSkillBySlug(skills, this.props.params.slug);
-
     return (
       <div style={styles.resources}>
         <RaisedButton
@@ -216,23 +239,7 @@ class Skill extends Component {
           style={styles.addResourceButton}
         />
         <List>
-          {map(resources, resource =>
-            <ListItem
-              key={resource.id}
-              leftIcon={resourceTypes[resource.type]}
-              primaryText={resource.url}
-              secondaryText={resource.type}
-              rightIconButton={
-                <FlatButton
-                  label={`x ${resource.upvotes}`}
-                  secondary={resource.upvoted}
-                  disabled={resource.upvoted}
-                  icon={<ActionThumbUp />}
-                  onTouchTap={this.addVote(skill.slug, resource)}
-                />
-              }
-            />,
-          )}
+          {map(resources, resource => this.renderResourceItem(resource))}
         </List>
       </div>
     );
@@ -258,7 +265,7 @@ class Skill extends Component {
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
     const resources = get(skill, 'resources', []).map((resource) => {
-      const userHasVoted = some(resource.votes, topic => topic.user === userId);
+      const userHasVoted = some(resource.votes, vote => (vote.user === userId && vote.vote > 0));
 
       return {
         id: resource.id,
