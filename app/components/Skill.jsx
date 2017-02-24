@@ -36,11 +36,7 @@ class Skill extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      resource_url: '',
-      resource_description: '',
-      resource_type: 'other',
-    };
+    this.initDialogState();
   }
 
   componentDidMount() {
@@ -70,6 +66,14 @@ class Skill extends Component {
     };
   })
   .sort((a, b) => b.upvotes - a.upvotes);
+
+  initDialogState() {
+    this.state = {
+      resource_url: '',
+      resource_description: '',
+      resource_type: 'other',
+    };
+  }
 
   /**
    * Handle TextField change.
@@ -114,6 +118,7 @@ class Skill extends Component {
         type: this.state.resource_type,
       });
       toggleOff(DIALOG_TOGGLE);
+      this.initDialogState();
     }
   }
 
@@ -141,14 +146,7 @@ class Skill extends Component {
       <FlatButton
         label="Add Resource"
         primary
-        onTouchTap={() => {
-          this.addResource(skillSlug);
-          this.setState({
-            resource_url: '',
-            resource_description: '',
-            resource_type: 'other',
-          });
-        }}
+        onTouchTap={() => this.addResource(skillSlug)}
       />,
     ];
 
