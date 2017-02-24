@@ -141,7 +141,14 @@ class Skill extends Component {
       <FlatButton
         label="Add Resource"
         primary
-        onTouchTap={() => this.addResource(skillSlug)}
+        onTouchTap={() => {
+          this.addResource(skillSlug);
+          this.setState({
+            resource_url: '',
+            resource_description: '',
+            resource_type: 'other',
+          });
+        }}
       />,
     ];
 
