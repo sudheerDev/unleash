@@ -8,7 +8,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
 import * as SkillActions from '../actions/SkillActions';
 import * as ProfileActions from '../actions/ProfileActions';
 import Skill from '../components/Skill';
