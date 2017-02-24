@@ -59,10 +59,6 @@ class Skill extends Component {
     return profiles.filter(profile => this.filterProfileIds(profile, ids));
   }
 
-  filterProfileIds(profile, ids) {
-    return ids.indexOf(profile.id) > -1;
-  }
-
   getResourcesFromSkill = skill => get(skill, 'resources', []).map((resource) => {
     const { userId } = this.props;
     const userHasVoted = some(resource.votes, vote => (vote.user === userId && vote.vote > 0));
@@ -73,9 +69,14 @@ class Skill extends Component {
       upvotes: resource.votes_total || 0,
       upvoted: userHasVoted,
       type: resourceTypes[resource.type] ? resource.type : 'other',
+      authorId: resource.author_id,
     };
   })
   .sort((a, b) => b.upvotes - a.upvotes);
+
+  filterProfileIds(profile, ids) {
+    return ids.indexOf(profile.id) > -1;
+  }
 
   /**
    * Handle TextField change.
@@ -249,36 +250,24 @@ class Skill extends Component {
   renderResources(skill) {
     let resourceItems;
     let emptyMessage;
-
-    const resources = get(skill, 'resources', []).map(resource => ({
-      id: resource.id,
-      authorId: resource.author_id ? resource.author_id : null,
-      url: resource.url,
-      upvotes: random(0, 10),
-      upvoted: random(0, 3) === 0,
-      type: resourceTypes[resource.type] ? resource.type : 'other',
-    })).sort((a, b) => b.upvotes - a.upvotes);
-
+    const resources = this.getResourcesFromSkill(skill);
     if (this.state.isRemoving) {
       resourceItems = this.renderRemovingResourcesList(resources, skill.slug);
       emptyMessage = 'There are no resources you can remove.';
     } else {
-      resourceItems = this.renderDefaultResourcesList(resources);
+      resourceItems = map(resources, resource => this.renderResourceItem(resource));
       emptyMessage = 'No resources added yet for this skill.';
     }
 
     return (
       <div style={styles.resources}>
-        <RaisedButton
-          label="Add Resource"
-          backgroundColor="#8FD694"
-          labelColor="#FFF"
-          onTouchTap={() => this.handleAddResource()}
-          style={styles.addResourceButton}
-        />
-        <List>
-          {map(resources, resource => this.renderResourceItem(resource))}
-        </List>
+        {resourceItems.length ? (
+          <List>{resourceItems}</List>
+        ) : (
+          <div style={styles.resources}>
+            <p style={styles.empty}>{emptyMessage}</p>
+          </div>
+        )}
       </div>
     );
   }
@@ -426,7 +415,6 @@ Skill.propTypes = {
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
-  userId: React.PropTypes.string.isRequired,
 };
 
 styles = {

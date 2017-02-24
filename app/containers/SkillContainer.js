@@ -13,7 +13,6 @@ import * as ProfileActions from '../actions/ProfileActions';
 import Skill from '../components/Skill';
 
 function mapStateToProps(state) {
-  const userId = get(state, 'user.userData.id');
   return {
     profilesBySkill: state.profilesBySkill.profiles,
     bySkillLoading: state.profilesBySkill.isLoading,
