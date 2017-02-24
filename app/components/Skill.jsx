@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { get, find, every, some, values, map, random } from 'lodash';
+import { routerShape } from 'react-router/lib/PropTypes';
+import { get, find, every, some, values, map } from 'lodash';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
@@ -14,7 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { routerShape } from 'react-router/lib/PropTypes';
+
 import toggleHOC from '../hocs/toggleHOC';
 import Loading from './Loading';
 import UserCard from './UserCard';
@@ -55,6 +56,20 @@ class Skill extends Component {
   getProfilesInIds(profiles = {}, ids = []) {
     return values(profiles).filter(profile => ids.indexOf(profile.id) > -1);
   }
+
+  getResourcesFromSkill = skill => get(skill, 'resources', []).map((resource) => {
+    const { userId } = this.props;
+    const userHasVoted = some(resource.votes, vote => (vote.user === userId && vote.vote > 0));
+
+    return {
+      id: resource.id,
+      url: resource.url,
+      upvotes: resource.votes_total || 0,
+      upvoted: userHasVoted,
+      type: resourceTypes[resource.type] ? resource.type : 'other',
+    };
+  })
+  .sort((a, b) => b.upvotes - a.upvotes);
 
   /**
    * Handle TextField change.
@@ -100,6 +115,17 @@ class Skill extends Component {
       });
       toggleOff(DIALOG_TOGGLE);
     }
+  }
+
+  addVote = (skillSlug, resource) => () => {
+    const { actions, userId } = this.props;
+    const vote = resource.upvoted ? -1 : 1;
+
+    actions.resourceAddVote(skillSlug, {
+      id: resource.id,
+      user: userId,
+      vote,
+    });
   }
 
   /**
@@ -174,14 +200,37 @@ class Skill extends Component {
     );
   }
 
+  renderResourceItem = (resource) => {
+    const { params: { slug }, skills } = this.props;
+
+    const skill = this.getSkillBySlug(skills, slug);
+
+    return (
+      <ListItem
+        key={resource.id}
+        leftIcon={resourceTypes[resource.type]}
+        primaryText={resource.url}
+        secondaryText={resource.type}
+        rightIconButton={
+          <FlatButton
+            label={`x ${resource.upvotes}`}
+            secondary={resource.upvoted}
+            icon={<ActionThumbUp />}
+            onTouchTap={this.addVote(skill.slug, resource)}
+          />
+        }
+      />
+    );
+  }
+
   renderResources(resources) {
-    if (resources.length === 0) {
+    if (!resources.length) {
       return (
         <div style={styles.resources}>
           <RaisedButton
             label="Add Resource"
             backgroundColor="#8FD694"
-            labelColor="#FFFFFF"
+            labelColor="#FFF"
             onTouchTap={() => this.handleAddResource()}
             style={styles.addResourceButton}
           />
@@ -197,26 +246,12 @@ class Skill extends Component {
         <RaisedButton
           label="Add Resource"
           backgroundColor="#8FD694"
-          labelColor="#FFFFFF"
+          labelColor="#FFF"
           onTouchTap={() => this.handleAddResource()}
           style={styles.addResourceButton}
         />
         <List>
-          {map(resources, resource =>
-            <ListItem
-              key={resource.id}
-              leftIcon={resourceTypes[resource.type]}
-              primaryText={resource.url}
-              secondaryText={resource.type}
-              rightIconButton={
-                <FlatButton
-                  label={`x ${resource.upvotes}`}
-                  icon={<ActionThumbUp />}
-                  secondary={resource.upvoted}
-                />
-              }
-            />,
-          )}
+          {map(resources, resource => this.renderResourceItem(resource))}
         </List>
       </div>
     );
@@ -240,13 +275,7 @@ class Skill extends Component {
 
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
-    const resources = get(skill, 'resources', []).map(resource => ({
-      id: resource.id,
-      url: resource.url,
-      upvotes: random(0, 10),
-      upvoted: random(0, 3) === 0,
-      type: resourceTypes[resource.type] ? resource.type : 'other',
-    })).sort((a, b) => b.upvotes - a.upvotes);
+    const resources = this.getResourcesFromSkill(skill);
 
     return (
       <div>
@@ -275,7 +304,9 @@ Skill.propTypes = {
     profileList: React.PropTypes.func.isRequired,
     profileListBySkill: React.PropTypes.func.isRequired,
     resourceAdd: React.PropTypes.func.isRequired,
+    resourceAddVote: React.PropTypes.func.isRequired,
   }).isRequired,
+  userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   skillsLoading: React.PropTypes.bool.isRequired,
   profiles: React.PropTypes.shape({

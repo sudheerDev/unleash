@@ -8,6 +8,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import * as SkillActions from '../actions/SkillActions';
 import * as ProfileActions from '../actions/ProfileActions';
 import Skill from '../components/Skill';
@@ -20,6 +21,7 @@ function mapStateToProps(state) {
     skillsLoading: state.skills.isLoading,
     profiles: state.profiles.list,
     profilesLoading: state.profiles.isLoading,
+    userId: state.user.userData.id,
   };
 }
 

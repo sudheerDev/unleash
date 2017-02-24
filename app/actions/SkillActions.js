@@ -13,6 +13,11 @@ export const SKILL = {
     SUCCESS: 'ADD_RESOURCE_SUCCESS',
     FAILURE: 'ADD_RESOURCE_FAILURE',
   },
+  VOTE_RESOURCE: {
+    START: 'VOTE_RESOURCE_START',
+    SUCCESS: 'VOTE_RESOURCE_SUCCESS',
+    FAILURE: 'VOTE_RESOURCE_FAILURE',
+  },
   ADD: {
     UPDATE_FIELD: 'SKILL_ADD_UPDATE_FIELD',
     SHOW_MODAL: 'SKILL_ADD_SHOW_MODAL',
@@ -37,6 +42,15 @@ export function resourceAdd(skillSlug, resource) {
     return httpClient.post(`${config.skills_api_url}/${skillSlug}/resources.json`, resource)
       .then(updatedSkill => dispatch({ type: SKILL.ADD_RESOURCE.SUCCESS, updatedSkill }))
       .catch(errors => dispatch({ type: SKILL.ADD_RESOURCE.FAILURE, errors }));
+  };
+}
+
+export function resourceAddVote(skillSlug, resource) {
+  return (dispatch) => {
+    dispatch({ type: SKILL.VOTE_RESOURCE.START });
+    return httpClient.post(`${config.skills_api_url}/${skillSlug}/resources/${resource.id}/votes.json`, resource)
+      .then(updatedSkill => dispatch({ type: SKILL.VOTE_RESOURCE.SUCCESS, updatedSkill }))
+      .catch(errors => dispatch({ type: SKILL.VOTE_RESOURCE.FAILURE, errors }));
   };
 }
 
