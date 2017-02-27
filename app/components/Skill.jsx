@@ -38,7 +38,7 @@ class Skill extends Component {
   constructor(props) {
     super(props);
 
-    this.state = this.getInitDialogState();
+    this.state = this.getInitalDialogState();
   }
 
   componentDidMount() {
@@ -70,7 +70,7 @@ class Skill extends Component {
   })
   .sort((a, b) => b.upvotes - a.upvotes);
 
-  getInitDialogState() {
+  getInitalDialogState() {
     return {
       resource_url: '',
       resource_description: '',
@@ -131,7 +131,7 @@ class Skill extends Component {
         author_id: userId,
       });
       toggleOff(DIALOG_TOGGLE);
-      this.setState(this.getInitDialogState());
+      this.setState(this.getInitalDialogState());
     }
   }
 
