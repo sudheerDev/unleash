@@ -76,6 +76,7 @@ class Skill extends Component {
       resource_description: '',
       resource_type: 'other',
     };
+  }
 
   filterProfileIds(profile, ids) {
     return ids.indexOf(profile.id) > -1;
