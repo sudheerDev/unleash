@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { routerShape } from 'react-router/lib/PropTypes';
-import { get, find, every, some, values, map } from 'lodash';
+import { find, every, some, values, map, get } from 'lodash';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
+import { routerShape } from 'react-router/lib/PropTypes';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ContentLink from 'material-ui/svg-icons/content/link';
@@ -10,12 +10,14 @@ import ContentCreate from 'material-ui/svg-icons/content/create';
 import SocialSchool from 'material-ui/svg-icons/social/school';
 import NotificationOnDemandVideo from 'material-ui/svg-icons/notification/ondemand-video';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentClear from 'material-ui/svg-icons/content/clear';
+import ContentUndo from 'material-ui/svg-icons/content/undo';
 import toggleHOC from '../hocs/toggleHOC';
 import Loading from './Loading';
 import UserCard from './UserCard';
@@ -46,11 +48,11 @@ class Skill extends Component {
   }
 
   getSkillBySlug(skills = {}, slug) {
-    return find(values(skills), ['slug', slug]);
+    return find(values(skills), ['slug', slug]) || {};
   }
 
   getProfilesInIds(profiles = {}, ids = []) {
-    return values(profiles).filter(profile => ids.indexOf(profile.id) > -1);
+    return profiles.filter(profile => this.filterProfileIds(profile, ids));
   }
 
   getResourcesFromSkill = skill => get(skill, 'resources', []).map((resource) => {
@@ -63,6 +65,7 @@ class Skill extends Component {
       upvotes: resource.votes_total || 0,
       upvoted: userHasVoted,
       type: resourceTypes[resource.type] ? resource.type : 'other',
+      authorId: resource.author_id,
     };
   })
   .sort((a, b) => b.upvotes - a.upvotes);
@@ -73,6 +76,9 @@ class Skill extends Component {
       resource_description: '',
       resource_type: 'other',
     };
+
+  filterProfileIds(profile, ids) {
+    return ids.indexOf(profile.id) > -1;
   }
 
   /**
@@ -109,13 +115,20 @@ class Skill extends Component {
     this.props.toggleOn(DIALOG_TOGGLE);
   }
 
+  toggleDeletingState() {
+    this.setState({
+      isRemoving: !this.setState.isRemoving,
+    });
+  }
+
   addResource(skillSlug) {
-    const { actions, toggleOff } = this.props;
+    const { actions, toggleOff, userId } = this.props;
     if (this.state.resource_url !== '' && this.state.resource_description !== '') {
       actions.resourceAdd(skillSlug, {
         url: this.state.resource_url,
         description: this.state.resource_description,
         type: this.state.resource_type,
+        author_id: userId,
       });
       toggleOff(DIALOG_TOGGLE);
       this.setState(this.getInitDialogState());
@@ -130,6 +143,16 @@ class Skill extends Component {
       id: resource.id,
       user: userId,
       vote,
+    });
+  }
+
+  removeResource(resource, skillSlug) {
+    const { actions } = this.props;
+    actions.resourceRemove(resource, skillSlug).then(() => {
+      const skill = this.getSkillBySlug(this.props.skills, skillSlug);
+      const index = skill.resources.findIndex(el => el.id === resource.id);
+      skill.resources.splice(index, 1);
+      this.toggleDeletingState();
     });
   }
 
@@ -228,38 +251,66 @@ class Skill extends Component {
     );
   }
 
-  renderResources(resources) {
-    if (!resources.length) {
-      return (
-        <div style={styles.resources}>
-          <RaisedButton
-            label="Add Resource"
-            backgroundColor="#8FD694"
-            labelColor="#FFF"
-            onTouchTap={() => this.handleAddResource()}
-            style={styles.addResourceButton}
-          />
-          <div style={styles.resources}>
-            <p style={styles.empty}>No resources added yet for this skill.</p>
-          </div>
-        </div>
-      );
+  renderResources(skill) {
+    let resourceItems;
+    let emptyMessage;
+    const resources = this.getResourcesFromSkill(skill);
+    if (this.state.isRemoving) {
+      resourceItems = this.renderRemovingResourcesList(resources, skill.slug);
+      emptyMessage = 'There are no resources you can remove.';
+    } else {
+      resourceItems = map(resources, resource => this.renderResourceItem(resource));
+      emptyMessage = 'No resources added yet for this skill.';
     }
 
     return (
       <div style={styles.resources}>
-        <RaisedButton
-          label="Add Resource"
-          backgroundColor="#8FD694"
-          labelColor="#FFF"
-          onTouchTap={() => this.handleAddResource()}
-          style={styles.addResourceButton}
-        />
-        <List>
-          {map(resources, resource => this.renderResourceItem(resource))}
-        </List>
+        {resourceItems.length ? (
+          <List>{resourceItems}</List>
+        ) : (
+          <div style={styles.resources}>
+            <p style={styles.empty}>{emptyMessage}</p>
+          </div>
+        )}
       </div>
     );
+  }
+
+  renderDefaultResourcesList(resources) {
+    return resources.map(resource => (
+      <ListItem
+        key={resource.id}
+        leftIcon={resourceTypes[resource.type]}
+        primaryText={resource.url}
+        secondaryText={resource.type}
+        rightIconButton={
+          <FlatButton
+            label={`x ${resource.upvotes}`}
+            icon={<ActionThumbUp />}
+            secondary={resource.upvoted}
+          />
+        }
+      />
+    ));
+  }
+
+  renderRemovingResourcesList(resources, skillSlug) {
+    const { userId } = this.props;
+    const ownedResources = resources.filter(resource => resource.authorId === userId);
+
+    return ownedResources.map(resource => (
+      <ListItem
+        key={resource.id}
+        leftIcon={
+          <ContentClear
+            color="#ff5965"
+            onClick={() => this.removeResource(resource, skillSlug)}
+          />
+        }
+        primaryText={resource.url}
+        secondaryText={resource.type}
+      />
+    ));
   }
 
   render() {
@@ -280,22 +331,61 @@ class Skill extends Component {
 
     const skill = this.getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
-    const resources = this.getResourcesFromSkill(skill);
+    const renderButtons = () => {
+      const showDefaultButtons = this.state.isRemoving !== true;
+      return (
+        <div style={styles.resources}>
+          {showDefaultButtons ? (
+            <div>
+              <FloatingActionButton
+                backgroundColor="#8FD694"
+                style={styles.addButton}
+                onClick={() => this.handleAddResource()}
+              >
+                <ContentAdd />
+              </FloatingActionButton>
+              <FloatingActionButton
+                backgroundColor="#ff5965"
+                style={styles.removeButton}
+                onClick={() => this.toggleDeletingState()}
+              >
+                <ContentClear />
+              </FloatingActionButton>
+            </div>
+          ) : (
+            <FloatingActionButton
+              backgroundColor="#8FD694"
+              style={styles.removeButton}
+              onClick={() => this.setState({ isRemoving: false })}
+            >
+              <ContentUndo />
+            </FloatingActionButton>
+          )}
+        </div>
+      );
+    };
+
+    const tabsRender = ({ selected, children }) => (
+      <div>
+        {selected && children}
+      </div>
+    );
 
     return (
       <div>
         <div style={styles.skillHeader}>
           <div style={styles.divider} />
-          <div>{skill && skill.name}</div>
+          <div>{skill.name}</div>
           <div style={styles.divider} />
           {skill && this.renderDialog(skill.slug)}
         </div>
-        <Tabs>
+        <Tabs tabTemplate={tabs => tabsRender(tabs)}>
           <Tab label="Profiles" style={styles.tab}>
             {this.renderProfiles(skilled)}
           </Tab>
           <Tab label="Resources" style={styles.tab}>
-            {this.renderResources(resources)}
+            {this.renderResources(skill)}
+            {renderButtons()}
           </Tab>
         </Tabs>
       </div>
@@ -370,13 +460,23 @@ styles = {
     backgroundColor: '#fff',
     color: '#757575',
   },
-  addResourceButton: {
+  fullWidthButton: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     margin: '20px auto 0 auto',
     width: '100%',
+  },
+  addButton: {
+    position: 'fixed',
+    bottom: '20px',
+    right: '100px',
+  },
+  removeButton: {
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
   },
 };
 
