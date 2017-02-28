@@ -38,11 +38,7 @@ class Skill extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      resource_url: '',
-      resource_description: '',
-      resource_type: 'other',
-    };
+    this.state = this.getInitalDialogState();
   }
 
   componentDidMount() {
@@ -73,6 +69,14 @@ class Skill extends Component {
     };
   })
   .sort((a, b) => b.upvotes - a.upvotes);
+
+  getInitalDialogState() {
+    return {
+      resource_url: '',
+      resource_description: '',
+      resource_type: 'other',
+    };
+  }
 
   filterProfileIds(profile, ids) {
     return ids.indexOf(profile.id) > -1;
@@ -128,6 +132,7 @@ class Skill extends Component {
         author_id: userId,
       });
       toggleOff(DIALOG_TOGGLE);
+      this.setState(this.getInitalDialogState());
     }
   }
 
