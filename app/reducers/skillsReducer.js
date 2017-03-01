@@ -25,6 +25,11 @@ const initialState = {
     showSpinner: false,
     name: '',
   },
+  addResourceDialog: {
+    resource_url: '',
+    resource_description: '',
+    resource_type: 'other',
+  },
 };
 
 function skillsReducer(state = initialState, action) {
@@ -56,6 +61,13 @@ function skillsReducer(state = initialState, action) {
       return { ...state, errors, list: updateOne(state.list, updatedSkill) };
     case SKILL.ADD_RESOURCE.FAILURE:
       return { ...state, errors };
+    case SKILL.ADD_RESOURCE.RESET:
+      return {
+        ...state,
+        addResourceDialog: {
+          ...initialState.addResourceDialog,
+        },
+      };
     case SKILL.VOTE_RESOURCE.START:
       return { ...state, errors };
     case SKILL.VOTE_RESOURCE.SUCCESS:

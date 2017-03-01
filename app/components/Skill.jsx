@@ -51,7 +51,7 @@ class Skill extends Component {
   constructor(props) {
     super(props);
 
-    this.state = this.getInitalDialogState();
+    this.props.actions.resetResourceDialog();
   }
 
   componentWillMount() {
@@ -90,14 +90,6 @@ class Skill extends Component {
     };
   })
   .sort((a, b) => b.upvotes - a.upvotes);
-
-  getInitalDialogState() {
-    return {
-      resource_url: '',
-      resource_description: '',
-      resource_type: 'other',
-    };
-  }
 
   filterProfileIds(profile, ids) {
     return ids.indexOf(profile.id) > -1;
@@ -153,7 +145,7 @@ class Skill extends Component {
         author_id: userId,
       });
       toggleOff(DIALOG_TOGGLE);
-      this.setState(this.getInitalDialogState());
+      actions.resetResourceDialog();
     }
   }
 
@@ -429,6 +421,7 @@ Skill.propTypes = {
     profileListBySkill: React.PropTypes.func.isRequired,
     resourceAdd: React.PropTypes.func.isRequired,
     resourceAddVote: React.PropTypes.func.isRequired,
+    resetResourceDialog: React.PropTypes.func,
   }).isRequired,
   userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
