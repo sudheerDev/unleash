@@ -12,11 +12,6 @@ let styles = {};
 
 class AddExistingGoalsModal extends React.Component {
 
-  componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchGoals();
-  }
-
   handleSelectedGoal(index) {
     const { actions, goals } = this.props;
     actions.updateSelectedGoal(goals[index]);

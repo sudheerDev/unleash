@@ -26,11 +26,13 @@ function userReducer(state = initialState, action = {}) {
           ...action.userData,
         },
         isLoggedIn: true,
+        isLoading: false,
         authServiceInit: true,
       };
     case USER.AUTH.LOGOUT:
       return {
         ...initialState,
+        isLoading: false,
         authServiceInit: true,
       };
     case USER.AUTH.LOGIN_START:
@@ -42,6 +44,7 @@ function userReducer(state = initialState, action = {}) {
     case USER.AUTH.LOGIN_FAILURE:
       return {
         ...initialState,
+        isLoading: false,
         authServiceInit: true,
       };
     default:

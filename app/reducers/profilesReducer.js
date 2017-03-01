@@ -31,10 +31,24 @@ function profilesReducer(state = initialState, action) {
         ...state,
         isLoading: false,
       };
+    case PROFILE.FETCH.START:
+      return {
+        ...state,
+        isLoading: true,
+      };
     case PROFILE.FETCH.SUCCESS:
-      return { ...state, profile: fetchedProfile.Item };
+      return {
+        ...state,
+        profile: fetchedProfile.Item,
+        isLoading: false,
+      };
     case PROFILE.FETCH.FAILURE:
-      return { ...state, error, profile: {} };
+      return {
+        ...state,
+        error,
+        profile: {},
+        isLoading: false,
+      };
     default:
       return state;
   }

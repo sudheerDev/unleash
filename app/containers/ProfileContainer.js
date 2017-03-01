@@ -13,14 +13,17 @@ import * as GoalsActions from '../actions/GoalsActions';
 import Profile from '../components/Profile';
 
 function mapStateToProps(state) {
+  const { profiles, paths, goals, user } = state;
+  const isLoading = profiles.isLoading || paths.isLoading || goals.isLoading || user.isLoading;
   return {
+    profiles,
+    paths,
+    goals: goals.list,
     userId: state.userId,
-    paths: state.paths,
-    goals: state.goals.list,
-    profiles: state.profiles,
-    loggedInUser: state.user.userData,
-    addModalParameters: state.goals.addGoalsModal,
-    addExistingGoalsModalParameters: state.goals.addExistingGoalsModal,
+    loggedInUser: user.userData,
+    addModalParameters: goals.addGoalsModal,
+    addExistingGoalsModalParameters: goals.addExistingGoalsModal,
+    isLoading,
   };
 }
 
