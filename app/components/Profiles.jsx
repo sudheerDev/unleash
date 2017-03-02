@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import FlipMove from 'react-flip-move';
 import { routerShape } from 'react-router/lib/PropTypes';
-import _ from 'lodash';
+import find from 'lodash/find';
+import includes from 'lodash/includes';
+import map from 'lodash/map';
 import UserCard from './UserCard';
+import Loading from './Loading';
 
 let styles = {};
 
@@ -23,7 +26,7 @@ class Profiles extends Component {
   }
 
   updateResults(searchText, dataSource) {
-    const shouldClear = !_.includes(dataSource, searchText);
+    const shouldClear = !includes(dataSource, searchText);
 
     if (shouldClear) {
       this.props.actions.clearSkill();
@@ -31,17 +34,20 @@ class Profiles extends Component {
   }
 
   renderProfilesBySkill(skills, selection) {
-    this.props.actions.profileListBySkill(skills[selection].slug, 'profile');
+    const filteredSkill = find(skills, skill => skill.name === selection);
+    if (filteredSkill) {
+      this.props.actions.profileListBySkill(filteredSkill.slug, 'profile');
+    }
   }
 
   renderProfiles(profiles) {
     const { router } = this.props;
-    return _.map(profiles, profile => <UserCard user={profile} router={router} key={profile.id} />);
+    return map(profiles, profile => <UserCard user={profile} router={router} key={profile.id} />);
   }
 
   render() {
-    const { profiles, skills } = this.props;
-    const autoCompleteData = _.map(skills, 'name');
+    const { profiles, skills, isLoading } = this.props;
+    const autoCompleteData = map(skills, 'name');
 
     return (
       <div style={styles.wrapper}>
@@ -54,9 +60,17 @@ class Profiles extends Component {
           onUpdateInput={(searchText, dataSource) => this.updateResults(searchText, dataSource)}
           fullWidth
         />
-        <FlipMove style={styles.profiles}>
-          {this.renderProfiles(profiles)}
-        </FlipMove>
+        <Loading loading={isLoading}>
+          { profiles && profiles.length
+            ? (
+              <FlipMove style={styles.profiles}>
+                {this.renderProfiles(profiles)}
+              </FlipMove>
+            ) : (
+              <p>Could not find any profiles</p>
+            )
+          }
+        </Loading>
       </div>
     );
   }
@@ -72,6 +86,7 @@ Profiles.propTypes = {
   profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   router: routerShape.isRequired,
+  isLoading: React.PropTypes.bool,
 };
 
 styles = {

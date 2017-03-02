@@ -54,6 +54,7 @@ describe('Profiles List', () => {
         skills={skills}
         actions={mockedActions}
         router={routerSpy}
+        isLoading={false}
       />,
       {
         context,
