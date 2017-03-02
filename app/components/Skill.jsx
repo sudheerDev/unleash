@@ -33,6 +33,13 @@ const resourceTypes = {
   other: <ContentLink />,
 };
 
+function loadData(props) {
+  const { actions, params } = props;
+  actions.skillList();
+  actions.profileList();
+  actions.profileListBySkill(params.slug);
+}
+
 class Skill extends Component {
 
   constructor(props) {
@@ -41,10 +48,17 @@ class Skill extends Component {
     this.state = this.getInitalDialogState();
   }
 
-  componentDidMount() {
-    this.props.actions.skillList();
-    this.props.actions.profileList();
-    this.props.actions.profileListBySkill(this.props.params.slug);
+  componentWillMount() {
+    loadData(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const oldSlug = this.props.params.slug;
+    const nextSlug = nextProps.params.slug;
+
+    if (oldSlug !== nextSlug) {
+      loadData(nextProps);
+    }
   }
 
   getSkillBySlug(skills = {}, slug) {
