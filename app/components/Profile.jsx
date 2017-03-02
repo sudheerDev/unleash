@@ -8,17 +8,30 @@ import Path from './Path';
 import UserCard from './UserCard';
 import AddGoalsModal from './AddGoalsModal';
 import AddExistingGoalsModal from './AddExistingGoalsModal';
+import Loading from './Loading';
 
 let styles = {};
 
+function loadData(props) {
+  const { actions, params } = props;
+  actions.fetchProfile(params.userId);
+  actions.pathsList(params.userId);
+  actions.fetchGoals();
+}
+
 class Profile extends Component {
 
-  componentDidMount() {
-    const { params, actions } = this.props;
-    const userId = params.userId;
-    actions.fetchProfile(userId);
-    actions.pathsList(userId);
-    actions.fetchGoals();
+  componentWillMount() {
+    loadData(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const oldUserId = this.props.params.userId;
+    const nextUserId = nextProps.params.userId;
+
+    if (oldUserId !== nextUserId) {
+      loadData(nextProps);
+    }
   }
 
   render() {
@@ -31,6 +44,7 @@ class Profile extends Component {
       loggedInUser,
       addModalParameters,
       addExistingGoalsModalParameters,
+      isLoading,
     } = this.props;
 
     const userId = params.userId;
@@ -77,26 +91,28 @@ class Profile extends Component {
     addModalParameters.paths = paths.list;
 
     return (
-      <div>
-        <div style={styles.userWrapper}>
-          <UserCard user={profiles.profile} router={this.props.router} key={userId} />
+      <Loading loading={isLoading}>
+        <div>
+          <div style={styles.userWrapper}>
+            <UserCard user={profiles.profile} router={this.props.router} key={userId} />
+          </div>
+          <div style={styles.skillsWrapper}>
+            {skills.map(skill => (
+              <Paper key={skill.id} style={styles.skill} zDepth={2} circle >
+                <span style={styles.skillTitle}>{skill.name}</span>
+              </Paper>
+            ))}
+          </div>
+          <Path
+            userId={userId}
+            actions={actions}
+            paths={paths}
+            editable={editable}
+            loggedInUser={loggedInUser}
+          />
+          {addGoalButton}
         </div>
-        <div style={styles.skillsWrapper}>
-          {skills.map(skill => (
-            <Paper key={skill.id} style={styles.skill} zDepth={2} circle >
-              <span style={styles.skillTitle}>{skill.name}</span>
-            </Paper>
-          ))}
-        </div>
-        <Path
-          userId={userId}
-          actions={actions}
-          paths={paths}
-          editable={editable}
-          loggedInUser={loggedInUser}
-        />
-        {addGoalButton}
-      </div>
+      </Loading>
     );
   }
 }
@@ -111,7 +127,6 @@ Profile.propTypes = {
     userId: React.PropTypes.string,
   }).isRequired,
   paths: React.PropTypes.shape({
-    loading: React.PropTypes.bool,
     list: React.PropTypes.array.isRequired,
   }).isRequired,
   profiles: React.PropTypes.shape({
@@ -137,6 +152,7 @@ Profile.propTypes = {
     selectedPath: React.PropTypes.string,
     selectedGoal: React.PropTypes.object,
   }).isRequired,
+  isLoading: React.PropTypes.bool,
 };
 
 export default Profile;
