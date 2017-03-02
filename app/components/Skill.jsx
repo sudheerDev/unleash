@@ -405,13 +405,9 @@ Skill.propTypes = {
   userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   skillsLoading: React.PropTypes.bool.isRequired,
-  profiles: React.PropTypes.shape({
-    list: React.PropTypes.array,
-  }).isRequired,
+  profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   profilesLoading: React.PropTypes.bool.isRequired,
-  profilesBySkill: React.PropTypes.shape({
-    profiles: React.PropTypes.array,
-  }).isRequired,
+  profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   bySkillLoading: React.PropTypes.bool.isRequired,
   params: React.PropTypes.shape({
     slug: React.PropTypes.string,
