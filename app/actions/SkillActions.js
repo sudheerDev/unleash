@@ -12,6 +12,7 @@ export const SKILL = {
     START: 'ADD_RESOURCE_START',
     SUCCESS: 'ADD_RESOURCE_SUCCESS',
     FAILURE: 'ADD_RESOURCE_FAILURE',
+    UPDATE: 'ADD_RESOURCE_UPDATE',
     RESET: 'ADD_RESOURCE_RESET',
   },
   VOTE_RESOURCE: {
@@ -67,6 +68,13 @@ export function resourceRemove(resource, skillSlug) {
     return httpClient.delete(`${config.skills_api_url}/${skillSlug}/resources/${resource.id}.json`)
       .then(updatedSkill => dispatch({ type: SKILL.REMOVE_RESOURCE.SUCCESS, updatedSkill }))
       .catch(errors => dispatch({ type: SKILL.REMOVE_RESOURCE.FAILURE, errors }));
+  };
+}
+
+export function updateResource(resource) {
+  return {
+    type: SKILL.ADD_RESOURCE.UPDATE,
+    resource,
   };
 }
 

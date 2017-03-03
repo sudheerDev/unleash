@@ -61,6 +61,14 @@ function skillsReducer(state = initialState, action) {
       return { ...state, errors, list: updateOne(state.list, updatedSkill) };
     case SKILL.ADD_RESOURCE.FAILURE:
       return { ...state, errors };
+    case SKILL.ADD_RESOURCE.UPDATE:
+      return {
+        ...state,
+        addResourceDialog: {
+          ...state.addResourceDialog,
+          resource: action.resource,
+        },
+      };
     case SKILL.ADD_RESOURCE.RESET:
       return {
         ...state,
