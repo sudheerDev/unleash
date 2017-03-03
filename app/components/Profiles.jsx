@@ -33,10 +33,14 @@ class Profiles extends Component {
     }
   }
 
-  renderProfilesBySkill(skills, selection) {
+  renderProfilesBySkillOrName(profiles, skills, selection) {
     const filteredSkill = find(skills, skill => skill.name === selection);
+    const filteredProfile = find(profiles, profile => profile.fullName === selection);
     if (filteredSkill) {
       this.props.actions.profileListBySkill(filteredSkill.slug, 'profile');
+    }
+    if (filteredProfile) {
+      this.props.router.push(`/profiles/${filteredProfile.id}`);
     }
   }
 
@@ -47,16 +51,18 @@ class Profiles extends Component {
 
   render() {
     const { profiles, skills, isLoading } = this.props;
-    const autoCompleteData = map(skills, 'name');
+    const skillNames = map(skills, 'name');
+    const profileNames = map(profiles, 'fullName');
+    const autoCompleteData = skillNames.concat(profileNames);
 
     return (
       <div style={styles.wrapper}>
         <AutoComplete
-          hintText="Type a skill name"
+          hintText="Type a skill or name"
           dataSource={autoCompleteData}
-          floatingLabelText="Search by Skill"
+          floatingLabelText="Search by Skill or Name"
           filter={AutoComplete.caseInsensitiveFilter}
-          onNewRequest={selection => this.renderProfilesBySkill(skills, selection)}
+          onNewRequest={selection => this.renderProfilesBySkillOrName(profiles, skills, selection)}
           onUpdateInput={(searchText, dataSource) => this.updateResults(searchText, dataSource)}
           fullWidth
         />
