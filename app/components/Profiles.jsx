@@ -37,8 +37,8 @@ class Profiles extends Component {
   }
 
   renderProfilesBySkillOrName(profiles, skills, selection) {
-    const filteredSkill = find(skills, skill => skill.name === selection);
-    const filteredProfile = find(profiles, profile => profile.fullName === selection);
+    const filteredSkill = find(skills, skill => skill.name === selection.text);
+    const filteredProfile = find(profiles, profile => profile.fullName === selection.text);
     if (filteredSkill) {
       this.props.actions.profileListBySkill(filteredSkill.slug, 'profile');
     }
