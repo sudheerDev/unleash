@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
+import ActionSupervisorAccount from 'material-ui/svg-icons/action/supervisor-account';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
 import FlipMove from 'react-flip-move';
 import { routerShape } from 'react-router/lib/PropTypes';
 import find from 'lodash/find';
@@ -33,10 +36,14 @@ class Profiles extends Component {
     }
   }
 
-  renderProfilesBySkill(skills, selection) {
+  renderProfilesBySkillOrName(profiles, skills, selection) {
     const filteredSkill = find(skills, skill => skill.name === selection);
+    const filteredProfile = find(profiles, profile => profile.fullName === selection);
     if (filteredSkill) {
       this.props.actions.profileListBySkill(filteredSkill.slug, 'profile');
+    }
+    if (filteredProfile) {
+      this.props.router.push(`/profiles/${filteredProfile.id}`);
     }
   }
 
@@ -47,16 +54,36 @@ class Profiles extends Component {
 
   render() {
     const { profiles, skills, isLoading } = this.props;
-    const autoCompleteData = map(skills, 'name');
+    const skillNames = map(skills, 'name');
+    const profileNames = map(profiles, 'fullName');
+    const skillsAutoCompleteData = skillNames.map(skillName => ({
+      text: skillName,
+      value: (
+        <MenuItem
+          primaryText={skillName}
+          secondaryText={<ActionGrade />}
+        />
+      ),
+    }));
+    const profilesAutoCompleteData = profileNames.map(profileName => ({
+      text: profileName,
+      value: (
+        <MenuItem
+          primaryText={profileName}
+          secondaryText={<ActionSupervisorAccount />}
+        />
+      ),
+    }));
+    const autoCompleteData = skillsAutoCompleteData.concat(profilesAutoCompleteData);
 
     return (
       <div style={styles.wrapper}>
         <AutoComplete
-          hintText="Type a skill name"
+          hintText="Type a skill or name"
           dataSource={autoCompleteData}
-          floatingLabelText="Search by Skill"
+          floatingLabelText="Search by Skill or Name"
           filter={AutoComplete.caseInsensitiveFilter}
-          onNewRequest={selection => this.renderProfilesBySkill(skills, selection)}
+          onNewRequest={selection => this.renderProfilesBySkillOrName(profiles, skills, selection)}
           onUpdateInput={(searchText, dataSource) => this.updateResults(searchText, dataSource)}
           fullWidth
         />
