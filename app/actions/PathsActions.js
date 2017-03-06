@@ -122,7 +122,7 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
         if (slackOptions.notifyOnSlack) {
           const notificationParameters = {
             goal: inflatedGoal,
-            user: getState().user.userData,
+            user: getState().profiles.profile,
             additionalMessage: slackOptions.additionalMessage,
           };
 
