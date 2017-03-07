@@ -104,11 +104,10 @@ class Profile extends Component {
             ))}
           </div>
           <Path
-            userId={userId}
             actions={actions}
             paths={paths}
             editable={editable}
-            loggedInUser={loggedInUser}
+            profile={profiles.profile}
           />
           {addGoalButton}
         </div>

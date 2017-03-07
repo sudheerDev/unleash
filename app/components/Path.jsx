@@ -10,12 +10,12 @@ let styles = {};
 class Paths extends Component {
 
   handleCreatePath() {
-    const { actions, userId } = this.props;
-    actions.pathsCreate(userId);
+    const { actions, profile } = this.props;
+    actions.pathsCreate(profile.id);
   }
 
   renderGoals(path) {
-    const { actions, paths, editable, userId } = this.props;
+    const { actions, paths, editable, profile } = this.props;
 
     return map(path.goals, (goal) => {
       const loading = some(paths.goals, { id: goal.id, path: { id: path.id } });
@@ -24,22 +24,21 @@ class Paths extends Component {
           key={goal.id}
           goal={goal}
           path={path}
-          userId={userId}
           actions={actions}
           loading={loading}
           editable={editable}
+          profile={profile}
         />
       );
     });
   }
 
   renderPath(path) {
-    const { actions, loggedInUser } = this.props;
-    const userCanEditPath = loggedInUser.isAdmin || loggedInUser.id === path.userId;
+    const { actions, editable } = this.props;
 
     return (
       <div key={path.id}>
-        <PathHeader path={path} actions={actions} showActions={userCanEditPath} />
+        <PathHeader path={path} actions={actions} showActions={editable} />
         <div style={styles.pathsWrapper}>
           {this.renderGoals(path)}
         </div>
@@ -86,15 +85,15 @@ Paths.propTypes = {
   actions: React.PropTypes.shape({
     pathsCreate: React.PropTypes.func,
   }).isRequired,
-  userId: React.PropTypes.string.isRequired,
+  profile: React.PropTypes.shape({
+    id: React.PropTypes.string,
+    fullName: React.PropTypes.string,
+    picture: React.PropTypes.string,
+  }),
   paths: React.PropTypes.shape({
     goals: React.PropTypes.array,
     list: React.PropTypes.array,
     isLoading: React.PropTypes.boolean,
-  }).isRequired,
-  loggedInUser: React.PropTypes.shape({
-    isAdmin: React.PropTypes.bool.isRequired,
-    id: React.PropTypes.string.isRequired,
   }).isRequired,
   editable: React.PropTypes.bool.isRequired,
 };

@@ -112,7 +112,7 @@ export function removeGoalFromPath(goal, path, userId) {
 export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
   const inflatedGoal = { ...goal, path };
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: PATHS.UPDATE_GOAL.START, goal: inflatedGoal });
 
     return httpClient.put(`${config.paths_api_url}/${path.id}/goals/${goal.id}`, data)
@@ -122,7 +122,7 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
         if (slackOptions.notifyOnSlack) {
           const notificationParameters = {
             goal: inflatedGoal,
-            user: getState().user.userData,
+            user: slackOptions.profile,
             additionalMessage: slackOptions.additionalMessage,
           };
 
