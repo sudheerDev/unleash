@@ -96,33 +96,13 @@ class Skill extends Component {
   }
 
   /**
-   * Handle TextField change.
-   * @param {Object} event - TextField event.
+   * Handle Resource change.
+   * @param {String} inputName - Resource input field name.
    */
-  handleResourceUrlChange = (event) => {
-    this.setState({
-      resource_url: event.target.value,
-    });
-  }
-
-  /**
-   * Handle TextField change.
-   * @param {Object} event - TextField event.
-   */
-  handleResourceDescriptionChange = (event) => {
-    this.setState({
-      resource_description: event.target.value,
-    });
-  }
-
-  /**
-   * Handle SelectField change.
-   * @param {Object} event - SelectField event.
-   */
-  handleResourceTypeChange = (event, index, value) => {
-    this.setState({
-      resource_type: value,
-    });
+  handleResourceChange = (inputName) => {
+    return (event) => {
+      this.props.actions.updateResource(inputName, event.target.value);
+    };
   }
 
   handleAddResource() {
@@ -196,22 +176,22 @@ class Skill extends Component {
       >
         <TextField
           id="resource-url"
-          defaultValue={this.state.resource_url}
+          defaultValue={this.props.resource_url}
           hintText="Resource URL"
-          onChange={this.handleResourceUrlChange}
+          onChange={this.handleResourceChange('resource_url')}
           fullWidth
         />
         <TextField
           id="resource-description"
-          defaultValue={this.state.resource_description}
+          defaultValue={this.props.resource_description}
           hintText="Description"
-          onChange={this.handleResourceDescriptionChange}
+          onChange={this.handleResourceChange('resource_description')}
           fullWidth
         />
         <SelectField
           floatingLabelText="Type"
-          value={this.state.resource_type}
-          onChange={this.handleResourceTypeChange}
+          value={this.props.resource_type}
+          onChange={this.handleResourceChange('resource_type')}
         >
           <MenuItem value={'post'} primaryText="Post" />
           <MenuItem value={'course'} primaryText="Course" />
@@ -422,6 +402,7 @@ Skill.propTypes = {
     resourceAdd: React.PropTypes.func.isRequired,
     resourceAddVote: React.PropTypes.func.isRequired,
     resetResourceDialog: React.PropTypes.func,
+    updateResource: React.PropTypes.func.isRequired,
   }).isRequired,
   userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
@@ -430,6 +411,9 @@ Skill.propTypes = {
   profilesLoading: React.PropTypes.bool.isRequired,
   profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   bySkillLoading: React.PropTypes.bool.isRequired,
+  resource_url: React.PropTypes.string.isRequired,
+  resource_description: React.PropTypes.string.isRequired,
+  resource_type: React.PropTypes.string.isRequired,
   params: React.PropTypes.shape({
     slug: React.PropTypes.string,
   }).isRequired,

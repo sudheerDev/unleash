@@ -71,10 +71,10 @@ export function resourceRemove(resource, skillSlug) {
   };
 }
 
-export function updateResource(resource) {
+export function updateResource(inputName, value) {
   return {
     type: SKILL.ADD_RESOURCE.UPDATE,
-    resource,
+    [inputName]: value,
   };
 }
 
