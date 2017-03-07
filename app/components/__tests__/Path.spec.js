@@ -13,7 +13,8 @@ describe('Path Component', () => {
   const testId = 'testId';
   const paths = { list: generate('path', 5, testId) };
   const location = { pathname: `/profiles/${testId}` };
-  let loggedInUser;
+  let profile;
+  let editable;
   let mockedActions;
   let pathsCreateSpy;
   let pathsRemoveSpy;
@@ -21,11 +22,12 @@ describe('Path Component', () => {
   let routerSpy;
 
   beforeEach(() => {
-    loggedInUser = generate('user')[0];
+    profile = generate('user')[0];
   });
 
   afterEach(() => {
-    loggedInUser = null;
+    profile = null;
+    editable = false;
     mockedActions = null;
     pathsCreateSpy = null;
     pathsRemoveSpy = null;
@@ -64,11 +66,11 @@ describe('Path Component', () => {
       params: params,
       actions: mockedActions,
       paths: paths,
-      loggedInUser: loggedInUser,
+      profile: profile,
       userId: testId,
       location: location,
       router: routerSpy,
-      editable: false
+      editable: editable
     }, props);
 
     return mount(<Paths {...componentProps} />, { context, childContextTypes });
@@ -85,30 +87,18 @@ describe('Path Component', () => {
     expect(pathItems.length).to.equal(paths.list.length);
   });
 
-  it('should render paths providing showActions false if user is not admin or owner', () => {
-    loggedInUser.isAdmin = false;
-    loggedInUser.id = testId + '1';
+  it('should render paths actions providing showActions true', () => {
+    editable = true;
+    const component = getComponent();
+    component.find(PathHeader).forEach((pathHeader) => {
+      expect(pathHeader.prop('showActions')).to.be.true;
+    });
+  });
+
+  it('should not render paths actions providing showActions false', () => {
     const component = getComponent();
     component.find(PathHeader).forEach((pathHeader) => {
       expect(pathHeader.prop('showActions')).to.be.false;
-    });
-  });
-
-  it('should render paths providing showActions true if user is admin', () => {
-    loggedInUser.isAdmin = true;
-    loggedInUser.id = testId + '1';
-    const component = getComponent();
-    component.find(PathHeader).forEach((pathHeader) => {
-      expect(pathHeader.prop('showActions')).to.be.true;
-    });
-  });
-
-  it('should render paths providing showActions false if user is admin', () => {
-    loggedInUser.isAdmin = false;
-    loggedInUser.id = testId;
-    const component = getComponent();
-    component.find(PathHeader).forEach((pathHeader) => {
-      expect(pathHeader.prop('showActions')).to.be.true;
     });
   });
 
