@@ -20,7 +20,11 @@ const propTypes = {
   editable: React.PropTypes.bool,
   goal: React.PropTypes.object.isRequired,
   path: React.PropTypes.object,
-  userId: React.PropTypes.string,
+  profile: React.PropTypes.shape({
+    id: React.PropTypes.string,
+    fullName: React.PropTypes.string,
+    picture: React.PropTypes.string,
+  }),
   getToggleState: React.PropTypes.func.isRequired,
   toggleOn: React.PropTypes.func.isRequired,
   toggleOff: React.PropTypes.func.isRequired,
@@ -49,11 +53,12 @@ class GoalCard extends Component {
   };
 
   toggleAchievement() {
-    const { goal, path } = this.props;
+    const { goal, path, profile } = this.props;
     const achieved = !goal.achieved;
     const slackOptions = {
       notifyOnSlack: this.props.getToggleState(NOTIFY_ON_SLACK),
       additionalMessage: this.state.slackAdditionalMessage,
+      profile,
     };
 
     this.props.actions.pathsUpdateGoal(path, goal, { achieved }, slackOptions)
@@ -61,9 +66,9 @@ class GoalCard extends Component {
   }
 
   handleRemove() {
-    const { actions, goal, path, userId } = this.props;
+    const { actions, goal, path, profile } = this.props;
 
-    actions.removeGoalFromPath(goal, path, userId);
+    actions.removeGoalFromPath(goal, path, profile.id);
   }
 
   updateDueDate(dueDate) {
