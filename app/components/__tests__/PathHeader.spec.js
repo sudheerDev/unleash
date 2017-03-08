@@ -3,7 +3,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { assign } from 'lodash';
+import assign from 'lodash/assign';
 import generate from '../../testUtils/fixtures';
 import PathHeader from '../PathHeader';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';

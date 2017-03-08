@@ -1,5 +1,6 @@
 import faker from 'faker';
-import { random, times } from 'lodash';
+import random from 'lodash/random';
+import times from 'lodash/times';
 
 const generateGoal = () => ({
   id: faker.random.uuid(),

@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { find, every, some, values, map, get } from 'lodash';
+import find from 'lodash/find';
+import every from 'lodash/every';
+import some from 'lodash/some';
+import values from 'lodash/values';
+import map from 'lodash/map';
+import get from 'lodash/get';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import { routerShape } from 'react-router/lib/PropTypes';

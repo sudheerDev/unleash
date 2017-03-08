@@ -2,7 +2,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { keyBy, random } from 'lodash';
+import random from 'lodash/random';
 import sinon from 'sinon';
 import generate from '../../testUtils/fixtures';
 import Skills from '../Skills';

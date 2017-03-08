@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { red700, green700 } from 'material-ui/styles/colors';
 import Snackbar from 'material-ui/Snackbar';
 

@@ -5,7 +5,10 @@
  * @author Rubens Mariuzzo <rubens@x-team.com>
  */
 
-import { map, keyBy, reject, cloneDeep } from 'lodash';
+import map from 'lodash/map';
+import keyBy from 'lodash/keyBy';
+import reject from 'lodash/reject';
+import cloneDeep from 'lodash/cloneDeep';
 import { PATHS } from '../actions/PathsActions';
 
 /**

@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import head from 'lodash/head';
+import find from 'lodash/find';
 import config from '../../config';
 import * as UserActions from '../actions/UserActions';
 import { addNotification } from '../actions/NotificationActions';
@@ -24,7 +25,7 @@ class AuthService {
 
   onAuthStateChanged(user) {
     if (user) {
-      const userProviderData = _.head(user.providerData);
+      const userProviderData = head(user.providerData);
       const userId = userProviderData.uid;
       this.dispatch(UserActions.startLoginProcess());
       this.getUserById(userId)
@@ -49,7 +50,7 @@ class AuthService {
 
   getUserById(userId) {
     return httpClient.get(config.profiles_api_url)
-      .then(result => _.find(result.Items, ['id', userId]))
+      .then(result => find(result.Items, ['id', userId]))
       .catch(exception => this.dispatch(addNotification(exception)));
   }
 

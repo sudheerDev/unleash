@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+import map from 'lodash/map';
+import flatten from 'lodash/flatten';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import GoalCard from './GoalCard';
@@ -15,11 +16,11 @@ class Goals extends Component {
   getTags() {
     const { list } = this.props;
     const goalsWithTags = list.filter(goal => (goal.tags ? goal.tags.length > 0 : false));
-    return _.flatten(goalsWithTags.map(goal => goal.tags));
+    return flatten(goalsWithTags.map(goal => goal.tags));
   }
 
   renderGoals(goals) {
-    return _.map(goals, goal => <GoalCard key={goal.id} goal={goal} />);
+    return map(goals, goal => <GoalCard key={goal.id} goal={goal} />);
   }
 
   render() {

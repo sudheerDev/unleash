@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import ChipInput from 'material-ui-chip-input';
@@ -86,7 +86,7 @@ class AddGoalsModal extends React.Component {
     return (
       <TextField
         style={styles.textFields}
-        floatingLabelText={_.capitalize(fieldName)}
+        floatingLabelText={capitalize(fieldName)}
         value={parameters[fieldName]}
         onChange={event => actions.updateAddGoalsField(fieldName, event.target.value)}
       />
