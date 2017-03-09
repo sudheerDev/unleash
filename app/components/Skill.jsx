@@ -51,7 +51,7 @@ class Skill extends Component {
   constructor(props) {
     super(props);
 
-    this.props.actions.resetResourceDialog();
+    this.state = this.props.actions.resetResourceDialog();
   }
 
   componentWillMount() {
@@ -99,11 +99,9 @@ class Skill extends Component {
    * Handle Resource change.
    * @param {String} inputName - Resource input field name.
    */
-  handleResourceChange = (inputName) => {
-    return (event) => {
-      this.props.actions.updateResource(inputName, event.target.value);
-    };
-  }
+  handleResourceChange = inputName => (event) => {
+    this.props.actions.updateResource(inputName, event.target.value);
+  };
 
   handleAddResource() {
     this.props.toggleOn(DIALOG_TOGGLE);
