@@ -10,6 +10,7 @@ import { List, ListItem } from 'material-ui/List';
 import { routerShape } from 'react-router/lib/PropTypes';
 import ActionExtension from 'material-ui/svg-icons/action/extension';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
+import AvWeb from 'material-ui/svg-icons/av/web';
 import ContentLink from 'material-ui/svg-icons/content/link';
 import ContentCreate from 'material-ui/svg-icons/content/create';
 import SocialSchool from 'material-ui/svg-icons/social/school';
@@ -81,6 +82,7 @@ class Skill extends Component {
     return {
       id: resource.id,
       url: resource.url,
+      description: resource.description,
       upvotes: resource.votes_total || 0,
       upvoted: userHasVoted,
       type: resourceTypes[resource.type] ? resource.type : 'other',
@@ -257,15 +259,22 @@ class Skill extends Component {
       <ListItem
         key={resource.id}
         leftIcon={resourceTypes[resource.type]}
-        primaryText={resource.url}
+        primaryText={resource.description}
         secondaryText={resource.type}
         rightIconButton={
-          <FlatButton
-            label={`x ${resource.upvotes}`}
-            secondary={resource.upvoted}
-            icon={<ActionThumbUp />}
-            onTouchTap={this.addVote(skill.slug, resource)}
-          />
+          <div>
+            <FlatButton
+              href={resource.url}
+              target="_blank"
+              icon={<AvWeb />}
+            />
+            <FlatButton
+              label={`x ${resource.upvotes}`}
+              secondary={resource.upvoted}
+              icon={<ActionThumbUp />}
+              onTouchTap={this.addVote(skill.slug, resource)}
+            />
+          </div>
         }
       />
     );
