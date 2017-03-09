@@ -2,7 +2,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { assign, keyBy, random, forEach, keys } from 'lodash';
+import assign from 'lodash/assign';
+import forEach from 'lodash/forEach';
 import sinon from 'sinon';
 import generate from '../../testUtils/fixtures';
 import Paths from '../Path';

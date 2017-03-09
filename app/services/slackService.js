@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import size from 'lodash/size';
 import httpClient from '../services/httpClient';
 import config from '../../config';
 
@@ -26,7 +26,7 @@ const notifyAchieved = (params) => {
           },
           {
             title: 'Comments',
-            value: _.size(goal.comments) || '0',
+            value: size(goal.comments) || '0',
             short: true,
           },
         ],

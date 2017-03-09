@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import Menu from '../components/Menu';
 import AuthService from '../services/authService';
 

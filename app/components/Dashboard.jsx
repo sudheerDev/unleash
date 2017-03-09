@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { map, values, set } from 'lodash';
+import map from 'lodash/map';
+import values from 'lodash/values';
+import set from 'lodash/set';
 import Avatar from 'material-ui/Avatar';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { FormattedDate } from 'react-intl';

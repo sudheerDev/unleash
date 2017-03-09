@@ -1,4 +1,4 @@
-import { range } from 'lodash';
+import range from 'lodash/range';
 import config from '../../config';
 import httpClient from '../services/httpClient';
 

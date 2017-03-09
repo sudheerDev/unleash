@@ -4,7 +4,7 @@ import ListItem from 'material-ui/List/ListItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { routerShape } from 'react-router/lib/PropTypes';
-import _ from 'lodash';
+import map from 'lodash/map';
 import Loading from './Loading';
 import AddSkillsModal from './AddSkillsModal';
 
@@ -20,7 +20,7 @@ class Skills extends Component {
   }
 
   renderSkills(skills) {
-    return _.map(skills, skill => (
+    return map(skills, skill => (
       <ListItem
         key={skill.id}
         primaryText={skill.name}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import _ from 'lodash';
+import map from 'lodash/map';
 
 class CuratedPaths extends Component {
   componentDidMount() {
@@ -9,7 +9,7 @@ class CuratedPaths extends Component {
   }
 
   renderPaths(paths) {
-    return _.map(paths, path => (
+    return map(paths, path => (
       <ListItem
         key={path.id}
         primaryText={path.name}

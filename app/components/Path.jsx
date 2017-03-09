@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { map, some } from 'lodash';
+import map from 'lodash/map';
+import some from 'lodash/some';
 import RaisedButton from 'material-ui/RaisedButton';
 import GoalCard from './GoalCard';
 import PathHeader from './PathHeader';

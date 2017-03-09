@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import _ from 'lodash';
+import assign from 'lodash/assign';
 import sinon from 'sinon';
 import AddGoalsModal from '../AddGoalsModal';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -40,7 +40,7 @@ describe('Add Goals Modal', () => {
     const defaultProps = {
       tagsOptions: tags,
       actions: mockedActions,
-      parameters: _.assign(modalParameters, options),
+      parameters: assign(modalParameters, options),
       onSubmit: onSubmit
     };
 

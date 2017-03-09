@@ -2,7 +2,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { keyBy, sampleSize, map } from 'lodash';
+import sampleSize from 'lodash/sampleSize';
+import map from 'lodash/map';
 import sinon from 'sinon';
 import generate from '../../testUtils/fixtures';
 import Skill from '../Skill';

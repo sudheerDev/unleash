@@ -2,7 +2,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { keyBy, random, mapValues } from 'lodash';
+import keyBy from 'lodash/keyBy';
 import sinon from 'sinon';
 import generate from '../../testUtils/fixtures';
 import Profiles from '../Profiles';
