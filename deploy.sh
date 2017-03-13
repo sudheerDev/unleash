@@ -30,7 +30,7 @@ make_task_def() {
       "name": "web",
       "image": "%s.dkr.ecr.us-west-2.amazonaws.com/x-team-unleash:%s",
       "essential": true,
-      "memoryReservation": 400,
+      "memoryReservation": 250,
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
