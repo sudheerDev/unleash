@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -ev
+APP_ENV=$1
+
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
 
@@ -14,7 +17,7 @@ deploy_cluster() {
 
     make_task_def
     register_definition
-    if [[ $(aws ecs update-service --cluster x-team-unleash-cluster --service x-team-unleash-service --task-definition $revision | \
+    if [[ $(aws ecs update-service --cluster x-team-unleash-cluster --service x-team-unleash-$APP_ENV --task-definition $revision | \
                    $JQ '.service.taskDefinition') != $revision ]]; then
         echo "Error updating service."
         return 1
@@ -45,7 +48,8 @@ make_task_def() {
         { "name": "goals_api_url", "value": "%s" },
         { "name": "profiles_api_url", "value": "%s" },
         { "name": "paths_api_url", "value": "%s" },
-        { "name": "slack_bot_url", "value": "%s" }
+        { "name": "slack_bot_url", "value": "%s" },
+        { "name": "NODE_ENV", "value": "%s" }
       ],
       "portMappings": [
         {
@@ -57,7 +61,7 @@ make_task_def() {
     }
   ]'
 
-  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $TRAVIS_BUILD_NUMBER $FIREBASE_API_KEY $FIREBASE_AUTH_DOMAIN $FIREBASE_DATABASE_URL $FIREBASE_STORAGE_BUCKET $FIREBASE_MESSAGING_SENDER_ID $SKILLS_API_URL $GOALS_API_URL $PROFILES_API_URL $PATHS_API_URL $SLACK_BOT_URL)
+  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $TRAVIS_BUILD_NUMBER $FIREBASE_API_KEY $FIREBASE_AUTH_DOMAIN $FIREBASE_DATABASE_URL $FIREBASE_STORAGE_BUCKET $FIREBASE_MESSAGING_SENDER_ID $SKILLS_API_URL $GOALS_API_URL $PROFILES_API_URL $PATHS_API_URL $SLACK_BOT_URL, $APP_NODE_ENV)
 }
 
 push_ecr_image() {
