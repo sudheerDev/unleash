@@ -1,35 +1,27 @@
 sudo: required
+
 language: node_js
+node_js:
+  - "6"
+
 services:
   - docker
-node_js:
-  - '0.10'
-before_script:
-  - 'npm install -g bower grunt-cli'
-  - 'bower install'
-  - 'gem install sass --version "=3.4.8"'
-  - 'gem install compass --version "=1.0.1"'
-before_deploy:
-  - if [ "$TRAVIS_BRANCH" == 'master' ]; then export UNLEASH_ENV='production'; fi
-  - if [ "$TRAVIS_BRANCH" == 'master' ]; then export BOT_URL='http://bot.unleash.x-team.com'; fi
-  - if [ "$TRAVIS_BRANCH" == 'master' ]; then export PROFILES_URL='https://txkaf3ohhf.execute-api.us-west-2.amazonaws.com/prod/profiles'; fi
-  - if [ "$TRAVIS_BRANCH" == 'master' ]; then export SKILLS_URL='http://skills.unleash.x-team.com/api/v1/skills'; fi
-  - if [ "$TRAVIS_BRANCH" == 'master' ]; then export GOALS_URL='http://goals.unleash.x-team.com/api/v1/goals'; fi
-  - if [ "$TRAVIS_BRANCH" == 'master' ]; then export PATHS_URL='http://paths.unleash.x-team.com/api/v1/paths'; fi
-  - grunt build
+
+before_install:
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+  - cp config.js config.local.js
+  - sed -i -e "s/local/$TRAVIS_BUILD_NUMBER/g" config.local.js
+
+install:
+  - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/x-team-unleash:$TRAVIS_BUILD_NUMBER .
+
+script:
+  - docker run $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/x-team-unleash:$TRAVIS_BUILD_NUMBER npm run test:lint
+  - docker run $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/x-team-unleash:$TRAVIS_BUILD_NUMBER npm run test
+
 deploy:
-  - provider: script
-    skip_cleanup: true
-    script: ./deploy.sh latest
-    on:
-      branch: master
-  - provider: script
-    skip_cleanup: true
-    script: ./deploy.sh staging
-    on:
-      branch: develop
-  - provider: script
-    skip_cleanup: true
-    script: ./deploy.sh qa
-    on:
-      branch: qa
+  provider: script
+  script: ./deploy.sh
+  on:
+    branch: master

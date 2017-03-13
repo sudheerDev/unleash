@@ -1,4 +1,0 @@
-#!/bin/bash
-
-DIR=`pwd`
-sudo -iu deploy bash -c "cd $DIR && source ./setup-env && npm install && bower install && grunt build --force"

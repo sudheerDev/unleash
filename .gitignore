@@ -1,20 +1,10 @@
-# Angularfire config
-app/scripts/angularfire/config.js
-
-# App constants
-app/scripts/constants.js
-
-# Utilities
-/scripts/
-
-logs/*
-!.gitkeep
-node_modules/
-bower_components/
-dist/
-.tmp
-.sass-cache
-.idea/
-.DS_Store
+node_modules
+dist
 npm-debug.log
-*.tmp
+.idea/
+config.local.js
+.DS_Store
+
+# Coverage files
+.nyc_output
+coverage
