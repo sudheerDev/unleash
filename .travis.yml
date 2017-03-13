@@ -27,13 +27,11 @@ script:
   - docker run $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/x-team-unleash:$TRAVIS_BUILD_NUMBER npm run test
 
 deploy:
-  provider: script
-  script: ./deploy.sh prod
-  on:
-    branch: master
-
-deploy:
-  provider: script
-  script: ./deploy.sh staging
-  on:
-    branch: develop
+  - provider: script
+    script: ./deploy.sh prod
+    on:
+      branch: master
+  - provider: script
+    script: ./deploy.sh staging
+    on:
+      branch: develop
