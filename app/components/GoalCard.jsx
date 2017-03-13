@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
+import { red300 } from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 import DatePicker from 'material-ui/DatePicker';
@@ -171,7 +172,13 @@ class GoalCard extends Component {
     const { goal, loading } = this.props;
     const achieved = goal.achieved;
     const dueDays = goal.dueDate ? this.daysLeft(goal.dueDate) : 0;
-    const goalStyle = Object.assign({}, styles.goal, achieved && styles.achieved);
+    const inProgress = !goal.achieved && goal.dueDate;
+    const goalStyle = Object.assign(
+      {},
+      styles.goal,
+      achieved && styles.achieved,
+      inProgress && styles.inProgress,
+    );
     // @TODO: (Kelvin De Moya) - Just for testing. Update once goal type is implemented in the api.
     const isMilestone = dueDays >= 10 || goal.level === 4;
 
@@ -279,6 +286,10 @@ styles = {
   },
   achieved: {
     backgroundColor: '#8FD694',
+    color: '#ffffff',
+  },
+  inProgress: {
+    backgroundColor: red300,
     color: '#ffffff',
   },
   dueDatePicker: {
