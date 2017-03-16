@@ -2,7 +2,6 @@ import { pullAll, flatten } from 'lodash';
 
 const day = 1000 * 60 * 60 * 24;
 const week = day * 7;
-const now = new Date().valueOf();
 
 function getAllAchievedGoals(paths = { list: [] }) {
   return flatten(paths.list.map(path => path.goals))
@@ -31,6 +30,7 @@ function getTempoHistory(paths = { list: [] }) {
 
   let achievedGoals = getAllAchievedGoals(paths);
 
+  const now = new Date().valueOf();
   const startTime = now - (day * 365);
 
   let currentTempo = 0;
@@ -50,4 +50,4 @@ function getTempoHistory(paths = { list: [] }) {
   return tempo;
 }
 
-export default { day, week, now, getAllAchievedGoals, getAchievements, getPoints, getTempoHistory };
+export default { day, week, getAllAchievedGoals, getAchievements, getPoints, getTempoHistory };
