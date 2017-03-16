@@ -66,7 +66,7 @@ function skillsReducer(state = initialState, action) {
         ...state,
         addResourceDialog: {
           ...state.addResourceDialog,
-          resource: action.resource,
+          [action.inputName]: action.inputName,
         },
       };
     case SKILL.ADD_RESOURCE.RESET:
