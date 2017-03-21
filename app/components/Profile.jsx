@@ -9,6 +9,7 @@ import UserCard from './UserCard';
 import AddGoalsModal from './AddGoalsModal';
 import AddExistingGoalsModal from './AddExistingGoalsModal';
 import Loading from './Loading';
+import Tempo from './Tempo';
 
 let styles = {};
 
@@ -95,6 +96,7 @@ class Profile extends Component {
         <div>
           <div style={styles.userWrapper}>
             <UserCard user={profiles.profile} router={this.props.router} key={userId} />
+            <Tempo paths={paths} />
           </div>
           <div style={styles.skillsWrapper}>
             {skills.map(skill => (
@@ -188,10 +190,10 @@ styles = {
     maxWidth: '1150px',
   },
   userWrapper: {
+    alignItems: 'center',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
     margin: 'auto',
     width: '90%',
     maxWidth: '1150px',
