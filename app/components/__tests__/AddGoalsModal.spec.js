@@ -114,4 +114,38 @@ describe('Add Goals Modal', () => {
     expect(iconSelector.length).to.equal(0);
     expect(loading.length).to.equal(1);
   });
+
+  describe('handleSubmit', () => {
+    const modalParametersWithPaths = { ...modalParameters, paths: [{ id: '123' }] };
+    const onSubmitStub = sinon.stub().returns(Promise.resolve());
+
+    afterEach(() => {
+      onSubmitStub.reset();
+    });
+
+    it('should use first path from paths when submitting without path set', () => {
+      renderAddGoalsModal(modalParametersWithPaths, { withPath: true, onSubmit: onSubmitStub });
+      component.instance().handleSubmit();
+
+      expect(mockedActions.updateAddGoalsField.callCount).to.equal(1);
+      expect(mockedActions.updateAddGoalsField.getCall(0).args).to.eql(['path', '123']);
+      expect(onSubmitStub.called).to.equal(true);
+    });
+
+    it('should use set path', () => {
+      renderAddGoalsModal({ ...modalParametersWithPaths, path: '456' }, { withPath: true, onSubmit: onSubmitStub });
+      component.instance().handleSubmit();
+
+      expect(mockedActions.updateAddGoalsField.callCount).to.equal(0);
+      expect(onSubmitStub.called).to.equal(true);
+    });
+
+    it('should not set default path if withPath is false', () => {
+      renderAddGoalsModal(modalParametersWithPaths, { withPath: false, onSubmit: onSubmitStub });
+      component.instance().handleSubmit();
+
+      expect(mockedActions.updateAddGoalsField.callCount).to.equal(0);
+      expect(onSubmitStub.called).to.equal(true);
+    });
+  });
 });
