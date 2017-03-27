@@ -105,8 +105,18 @@ class AddGoalsModal extends React.Component {
     }
   }
 
+  handleSubmit() {
+    const { onSubmit, actions, withPath, parameters: { paths: [{ id }], path } } = this.props;
+
+    if (withPath && !path) {
+      actions.updateAddGoalsField('path', id);
+    }
+
+    onSubmit().then(() => actions.resetGoalModal());
+  }
+
   render() {
-    const { actions, parameters, onSubmit } = this.props;
+    const { actions, parameters } = this.props;
     const modalContent = parameters.showSpinner ? <Loading /> : this.getGoalForm();
 
     const cancelButton = (
@@ -119,7 +129,7 @@ class AddGoalsModal extends React.Component {
       <FlatButton
         label="Submit"
         secondary
-        onTouchTap={() => onSubmit().then(() => actions.resetGoalModal())}
+        onTouchTap={() => this.handleSubmit()}
         disabled={parameters.showSpinner}
       />);
 

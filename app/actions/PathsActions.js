@@ -127,8 +127,7 @@ export function pathsUpdateGoal(path, goal, data, slackOptions = {}) {
           };
 
           slackService.notifyAchieved(notificationParameters)
-            .catch((error) => {
-              console.log('Slack notification error', error);
+            .catch(() => {
               dispatch(addNotification('There was a problem with the slack notification'));
             });
         }
