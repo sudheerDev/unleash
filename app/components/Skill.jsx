@@ -115,11 +115,11 @@ class Skill extends Component {
 
   addResource(skillSlug) {
     const { actions, toggleOff, userId } = this.props;
-    if (this.state.resource_url !== '' && this.state.resource_description !== '') {
+    if (this.props.resource_url !== '' && this.props.resource_description !== '') {
       actions.resourceAdd(skillSlug, {
-        url: this.state.resource_url,
-        description: this.state.resource_description,
-        type: this.state.resource_type,
+        url: this.props.resource_url,
+        description: this.props.resource_description,
+        type: this.props.resource_type,
         author_id: userId,
       });
       toggleOff(DIALOG_TOGGLE);
@@ -176,20 +176,20 @@ class Skill extends Component {
           id="resource-url"
           defaultValue={this.props.resource_url}
           hintText="Resource URL"
-          onChange={this.handleResourceChange('resource_url')}
+          onChange={this.handleResourceChange('url')}
           fullWidth
         />
         <TextField
           id="resource-description"
           defaultValue={this.props.resource_description}
           hintText="Description"
-          onChange={this.handleResourceChange('resource_description')}
+          onChange={this.handleResourceChange('description')}
           fullWidth
         />
         <SelectField
           floatingLabelText="Type"
           value={this.props.resource_type}
-          onChange={this.handleResourceChange('resource_type')}
+          onChange={this.handleResourceChange('type')}
         >
           <MenuItem value={'post'} primaryText="Post" />
           <MenuItem value={'course'} primaryText="Course" />

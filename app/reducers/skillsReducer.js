@@ -26,14 +26,14 @@ const initialState = {
     name: '',
   },
   addResourceDialog: {
-    resource_url: '',
-    resource_description: '',
-    resource_type: 'other',
+    url: '',
+    description: '',
+    type: 'other',
   },
 };
 
 function skillsReducer(state = initialState, action) {
-  const { updatedSkill, errors = [] } = action;
+  const { payload, updatedSkill, errors = [] } = action;
 
   switch (action.type) {
     case SKILL.FETCH.START:
@@ -66,7 +66,7 @@ function skillsReducer(state = initialState, action) {
         ...state,
         addResourceDialog: {
           ...state.addResourceDialog,
-          [action.inputName]: action.inputName,
+          [payload.inputName]: payload.value,
         },
       };
     case SKILL.ADD_RESOURCE.RESET:

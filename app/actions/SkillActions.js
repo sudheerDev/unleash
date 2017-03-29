@@ -74,7 +74,7 @@ export function resourceRemove(resource, skillSlug) {
 export function updateResource(inputName, value) {
   return {
     type: SKILL.ADD_RESOURCE.UPDATE,
-    [inputName]: value,
+    payload: { inputName, value },
   };
 }
 
