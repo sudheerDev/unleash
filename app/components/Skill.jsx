@@ -143,14 +143,14 @@ class Skill extends Component {
     });
   }
 
-  addResource(skillSlug) {
+  addResource(skillId) {
     const { actions, toggleOff, userId } = this.props;
     if (this.state.resource_url !== '' && this.state.resource_description !== '') {
-      actions.resourceAdd(skillSlug, {
+      actions.resourceAdd(skillId, {
         url: this.state.resource_url,
         description: this.state.resource_description,
         type: this.state.resource_type,
-        author_id: userId,
+        authorId: userId,
       });
       toggleOff(DIALOG_TOGGLE);
       this.setState(this.getInitalDialogState());
@@ -182,7 +182,7 @@ class Skill extends Component {
    * Render dialog with description.
    * @returns {Object} dialog element
    */
-  renderDialog(skillSlug) {
+  renderDialog(skill) {
     const actions = [
       <FlatButton
         label="Cancel"
@@ -191,7 +191,7 @@ class Skill extends Component {
       <FlatButton
         label="Add Resource"
         primary
-        onTouchTap={() => this.addResource(skillSlug)}
+        onTouchTap={() => this.addResource(skill.id)}
       />,
     ];
 
@@ -406,7 +406,7 @@ class Skill extends Component {
           <div style={styles.divider} />
           <div>{skill.name}</div>
           <div style={styles.divider} />
-          {skill && this.renderDialog(skill.slug)}
+          {skill && this.renderDialog(skill)}
         </div>
         <Tabs tabTemplate={tabs => tabsRender(tabs)}>
           <Tab label="Profiles" style={styles.tab}>

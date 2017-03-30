@@ -41,10 +41,10 @@ export function skillList() {
   };
 }
 
-export function resourceAdd(skillSlug, resource) {
+export function resourceAdd(skillId, resource) {
   return (dispatch) => {
     dispatch({ type: SKILL.ADD_RESOURCE.START });
-    return httpClient.post(`${config.skills_api_url}/${skillSlug}/resources.json`, resource)
+    return httpClient.post(`${config.skills_api_url}/${skillId}/resources`, resource)
       .then(updatedSkill => dispatch({ type: SKILL.ADD_RESOURCE.SUCCESS, updatedSkill }))
       .catch(errors => dispatch({ type: SKILL.ADD_RESOURCE.FAILURE, errors }));
   };
