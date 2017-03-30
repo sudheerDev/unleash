@@ -12,7 +12,7 @@ before_install:
   - export PATH=$PATH:$HOME/.local/bin
   - cp config.js config.local.js
   - sed -i -e "s/local/$TRAVIS_BUILD_NUMBER/g" config.local.js
-  - if [ "$TRAVIS_BRANCH" == 'develop' ]; then export SKILLS_API_URL='http://skills-staging.unleash.x-team.com/api/v1/skills'; fi
+  - if [ "$TRAVIS_BRANCH" == 'develop' ]; then export SKILLS_API_URL='https://fy5p532pni.execute-api.us-west-2.amazonaws.com/dev/skills'; fi
   - if [ "$TRAVIS_BRANCH" == 'develop' ]; then export GOALS_API_URL='http://goals-staging.unleash.x-team.com/api/v1/goals.json'; fi
   - if [ "$TRAVIS_BRANCH" == 'develop' ]; then export PROFILES_API_URL='https://txkaf3ohhf.execute-api.us-west-2.amazonaws.com/staging/profiles'; fi
   - if [ "$TRAVIS_BRANCH" == 'develop' ]; then export PATHS_API_URL='http://paths-staging.unleash.x-team.com/api/v1/paths'; fi
