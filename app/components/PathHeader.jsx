@@ -80,7 +80,7 @@ class PathHeader extends Component {
       >
         <TextField
           id="rename-path"
-          defaultValue={this.state.renameText || 'Empty Path'}
+          defaultValue={this.state.renameText || 'Unnamed Path'}
           onChange={this.handleNameChange}
           fullWidth
         />
@@ -101,7 +101,7 @@ class PathHeader extends Component {
       />,
     ];
 
-    const pathName = this.state.renameText || 'Empty Path';
+    const pathName = this.state.renameText || 'Unnamed Path';
     return (
       <Dialog
         title={`You are about to remove "${pathName}"`}
@@ -122,7 +122,7 @@ class PathHeader extends Component {
         <div style={styles.pathHeader}>
           <div style={styles.divider} />
           <div style={styles.name}>
-            <i className="icon-map" /> {path.name || 'Empty Path'}
+            <i className="icon-map" /> {path.name || 'Unnamed Path'}
           </div>
           <div style={styles.divider} />
         </div>
