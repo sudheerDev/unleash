@@ -19,6 +19,8 @@ function updateOne(skills, skill) {
 
 const initialState = {
   list: [],
+  resourceList: [],
+  resourcesLoading: false,
   isLoading: false,
   addSkillModal: {
     showModal: false,
@@ -48,6 +50,24 @@ function skillsReducer(state = initialState, action) {
         ...state,
         list: [],
         isLoading: false,
+      };
+    case SKILL.LIST_RESOURCE.START:
+      return {
+        ...state,
+        resourceList: [],
+        resourcesLoading: true,
+      };
+    case SKILL.LIST_RESOURCE.SUCCESS:
+      return {
+        ...state,
+        resourceList: action.resources,
+        resourcesLoading: false,
+      };
+    case SKILL.LIST_RESOURCE.FAILURE:
+      return {
+        ...state,
+        resourceList: [],
+        resourcesLoading: false,
       };
     case SKILL.ADD_RESOURCE.START:
       return { ...state, errors };

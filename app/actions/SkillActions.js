@@ -13,6 +13,11 @@ export const SKILL = {
     SUCCESS: 'ADD_RESOURCE_SUCCESS',
     FAILURE: 'ADD_RESOURCE_FAILURE',
   },
+  LIST_RESOURCE: {
+    START: 'LIST_RESOURCE_START',
+    SUCCESS: 'LIST_RESOURCE_SUCCESS',
+    FAILURE: 'LIST_RESOURCE_FAILURE',
+  },
   VOTE_RESOURCE: {
     START: 'VOTE_RESOURCE_START',
     SUCCESS: 'VOTE_RESOURCE_SUCCESS',
@@ -47,6 +52,15 @@ export function resourceAdd(skillId, resource) {
     return httpClient.post(`${config.skills_api_url}/${skillId}/resources`, resource)
       .then(updatedSkill => dispatch({ type: SKILL.ADD_RESOURCE.SUCCESS, updatedSkill }))
       .catch(errors => dispatch({ type: SKILL.ADD_RESOURCE.FAILURE, errors }));
+  };
+}
+
+export function resourceList(skillId) {
+  return (dispatch) => {
+    dispatch({ type: SKILL.LIST_RESOURCE.START });
+    return httpClient.get(`${config.skills_api_url}/${skillId}/resources`)
+      .then(resources => dispatch({ type: SKILL.LIST_RESOURCE.SUCCESS, resources }))
+      .catch(errors => dispatch({ type: SKILL.LIST_RESOURCE.FAILURE, errors }));
   };
 }
 

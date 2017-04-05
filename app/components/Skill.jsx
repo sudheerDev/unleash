@@ -4,7 +4,6 @@ import every from 'lodash/every';
 import some from 'lodash/some';
 import values from 'lodash/values';
 import map from 'lodash/map';
-import get from 'lodash/get';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import { routerShape } from 'react-router/lib/PropTypes';
@@ -39,9 +38,16 @@ const resourceTypes = {
   other: <ContentLink />,
 };
 
+function getSkillBySlug(skills = {}, slug) {
+  return find(values(skills), ['slug', slug]) || {};
+}
+
 function loadData(props) {
   const { actions, params } = props;
-  actions.skillList();
+  actions.skillList().then((action) => {
+    const skill = getSkillBySlug(action.skills, params.slug);
+    actions.resourceList(skill.id);
+  });
   actions.profileList();
   actions.profileListBySkill(params.slug);
 }
@@ -67,29 +73,9 @@ class Skill extends Component {
     }
   }
 
-  getSkillBySlug(skills = {}, slug) {
-    return find(values(skills), ['slug', slug]) || {};
-  }
-
   getProfilesInIds(profiles = {}, ids = []) {
     return profiles.filter(profile => this.filterProfileIds(profile, ids));
   }
-
-  getResourcesFromSkill = skill => get(skill, 'resources', []).map((resource) => {
-    const { userId } = this.props;
-    const userHasVoted = some(resource.votes, vote => (vote.user === userId && vote.vote > 0));
-
-    return {
-      id: resource.id,
-      url: resource.url,
-      description: resource.description,
-      upvotes: resource.votes_total || 0,
-      upvoted: userHasVoted,
-      type: resourceTypes[resource.type] ? resource.type : 'other',
-      authorId: resource.author_id,
-    };
-  })
-  .sort((a, b) => b.upvotes - a.upvotes);
 
   getInitalDialogState() {
     return {
@@ -168,10 +154,9 @@ class Skill extends Component {
     });
   }
 
-  removeResource(resource, skillSlug) {
+  removeResource(resource, skill) {
     const { actions } = this.props;
-    actions.resourceRemove(resource, skillSlug).then(() => {
-      const skill = this.getSkillBySlug(this.props.skills, skillSlug);
+    actions.resourceRemove(resource, skill.slug).then(() => {
       const index = skill.resources.findIndex(el => el.id === resource.id);
       skill.resources.splice(index, 1);
       this.toggleDeletingState();
@@ -250,12 +235,8 @@ class Skill extends Component {
     );
   }
 
-  renderResourceItem = (resource) => {
-    const { params: { slug }, skills } = this.props;
-
-    const skill = this.getSkillBySlug(skills, slug);
-
-    return (
+  renderResourceItem = (resource, skill) =>
+    (
       <ListItem
         key={resource.id}
         leftIcon={resourceTypes[resource.type]}
@@ -278,17 +259,16 @@ class Skill extends Component {
         }
       />
     );
-  }
 
-  renderResources(skill) {
+  renderResources(resources, skill) {
     let resourceItems;
     let emptyMessage;
-    const resources = this.getResourcesFromSkill(skill);
+
     if (this.state.isRemoving) {
-      resourceItems = this.renderRemovingResourcesList(resources, skill.slug);
+      resourceItems = this.renderRemovingResourcesList(resources, skill);
       emptyMessage = 'There are no resources you can remove.';
     } else {
-      resourceItems = map(resources, resource => this.renderResourceItem(resource));
+      resourceItems = map(resources, resource => this.renderResourceItem(resource, skill));
       emptyMessage = 'No resources added yet for this skill.';
     }
 
@@ -323,7 +303,7 @@ class Skill extends Component {
     ));
   }
 
-  renderRemovingResourcesList(resources, skillSlug) {
+  renderRemovingResourcesList(resources, skill) {
     const { userId } = this.props;
     const ownedResources = resources.filter(resource => resource.authorId === userId);
 
@@ -333,7 +313,7 @@ class Skill extends Component {
         leftIcon={
           <ContentClear
             color="#ff5965"
-            onClick={() => this.removeResource(resource, skillSlug)}
+            onClick={() => this.removeResource(resource, skill)}
           />
         }
         primaryText={resource.url}
@@ -350,15 +330,17 @@ class Skill extends Component {
       profilesLoading,
       profilesBySkill,
       bySkillLoading,
+      resourcesLoading,
+      resources,
     } = this.props;
-    const isLoading = some([skillsLoading, profilesLoading, bySkillLoading]);
-    const allLoaded = every([skills, profiles, profilesBySkill]);
+    const isLoading = some([profilesLoading, skillsLoading, resourcesLoading, bySkillLoading]);
+    const allLoaded = every([skills, profiles, resources, profilesBySkill]);
 
     if (isLoading || !allLoaded) {
       return <Loading />;
     }
 
-    const skill = this.getSkillBySlug(skills, this.props.params.slug);
+    const skill = getSkillBySlug(skills, this.props.params.slug);
     const skilled = this.getProfilesInIds(profiles, profilesBySkill);
     const renderButtons = () => {
       const showDefaultButtons = this.state.isRemoving !== true;
@@ -413,7 +395,7 @@ class Skill extends Component {
             {this.renderProfiles(skilled)}
           </Tab>
           <Tab label="Resources" style={styles.tab}>
-            {this.renderResources(skill)}
+            {this.renderResources(resources, skill)}
             {renderButtons()}
           </Tab>
         </Tabs>
@@ -429,10 +411,13 @@ Skill.propTypes = {
     profileListBySkill: React.PropTypes.func.isRequired,
     resourceAdd: React.PropTypes.func.isRequired,
     resourceAddVote: React.PropTypes.func.isRequired,
+    resourceList: React.PropTypes.func.isRequired,
   }).isRequired,
   userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   skillsLoading: React.PropTypes.bool.isRequired,
+  resources: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  resourcesLoading: React.PropTypes.bool.isRequired,
   profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   profilesLoading: React.PropTypes.bool.isRequired,
   profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
