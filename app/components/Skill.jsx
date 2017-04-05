@@ -420,7 +420,7 @@ Skill.propTypes = {
   resourcesLoading: React.PropTypes.bool.isRequired,
   profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   profilesLoading: React.PropTypes.bool.isRequired,
-  profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
   bySkillLoading: React.PropTypes.bool.isRequired,
   params: React.PropTypes.shape({
     slug: React.PropTypes.string,

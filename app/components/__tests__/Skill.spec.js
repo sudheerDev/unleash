@@ -16,14 +16,22 @@ describe('Skill Details', () => {
   let routerSpy;
   const skills = generate('skill', 15);
   const profiles = generate('profile', 15);
+  const resources = generate('resource', 15);
+  const mockedUserId = 'test';
   const mockedProfilesBySkill = map(sampleSize(profiles, 3), 'id');
+  const skillListPromise = sinon.spy()
 
   beforeEach(() => {
+    skillListPromise.reset()
     mockedActions = {
-      skillList: sinon.spy(),
+      skillList: () => ({
+        then: skillListPromise
+      }),
+      resourceList: sinon.spy(),
       profileList: sinon.spy(),
       profileListBySkill: sinon.spy(),
       resourceAdd: sinon.spy(),
+      resourceAddVote: sinon.spy(),
     }
     routerSpy = {
       push: sinon.spy(),
@@ -48,11 +56,14 @@ describe('Skill Details', () => {
       <Skill
         actions={mockedActions}
         skills={skills}
+        resources={resources}
         profiles={profiles}
         profilesBySkill={mockedProfilesBySkill}
         router={routerSpy}
         params={mockedParams}
+        userId={mockedUserId}
         skillsLoading={false}
+        resourcesLoading={false}
         profilesLoading={false}
         bySkillLoading={false}
       />,
@@ -72,7 +83,7 @@ describe('Skill Details', () => {
   });
 
   it('should fetch the skill list when component is mounted', () => {
-    expect(mockedActions.skillList.callCount).to.equal(1);
+    expect(skillListPromise.callCount).to.equal(1);
   });
 
   it('should fetch the profile list when component is mounted', () => {
