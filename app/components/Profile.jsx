@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { routerShape } from 'react-router/lib/PropTypes';
 import ContentPaste from 'material-ui/svg-icons/content/content-paste';
 import Path from './Path';
 import UserCard from './UserCard';
-import AddGoalsModal from './AddGoalsModal';
+import AddGoalsModalGeneric from './AddGoalsModalGeneric';
 import AddExistingGoalsModal from './AddExistingGoalsModal';
 import Loading from './Loading';
 import Tempo from './Tempo';
@@ -35,6 +36,48 @@ class Profile extends Component {
     }
   }
 
+  handleSubmit() {
+    const { actions, addModalParameters: { path }, paths: { list: [{ id }] } } = this.props;
+
+    if (!path) {
+      actions.updateAddGoalsField('path', id);
+    }
+
+    actions.addGoalToPathRequest().then(() => actions.resetGoalModal());
+  }
+
+  renderAddGoalModal() {
+    const { addModalParameters: { showSpinner, ...modalParams }, actions, paths } = this.props;
+    const onFieldChange = (field, value) => actions.updateAddGoalsField(field, value);
+    const modalActions = [(
+      <FlatButton
+        label="Cancel"
+        onTouchTap={() => actions.resetGoalModal()}
+        disabled={showSpinner}
+      />), (<FlatButton
+        label="Submit"
+        secondary
+        onTouchTap={() => this.handleSubmit()}
+        disabled={showSpinner}
+      />),
+    ];
+
+
+    const addGoalsModalParameters = {
+      ...modalParams,
+      onFieldChange,
+      modalActions,
+      paths: paths.list,
+    };
+
+    return (
+      <AddGoalsModalGeneric
+        parameters={addGoalsModalParameters}
+        tagsOptions={[]}
+      />
+    );
+  }
+
   render() {
     const {
       actions,
@@ -43,7 +86,6 @@ class Profile extends Component {
       goals,
       profiles,
       loggedInUser,
-      addModalParameters,
       addExistingGoalsModalParameters,
       isLoading,
     } = this.props;
@@ -54,7 +96,6 @@ class Profile extends Component {
       { name: 'mongoDB', id: 'c390be96-168b-4f42-a0cd-933fbc46e249' },
       { name: 'React', id: 'c390be96-168b-4f42-a0cd-933fbc46e240' },
     ];
-    const tags = [];
     let addGoalButton = null;
     if (editable) {
       addGoalButton = (
@@ -78,18 +119,10 @@ class Profile extends Component {
           >
             <ContentPaste />
           </FloatingActionButton>
-          <AddGoalsModal
-            parameters={addModalParameters}
-            actions={actions}
-            tagsOptions={tags}
-            onSubmit={actions.addGoalToPathRequest}
-            withPath
-          />
+          { this.renderAddGoalModal() }
         </div>
       );
     }
-
-    addModalParameters.paths = paths.list;
 
     return (
       <Loading loading={isLoading}>

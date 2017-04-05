@@ -14,7 +14,7 @@ const IconSelector = ({ label, value, onChange }) => {
   return (
     <AutoComplete
       floatingLabelText={label}
-      value={value}
+      searchText={value && value.replace('icon-', '')}
       dataSource={iconElements}
       openOnFocus
       fullWidth

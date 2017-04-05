@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
-import Dialog from 'material-ui/Dialog';
+import React, { Component, PropTypes } from 'react';
 import { red300 } from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
-import DatePicker from 'material-ui/DatePicker';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import toggleHOC from '../hocs/toggleHOC';
 import MilestoneImg from '../assets/milestone.png';
 import Loading from './Loading';
+import AddGoalsModalGeneric from './AddGoalsModalGeneric';
 
 const DIALOG_TOGGLE = 'dialog';
 const NOTIFY_ON_SLACK = 'notify-on-slack';
@@ -16,20 +15,22 @@ const NOTIFY_ON_SLACK = 'notify-on-slack';
 let styles = {};
 
 const propTypes = {
-  loading: React.PropTypes.bool,
-  actions: React.PropTypes.object,
-  editable: React.PropTypes.bool,
-  goal: React.PropTypes.object.isRequired,
-  path: React.PropTypes.object,
-  profile: React.PropTypes.shape({
-    id: React.PropTypes.string,
-    fullName: React.PropTypes.string,
-    picture: React.PropTypes.string,
+  loading: PropTypes.bool,
+  actions: PropTypes.object,
+  goal: PropTypes.object.isRequired,
+  path: PropTypes.shape({
+    id: PropTypes.string,
   }),
-  getToggleState: React.PropTypes.func.isRequired,
-  toggleOn: React.PropTypes.func.isRequired,
-  toggleOff: React.PropTypes.func.isRequired,
-  toggle: React.PropTypes.func.isRequired,
+  profile: PropTypes.shape({
+    id: PropTypes.string,
+    fullName: PropTypes.string,
+    picture: PropTypes.string,
+  }),
+  getToggleState: PropTypes.func.isRequired,
+  toggleOn: PropTypes.func.isRequired,
+  toggleOff: PropTypes.func.isRequired,
+  toggle: PropTypes.func.isRequired,
+  paths: PropTypes.array,
 };
 
 class GoalCard extends Component {
@@ -38,6 +39,9 @@ class GoalCard extends Component {
     super(props);
     this.state = {
       slackAdditionalMessage: '',
+      path: props.path,
+      // TODO this should be handled by parameter passed to GoalCard not calculated by component
+      usersGoal: !!props.path,
     };
   }
 
@@ -72,9 +76,14 @@ class GoalCard extends Component {
     actions.removeGoalFromPath(goal, path, profile.id);
   }
 
-  updateDueDate(dueDate) {
+  updateField(field, value) {
     const { goal, path } = this.props;
-    this.props.actions.pathsUpdateGoal(path, goal, { dueDate });
+
+    if (field === 'path') {
+      this.setState({ path: { id: value } });
+    } else {
+      this.props.actions.pathsUpdateGoal(path, goal, { [field]: value });
+    }
   }
 
   handleSlackMessageChange(event) {
@@ -84,87 +93,91 @@ class GoalCard extends Component {
   }
 
   closeDialog() {
-    this.props.toggleOff(NOTIFY_ON_SLACK);
-    this.props.toggleOff(DIALOG_TOGGLE);
+    const { profile, path, goal, toggleOff } = this.props;
+    const { usersGoal } = this.state;
+    toggleOff(NOTIFY_ON_SLACK);
+    toggleOff(DIALOG_TOGGLE);
+
+    if (usersGoal && path.id !== this.state.path.id) {
+      this.props.actions.moveGoalToPath(goal, path, profile.id, this.state.path);
+    }
   }
 
-  /**
-   * Render dialog with description
-   *
-   * @returns {Object} dialog element
-   */
-  renderDialog() {
-    const { goal, path, loading, editable } = this.props;
-    const actions = [
+  generateModalActions() {
+    const { goal } = this.props;
+
+    return [
+      <FlatButton
+        label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
+        primary
+        onTouchTap={() => this.toggleAchievement()}
+      />,
+      <FlatButton
+        label="Remove"
+        secondary
+        onTouchTap={() => this.handleRemove()}
+      />,
       <FlatButton
         label="Close"
         onTouchTap={() => this.closeDialog()}
       />,
     ];
-    let editableInputs = null;
+  }
 
-    if (path && editable) {
-      actions.unshift(
-        <FlatButton
-          label={goal.achieved ? 'Mark as unachieved' : 'Mark as achieved'}
-          primary
-          onTouchTap={() => this.toggleAchievement()}
-        />,
-      );
-      actions.unshift(
-        <FlatButton
-          label="Remove"
-          secondary
-          onTouchTap={() => this.handleRemove()}
-        />,
-      );
+  generateNotifySlackField() {
+    const { goal: { achieved }, getToggleState, toggle } = this.props;
+    const notifySlackValue = getToggleState(NOTIFY_ON_SLACK);
 
-      const notifySlackValue = this.props.getToggleState(NOTIFY_ON_SLACK);
-      editableInputs = (
-        <div>
-          <DatePicker
-            style={styles.dueDatePicker}
-            hintText="Due Date"
-            container="inline"
-            mode="landscape"
-            onChange={(event, date) => this.updateDueDate(date)}
-            value={goal.dueDate ? new Date(goal.dueDate) : null}
-          />
-          {!goal.achieved && (
-            <div>
-              <Checkbox
-                style={styles.notifySlackCheckbox}
-                checked={notifySlackValue}
-                onCheck={() => this.props.toggle(NOTIFY_ON_SLACK)}
-                label="Notify on Slack"
+    return () => (
+      <div>
+        {!achieved && (
+          <div>
+            <Checkbox
+              style={styles.notifySlackCheckbox}
+              checked={notifySlackValue}
+              onCheck={() => toggle(NOTIFY_ON_SLACK)}
+              label="Notify on Slack"
+            />
+            {notifySlackValue && (
+              <TextField
+                onChange={event => this.handleSlackMessageChange(event)}
+                style={styles.additionalMessageInput}
+                hintText="Additional message (optional)"
               />
-              {notifySlackValue && (
-                <TextField
-                  onChange={event => this.handleSlackMessageChange(event)}
-                  style={styles.additionalMessageInput}
-                  hintText="Additional message (optional)"
-                />
-              )}
-            </div>
-          )}
-        </div>
-      );
+            )}
+          </div>
+        )}
+      </div>);
+  }
+
+  renderGoalModal() {
+    const { goal, paths } = this.props;
+    const { path, usersGoal } = this.state;
+    const open = this.props.getToggleState(DIALOG_TOGGLE);
+    const modalActions = this.generateModalActions();
+
+    let modalParams = {
+      ...goal,
+      showModal: open,
+      modalActions,
+      onFieldChange: (field, value) => this.updateField(field, value),
+    };
+
+    if (usersGoal) {
+      modalParams = {
+        ...modalParams,
+        paths,
+        path: path.id,
+        extraFields: [this.generateNotifySlackField()],
+      };
     }
 
     return (
-      <Dialog
-        actions={!loading ? actions : null}
-        title={!loading ? goal.name : null}
-        open={this.props.getToggleState(DIALOG_TOGGLE)}
-        onRequestClose={() => this.closeDialog()}
-      >
-        <Loading loading={loading}>
-          <div>
-            {goal.description}
-            {editableInputs}
-          </div>
-        </Loading>
-      </Dialog>
+      <AddGoalsModalGeneric
+        parameters={modalParams}
+        tagsOptions={[]}
+        usersGoal={usersGoal}
+      />
     );
   }
 
@@ -198,7 +211,7 @@ class GoalCard extends Component {
             </div>
           </div>
         </Loading>
-        {this.renderDialog()}
+        {this.renderGoalModal()}
       </Paper>
     );
   }

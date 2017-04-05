@@ -29,6 +29,7 @@ class Paths extends Component {
           loading={loading}
           editable={editable}
           profile={profile}
+          paths={paths.list}
         />
       );
     });

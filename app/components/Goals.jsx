@@ -3,8 +3,9 @@ import map from 'lodash/map';
 import flatten from 'lodash/flatten';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FlatButton from 'material-ui/FlatButton';
 import GoalCard from './GoalCard';
-import AddGoalsModal from './AddGoalsModal';
+import AddGoalsModalGeneric from './AddGoalsModalGeneric';
 
 let styles = {};
 
@@ -23,9 +24,40 @@ class Goals extends Component {
     return map(goals, goal => <GoalCard key={goal.id} goal={goal} />);
   }
 
+  renderAddGoalModal() {
+    const { addModalParameters: { showSpinner, ...modalParams }, actions } = this.props;
+    const onFieldChange = (field, value) => actions.updateAddGoalsField(field, value);
+    const modalActions = [(
+      <FlatButton
+        label="Cancel"
+        onTouchTap={() => actions.resetGoalModal()}
+        disabled={showSpinner}
+      />), (<FlatButton
+        label="Submit"
+        secondary
+        onTouchTap={() => actions.addGoalRequest()}
+        disabled={showSpinner}
+      />),
+    ];
+
+
+    const addGoalsModalParameters = {
+      ...modalParams,
+      onFieldChange,
+      modalActions,
+    };
+
+    return (
+      <AddGoalsModalGeneric
+        parameters={addGoalsModalParameters}
+        tagsOptions={this.getTags()}
+        usersGoal={false}
+      />
+    );
+  }
+
   render() {
-    const { list, actions, addModalParameters } = this.props;
-    const tags = this.getTags();
+    const { list, actions } = this.props;
     return (
       <div>
         <div style={styles.goalsWrapper}>
@@ -37,12 +69,7 @@ class Goals extends Component {
         >
           <ContentAdd />
         </FloatingActionButton>
-        <AddGoalsModal
-          parameters={addModalParameters}
-          actions={actions}
-          tagsOptions={tags}
-          onSubmit={actions.addGoalRequest}
-        />
+        {this.renderAddGoalModal()}
       </div>
     );
   }
