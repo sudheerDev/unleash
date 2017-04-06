@@ -17,6 +17,7 @@ function mapStateToProps(state) {
     profilesBySkill: state.profilesBySkill.profiles,
     bySkillLoading: state.profilesBySkill.isLoading,
     skills: state.skills.list,
+    votes: state.skills.voteList,
     skillsLoading: state.skills.isLoading,
     resourcesLoading: state.skills.resourcesLoading,
     resources: state.skills.resourceList,

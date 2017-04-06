@@ -20,6 +20,7 @@ function updateOne(skills, skill) {
 const initialState = {
   list: [],
   resourceList: [],
+  voteList: [],
   resourcesLoading: false,
   isLoading: false,
   addSkillModal: {
@@ -69,6 +70,24 @@ function skillsReducer(state = initialState, action) {
         resourceList: [],
         resourcesLoading: false,
       };
+    case SKILL.LIST_VOTE.START:
+      return {
+        ...state,
+        voteList: [],
+      };
+    case SKILL.LIST_VOTE.SUCCESS:
+      return {
+        ...state,
+        voteList: {
+          ...state.voteList,
+          [action.resourceId]: action.votes,
+        },
+      };
+    case SKILL.LIST_VOTE.FAILURE:
+      return {
+        ...state,
+        voteList: [],
+      };
     case SKILL.ADD_RESOURCE.START:
       return { ...state, errors };
     case SKILL.ADD_RESOURCE.SUCCESS:
@@ -77,9 +96,9 @@ function skillsReducer(state = initialState, action) {
     case SKILL.ADD_RESOURCE.FAILURE:
       return { ...state, errors };
     case SKILL.VOTE_RESOURCE.START:
-      return { ...state, errors };
+      return { ...state };
     case SKILL.VOTE_RESOURCE.SUCCESS:
-      return { ...state, errors, list: updateOne(state.list, updatedSkill) };
+      return { ...state };
     case SKILL.VOTE_RESOURCE.FAILURE:
       return { ...state, errors };
     case SKILL.ADD.UPDATE_FIELD:

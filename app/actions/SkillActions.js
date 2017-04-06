@@ -18,6 +18,11 @@ export const SKILL = {
     SUCCESS: 'LIST_RESOURCE_SUCCESS',
     FAILURE: 'LIST_RESOURCE_FAILURE',
   },
+  LIST_VOTE: {
+    START: 'LIST_VOTE_START',
+    SUCCESS: 'LIST_VOTE_SUCCESS',
+    FAILURE: 'LIST_VOTE_FAILURE',
+  },
   VOTE_RESOURCE: {
     START: 'VOTE_RESOURCE_START',
     SUCCESS: 'VOTE_RESOURCE_SUCCESS',
@@ -64,11 +69,20 @@ export function resourceList(skillId) {
   };
 }
 
-export function resourceAddVote(skillSlug, resource) {
+export function voteList(skillId, resourceId) {
+  return (dispatch) => {
+    dispatch({ type: SKILL.LIST_VOTE.START });
+    return httpClient.get(`${config.skills_api_url}/${skillId}/resources/${resourceId}/votes`)
+      .then(votes => dispatch({ type: SKILL.LIST_VOTE.SUCCESS, resourceId, votes }))
+      .catch(errors => dispatch({ type: SKILL.LIST_VOTE.FAILURE, errors }));
+  };
+}
+
+export function resourceAddVote(skillId, resourceId, data) {
   return (dispatch) => {
     dispatch({ type: SKILL.VOTE_RESOURCE.START });
-    return httpClient.post(`${config.skills_api_url}/${skillSlug}/resources/${resource.id}/votes.json`, resource)
-      .then(updatedSkill => dispatch({ type: SKILL.VOTE_RESOURCE.SUCCESS, updatedSkill }))
+    return httpClient.post(`${config.skills_api_url}/${skillId}/resources/${resourceId}/votes`, data)
+      .then(vote => dispatch({ type: SKILL.VOTE_RESOURCE.SUCCESS, vote }))
       .catch(errors => dispatch({ type: SKILL.VOTE_RESOURCE.FAILURE, errors }));
   };
 }

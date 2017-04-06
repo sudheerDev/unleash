@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import find from 'lodash/find';
 import every from 'lodash/every';
 import some from 'lodash/some';
+import each from 'lodash/each';
 import values from 'lodash/values';
 import map from 'lodash/map';
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -42,12 +43,22 @@ function getSkillBySlug(skills = {}, slug) {
   return find(values(skills), ['slug', slug]) || {};
 }
 
+function loadVotes(props, skillId, resources) {
+  const { actions } = props;
+  each(resources, (resource) => {
+    actions.voteList(skillId, resource.id);
+  });
+}
+
+function loadResources(props, skills) {
+  const { actions, params } = props;
+  const skill = getSkillBySlug(skills, params.slug);
+  actions.resourceList(skill.id).then((resourceAction) => { loadVotes(props, skill.id, resourceAction.resources); });
+}
+
 function loadData(props) {
   const { actions, params } = props;
-  actions.skillList().then((action) => {
-    const skill = getSkillBySlug(action.skills, params.slug);
-    actions.resourceList(skill.id);
-  });
+  actions.skillList().then((action) => { loadResources(props, action.skills); });
   actions.profileList();
   actions.profileListBySkill(params.slug);
 }
@@ -143,13 +154,12 @@ class Skill extends Component {
     }
   }
 
-  addVote = (skillSlug, resource) => () => {
+  addVote = (skillId, resource, upvoted) => () => {
     const { actions, userId } = this.props;
-    const vote = resource.upvoted ? -1 : 1;
+    const vote = upvoted ? -1 : 1;
 
-    actions.resourceAddVote(skillSlug, {
-      id: resource.id,
-      user: userId,
+    actions.resourceAddVote(skillId, resource.id, {
+      authorId: userId,
       vote,
     });
   }
@@ -235,8 +245,21 @@ class Skill extends Component {
     );
   }
 
-  renderResourceItem = (resource, skill) =>
-    (
+  renderResourceItem = (resource, skill) => {
+    const { votes, userId } = this.props;
+
+    let votesCount = 0;
+    let upvoted = 0;
+    if (votes[resource.id]) {
+      votesCount = votes[resource.id].length;
+      each(votes[resource.id], (vote) => {
+        if (vote.authorId === userId) {
+          upvoted = 1;
+        }
+      });
+    }
+
+    return (
       <ListItem
         key={resource.id}
         leftIcon={resourceTypes[resource.type]}
@@ -250,15 +273,16 @@ class Skill extends Component {
               icon={<AvWeb />}
             />
             <FlatButton
-              label={`x ${resource.upvotes}`}
-              secondary={resource.upvoted}
+              label={`x ${votesCount}`}
+              secondary={upvoted}
               icon={<ActionThumbUp />}
-              onTouchTap={this.addVote(skill.slug, resource)}
+              onTouchTap={this.addVote(skill.id, resource, upvoted)}
             />
           </div>
         }
       />
     );
+  };
 
   renderResources(resources, skill) {
     let resourceItems;
@@ -418,6 +442,7 @@ Skill.propTypes = {
   skillsLoading: React.PropTypes.bool.isRequired,
   resources: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   resourcesLoading: React.PropTypes.bool.isRequired,
+  votes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   profiles: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   profilesLoading: React.PropTypes.bool.isRequired,
   profilesBySkill: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
