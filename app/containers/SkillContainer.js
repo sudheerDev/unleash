@@ -18,6 +18,8 @@ function mapStateToProps(state) {
     bySkillLoading: state.profilesBySkill.isLoading,
     skills: state.skills.list,
     skillsLoading: state.skills.isLoading,
+    resourcesLoading: state.skills.resourcesLoading,
+    resources: state.skills.resourceList,
     profiles: state.profiles.list,
     profilesLoading: state.profiles.isLoading,
     userId: state.user.userData.id,
