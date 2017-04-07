@@ -4,6 +4,7 @@ import every from 'lodash/every';
 import some from 'lodash/some';
 import each from 'lodash/each';
 import values from 'lodash/values';
+import filter from 'lodash/filter';
 import map from 'lodash/map';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
@@ -247,17 +248,8 @@ class Skill extends Component {
 
   renderResourceItem = (resource, skill) => {
     const { votes, userId } = this.props;
-
-    let votesCount = 0;
-    let upvoted = 0;
-    if (votes[resource.id]) {
-      votesCount = votes[resource.id].length;
-      each(votes[resource.id], (vote) => {
-        if (vote.authorId === userId) {
-          upvoted = 1;
-        }
-      });
-    }
+    const upvoted = filter(votes[resource.id], vote => (vote.authorId === userId && vote.vote === 1)).length;
+    const votesCount = filter(votes[resource.id], vote => (vote.vote === 1)).length;
 
     return (
       <ListItem
@@ -436,6 +428,7 @@ Skill.propTypes = {
     resourceAdd: React.PropTypes.func.isRequired,
     resourceAddVote: React.PropTypes.func.isRequired,
     resourceList: React.PropTypes.func.isRequired,
+    voteList: React.PropTypes.func.isRequired,
   }).isRequired,
   userId: React.PropTypes.string.isRequired,
   skills: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,

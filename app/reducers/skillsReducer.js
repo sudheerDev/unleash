@@ -1,21 +1,5 @@
-import findIndex from 'lodash/findIndex';
-
+import each from 'lodash/each';
 import { SKILL } from '../actions/SkillActions';
-
-/**
- * Update a skill inside the skills list.
- * @param  {object}  skills     The list of skills.
- * @param  {object}  skill      The skill to update.
- * @return {array}              The updated result.
- */
-function updateOne(skills, skill) {
-  const skillIndex = findIndex(skills, { id: skill.id });
-  return [
-    ...skills.slice(0, skillIndex),
-    skill,
-    ...skills.slice(skillIndex + 1),
-  ];
-}
 
 const initialState = {
   list: [],
@@ -30,8 +14,25 @@ const initialState = {
   },
 };
 
+function updateVotes(votes, resourceId, vote) {
+  let existingVoteIndex = -1;
+  each(votes[resourceId], (existingVote, index) => {
+    if (existingVote.authorId === vote.authorId) {
+      existingVoteIndex = index;
+    }
+  });
+
+  if (existingVoteIndex !== -1) {
+    votes[resourceId].splice(existingVoteIndex, 1);
+  } else {
+    votes[resourceId].push(vote);
+  }
+
+  return votes;
+}
+
 function skillsReducer(state = initialState, action) {
-  const { updatedSkill, errors = [] } = action;
+  const { errors = [] } = action;
 
   switch (action.type) {
     case SKILL.FETCH.START:
@@ -91,14 +92,22 @@ function skillsReducer(state = initialState, action) {
     case SKILL.ADD_RESOURCE.START:
       return { ...state, errors };
     case SKILL.ADD_RESOURCE.SUCCESS:
-      // The API return the affected skill object.
-      return { ...state, errors, list: updateOne(state.list, updatedSkill) };
+      return {
+        ...state,
+        resourceList: [
+          ...state.resourceList,
+          action.resource,
+        ],
+      };
     case SKILL.ADD_RESOURCE.FAILURE:
       return { ...state, errors };
     case SKILL.VOTE_RESOURCE.START:
       return { ...state };
     case SKILL.VOTE_RESOURCE.SUCCESS:
-      return { ...state };
+      return {
+        ...state,
+        voteList: updateVotes(state.voteList, action.resourceId, action.vote),
+      };
     case SKILL.VOTE_RESOURCE.FAILURE:
       return { ...state, errors };
     case SKILL.ADD.UPDATE_FIELD:

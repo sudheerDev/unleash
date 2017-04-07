@@ -51,11 +51,11 @@ export function skillList() {
   };
 }
 
-export function resourceAdd(skillId, resource) {
+export function resourceAdd(skillId, resourceData) {
   return (dispatch) => {
     dispatch({ type: SKILL.ADD_RESOURCE.START });
-    return httpClient.post(`${config.skills_api_url}/${skillId}/resources`, resource)
-      .then(updatedSkill => dispatch({ type: SKILL.ADD_RESOURCE.SUCCESS, updatedSkill }))
+    return httpClient.post(`${config.skills_api_url}/${skillId}/resources`, resourceData)
+      .then(resource => dispatch({ type: SKILL.ADD_RESOURCE.SUCCESS, resource }))
       .catch(errors => dispatch({ type: SKILL.ADD_RESOURCE.FAILURE, errors }));
   };
 }
@@ -82,7 +82,7 @@ export function resourceAddVote(skillId, resourceId, data) {
   return (dispatch) => {
     dispatch({ type: SKILL.VOTE_RESOURCE.START });
     return httpClient.post(`${config.skills_api_url}/${skillId}/resources/${resourceId}/votes`, data)
-      .then(vote => dispatch({ type: SKILL.VOTE_RESOURCE.SUCCESS, vote }))
+      .then(vote => dispatch({ type: SKILL.VOTE_RESOURCE.SUCCESS, resourceId, vote }))
       .catch(errors => dispatch({ type: SKILL.VOTE_RESOURCE.FAILURE, errors }));
   };
 }

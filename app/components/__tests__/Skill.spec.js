@@ -17,6 +17,7 @@ describe('Skill Details', () => {
   const skills = generate('skill', 15);
   const profiles = generate('profile', 15);
   const resources = generate('resource', 15);
+  const votes = generate('vote', 15);
   const mockedUserId = 'test';
   const mockedProfilesBySkill = map(sampleSize(profiles, 3), 'id');
   const skillListPromise = sinon.spy()
@@ -29,6 +30,7 @@ describe('Skill Details', () => {
       }),
       resourceList: sinon.spy(),
       profileList: sinon.spy(),
+      voteList: sinon.spy(),
       profileListBySkill: sinon.spy(),
       resourceAdd: sinon.spy(),
       resourceAddVote: sinon.spy(),
@@ -58,6 +60,7 @@ describe('Skill Details', () => {
         skills={skills}
         resources={resources}
         profiles={profiles}
+        votes={votes}
         profilesBySkill={mockedProfilesBySkill}
         router={routerSpy}
         params={mockedParams}
